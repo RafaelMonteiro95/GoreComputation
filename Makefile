@@ -16,9 +16,9 @@ DBGFLAGS=-v --leak-check=full --show-leak-kinds=all --read-var-info=yes --track-
 # Search for .c source files
 SRC=$(wildcard $(SRCDIR)/*.cpp)
 # Search for .h header files
-DEPS=$(wildcard $(INCDIR)/*.h)
+DEPS=$(wildcard $(INCDIR)/*.hpp)
 # Generate .o object files rules
-OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.c=$(OBJDIR)/%.o))
+OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o))
 
 
 CC=gcc
@@ -35,7 +35,7 @@ all: clean main
 
 # Compile directives
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
 	@echo Building $*
 	@$(CC) -c -o $@ $< $(CFLAGS)
 
