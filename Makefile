@@ -1,5 +1,5 @@
 # Project name
-NAME=hanson1
+NAME=freeGluteos
 
 
 # Directories
@@ -21,10 +21,10 @@ DEPS=$(wildcard $(INCDIR)/*.hpp)
 OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o))
 
 
-CC=gcc
+CC=g++
 CFLAGS=-O3 -I./$(INCDIR) 
 
-LIBS=-lm
+LIBS=-lm -lGL -lglut
 
 ifdef debug
 	CFLAGS += -Wall -Wextra -g -D DEBUG
