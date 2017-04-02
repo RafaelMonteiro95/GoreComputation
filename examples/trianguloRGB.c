@@ -1,6 +1,6 @@
 #include <GL/glut.h>
 
-void Draw(void) {
+void Draw() {
 	// Define a cor de fundo da cena
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -24,36 +24,30 @@ void Draw(void) {
 }
 
 // Função responsável por tratar eventos de mouse
-void Mouse(int button, int state, int x, int y)
-{
+void Mouse(int button, int state, int x, int y){
 	// Se o botão utilizado for o direito, a função exit(0) será executada.
-	if (button == GLUT_RIGHT_BUTTON)
-	{
+	if (button == GLUT_RIGHT_BUTTON){
 		exit(0);
 	}
 }
 
 // Função responsável por tratar eventos de teclado
-void Keyboard(unsigned char key, int x, int y)
-{
+void Keyboard(unsigned char key, int x, int y){
 	// Se a tecla cujo código ASCII é 102 (letra f) for pressionada
 	// a função glutFullScreen() chamada
-	if (key == 102)
-	{
+	if (key == 102){
 		glutFullScreen();
 	}
 
 	// Se a tecla cujo código ASCII é 27 (ESC) for pressionada
 	// a função glutReshapeWindow será chamada
-	if (key == 27)
-	{
+	if (key == 27){
 		glutReshapeWindow(200, 200);
 	}
 }
 
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]){
 	// Inicializa a gut
 	glutInit(&argc, argv);
 
