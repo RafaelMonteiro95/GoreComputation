@@ -24,7 +24,7 @@ OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o))
 CC=g++
 CFLAGS=-O3 -I./$(INCDIR) 
 
-LIBS=-lm -lGL -lglut
+LIBS=-lm -lGL -lglut -lGLU
 
 ifdef debug
 	CFLAGS += -Wall -Wextra -g -D DEBUG
