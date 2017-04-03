@@ -13,22 +13,15 @@
 using namespace std;
 
 //#include "primitives.hpp"
-#include "coordinates.hpp"
 
-void drawTriangle(vector<coordinates> coord) {
-	glBegin(GL_TRIANGLES);
-	for(vector<coordinates>::iterator it = coord.begin(); it != coord.end(); it++)
-    	glVertex2f(it->x, it->y);
-  	glEnd();
-}
-
+/*
 void drawSquare(vector<coordinates> coord) {
 	glBegin(GL_QUADS);
 		for(vector<coordinates>::iterator it = coord.begin(); it != coord.end(); it++)
     		glVertex2f(it->x, it->y);                
 	glEnd();
 }
-
+*/
 //void drawCircle(coordinates center, float radius) {
 
 //
