@@ -3,29 +3,44 @@
 	Lucas Alexandre Soares 			-	9293265
 	Rafael Jureg Monteiro 			-	9293095
 	Giovanna Oliveira Guimarães		-	9293693
-
 */
 
 #include <iostream>
 #include <GL/glut.h>
 
+#include "rgb_color.hpp"
 #include "callback.hpp"
 #include "graphics.hpp"
+
+
+/* Application defines */
+#define CLIP_AREA_LEFT 		0.0
+#define CLIP_AREA_RIGHT 	100.0
+#define CLIP_AREA_BOTTOM 	0.0
+#define CLIP_AREA_TOP 		100.0
+
+#define DEFAULT_WINDOW_WIDTH	800
+#define DEFAULT_WINDOW_HEIGHT	600
+
+/* End application defines */
 
 using namespace std;
 
 int main(int argc, char* argv[]){
 
-	// Initialize glut
+	// Initialize glut and display
 	glutInit(&argc, argv);
+	initGL();
 
 	// Initialize display mode
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 
+	glutInitWindowSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+	glutCreateWindow(argv[0]);
 
-	glutInitWindowSize(800, 600);
-	glutCreateWindow("FreeGluteos");
-	
+	// Initialize window
+	ClearScreen();
+	glFlush();
 
 	// Set callback functions
 	glutDisplayFunc(&Draw);				// Draw on screen
@@ -35,7 +50,7 @@ int main(int argc, char* argv[]){
 
 	// The parameters are (left, right, bottom, top)
 	// This create a clipping area in OpenGL coordinates (not screen coordinate)
-	gluOrtho2D(0.0, 100.0, 0.0, 100.0);
+	gluOrtho2D(CLIP_AREA_LEFT, CLIP_AREA_RIGHT, CLIP_AREA_BOTTOM, CLIP_AREA_TOP);
 
 	// Start listening to glut events
 	glutMainLoop();

@@ -1,4 +1,4 @@
-/* Color class file
+/* Color class header file
 
 	Lucas Alexandre Soares 			-	9293265
 	Rafael Jureg Monteiro 			-	9293095

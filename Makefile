@@ -1,5 +1,5 @@
 # Project name
-NAME=freeGluteos
+NAME=FreeGluteos
 
 
 # Directories

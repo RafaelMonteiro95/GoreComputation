@@ -12,10 +12,11 @@
 
 void Draw(){
 
-	// Initialize window
 	ClearScreen();
-	glFlush();
 
+	
+
+	glFlush();
 }
 
 void KeyboardHandle(unsigned char, int, int ){
