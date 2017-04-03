@@ -32,10 +32,10 @@ void ClearScreen(float r, float g, float b, float a){
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void ClearScreen(RGBColor c){
+void ClearScreen(RGBColor& c){
 
 	// Clear color (black and full opaque)
-	glClearColor(c->r, c->g, c->b, c->a);
+	glClearColor(c.r, c.g, c.b, c.a);
 
 	// Clear scene using clear color
 	glClear(GL_COLOR_BUFFER_BIT);

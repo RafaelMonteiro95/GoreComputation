@@ -8,8 +8,13 @@
 
 #include <GL/glut.h>
 #include "callback.hpp"
+#include "graphics.hpp"
 
 void Draw(){
+
+	// Initialize window
+	ClearScreen();
+	glFlush();
 
 }
 
@@ -24,5 +29,5 @@ void MouseHandle(int, int, int, int){
 void ResizeHandle(int width, int height){
 
 	// glViewport(0, 0, width, height);
-	
+
 }

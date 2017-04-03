@@ -15,6 +15,7 @@ class RGBColor {
 		float r, g, b, a;
 
 		RGBColor(float r, float g, float b, float a);
+		virtual ~RGBColor();
 
 	
 };

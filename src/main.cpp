@@ -22,12 +22,10 @@ int main(int argc, char* argv[]){
 	// Initialize display mode
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 
-	// Initialize window
-
-	ClearScreen();
 
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("FreeGluteos");
+	
 
 	// Set callback functions
 	glutDisplayFunc(&Draw);				// Draw on screen
