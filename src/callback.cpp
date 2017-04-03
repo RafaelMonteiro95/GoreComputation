@@ -14,8 +14,10 @@
 void Draw(){
 	
 	ClearScreen();
-	glFlush();
 
+	
+
+	glFlush();
 }
 
 void KeyboardHandle(unsigned char, int, int ){
