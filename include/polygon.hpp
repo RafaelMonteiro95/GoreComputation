@@ -19,13 +19,15 @@ using namespace std;
 class Polygon {
 public:
 	Polygon(int vertexes);
-	Polygon(Coordinates[] coord, int nVertexes);
-	void drawPolygon(Coordinates[] coord, int nVertexes);
+	void setVertex(Coordinates coord, int index);
+	Coordinates *getVertexes(int index);
+	Coordinates *getVertexes();
+	void drawPolygon(Coordinates coord[], int nVertexes) ;
 	virtual ~Polygon();
 
 private:
 	int nVertexes;
-	Coordinates[] vertexes;
+	Coordinates *vertexes;
 };
 
 #endif

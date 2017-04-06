@@ -6,13 +6,14 @@
 
 */
 
+#include <vector>
+
 #include "circle.hpp"
 
-Circle::Circle() {
+using namespace std;
 
-}
-
-void Circle::drawCircle(vector<Coordinates> coord) {
-}
+Circle::Circle(){}
 
 Circle::~Circle(){}
+
+void Circle::drawCircle(Coordinates circle, float radius){}

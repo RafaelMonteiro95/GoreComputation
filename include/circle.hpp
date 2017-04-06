@@ -18,7 +18,7 @@ class Circle {
 public:
 	Circle();
 	void drawCircle(Coordinates circle, float radius);
-	virtual ~Circle();	
+	virtual ~Circle();
 };
 
 #endif

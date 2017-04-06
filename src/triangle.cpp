@@ -5,7 +5,7 @@
 	Giovanna Oliveira Guimarães		-	9293693
 
 */
-
+/*
 #include "triangle.hpp"
 
 Triangle::Triangle() {
@@ -33,3 +33,4 @@ void Triangle::drawTriangle(vector<Coordinates> coord) {
 }
 
 Triangle::~Triangle() {}
+*/

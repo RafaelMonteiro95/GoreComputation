@@ -14,7 +14,8 @@ class Coordinates {
 	public:
 		float x, y;
 
-		Coordinates(float, float);
+		Coordinates();
+		Coordinates(int x, int y);
 		virtual ~Coordinates();
 };
 

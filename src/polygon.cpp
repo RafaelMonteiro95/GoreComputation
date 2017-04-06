@@ -10,28 +10,33 @@
 #include "polygon.hpp"
 
 Polygon::Polygon(int vertexes) {
-	this.nVertexes = vertexes;
+	this->nVertexes = vertexes;
 	this->vertexes = new Coordinates[nVertexes];
 }
 
-void Polygon::setVertexes(Coordinates coord, int index) {
+void Polygon::setVertex(Coordinates coord, int index) {
 
 	this->vertexes[index] = coord;
 }
 
 Coordinates *Polygon::getVertexes(int index) {
-	return this->Vertexes[index];
+	return &(this->vertexes[index]);
 }
 
 Coordinates *Polygon::getVertexes() {
-	return this->Vertexes;
+	return this->vertexes;
 }
 
-void Polygon::drawPolygon(Coordinates[] coord, int nVertexes) {
-	glBegin(GL_POLYGON);
+void Polygon::drawPolygon(Coordinates coord[], int nVertexes) {
+	
+	glBegin(GL_POLYGON);	// Star OpenGL routine
+	
+	// Set polygon vertexes
 	for(int i = 0; i < nVertexes; i++)
     	glVertex2f(coord[i].x, coord[i].y);
-  	glEnd();
+
+  	glEnd();	// End OpenGL routine
+  	glFlush();	// Draw
 }
 
 Polygon::~Polygon() {
