@@ -5,14 +5,24 @@
 	Giovanna Oliveira Guimarães		-	9293693
 
 */
-
+/*
 #include "triangle.hpp"
 
 Triangle::Triangle() {
-	glBegin(GL_TRIANGLES);
-		for(int i = 0; i < 3; i++)
-	    	glVertex2f(0.0f, 0.0f);
-	glEnd();
+	this->vertex1 = new Coordinates(0.0f, 0.0f);
+	this->vertex2 = new Coordinates(0.0f, 0.0f);
+	this->vertex3 = new Coordinates(0.0f, 0.0f);
+}
+
+Triangle::Triangle(vector<Coordinates> coord) {
+	for(vector<Coordinates>::iterator it = coord.begin(); it != coord.end(); it++)
+	    	
+}
+
+
+Triangle::Triangle(Coordinates[] coord) {
+	for(vector<Coordinates>::iterator it = coord.begin(); it != coord.end(); it++)
+	   this->vertexes  new Coordinates[;
 }
 
 void Triangle::drawTriangle(vector<Coordinates> coord) {
@@ -22,4 +32,5 @@ void Triangle::drawTriangle(vector<Coordinates> coord) {
 	  	glEnd();
 }
 
-Triangle::~Triangle(){}
+Triangle::~Triangle() {}
+*/

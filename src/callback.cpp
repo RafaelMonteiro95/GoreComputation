@@ -34,19 +34,32 @@ void Draw(){
 	
 	ClearScreen();
 
-	drawTriangle();
-
 	glFlush();
 }
 
+/* KeyboardHandle
+
+	uint8 key 	- Which keyboard key was pressed
+	int x 		- Mouse pointer x coordinate
+	int y 		- Mouse pointer y coordinate
+*/
 void KeyboardHandle(unsigned char key, int x, int y){
 	if (key == 27) exit(0);
 }
 
+/* MouseHandle
+
+	int button 	- Which mouse button was clicked (LEFT_CLICK, RIGHT_CLICK, 
+				  MIDDLE_CLICK)
+	int state 	- The button stat (BUTTON_DOWN or BUTTON_UP)
+	int x 		- Screen x coordinate
+	int y 		- Screen y coordinate
+*/
 void MouseHandle(int button, int state, int xx, int yy){
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP){
 		float winx = glutGet(GLUT_WINDOW_WIDTH);
 		float winy = glutGet(GLUT_WINDOW_HEIGHT);
+		
 
 		dest_x = 100*(((float)xx)/winx);
 		dest_y = 100*(((float)yy)/winy);
@@ -55,6 +68,8 @@ void MouseHandle(int button, int state, int xx, int yy){
 
 void ResizeHandle(int width, int height){
 
-	// glViewport(0, 0, width, height);
-
+	glViewport(0, 0, width, height);
+	gluOrtho2D(0.0f, (float) width, 0.0f, (float) height);
+	ClearScreen(1.0f, 1.0f, 1.0f, 1.0f);
+	glFlush();
 }

@@ -9,9 +9,6 @@
 #ifndef _TRIANGLE_H_
 #define _TRIANGLE_H_
 
-#include <GL/glut.h>
-#include <vector>
-
 #include "coordinates.hpp"
 
 using namespace std;
@@ -19,8 +16,13 @@ using namespace std;
 class Triangle {
 public:
 	Triangle();
-	void drawTriangle(vector<Coordinates> coord);
-	virtual ~Triangle();	
+	void drawTriangle(Coordinates[] coord, int);
+	Coordinates *getVertexes();
+	Coordinates *getVertexes();
+	virtual ~Triangle();
+
+private:
+	Coordinates[3] vertexes;
 };
 
 #endif
