@@ -15,8 +15,11 @@ class Coordinates {
 		float x, y;
 
 		Coordinates();
-		Coordinates(int x, int y);
+		Coordinates(float x, float y);
 		virtual ~Coordinates();
+
+		void operator=(Coordinates& c);
 };
 
 #endif
+
