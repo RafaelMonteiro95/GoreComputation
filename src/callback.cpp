@@ -17,6 +17,9 @@ using namespace std;
 float dest_x = 90;
 float dest_y = 90;
 
+float curx = 90;
+float cury = 90;
+
 void drawTriangle(){
 	glBegin(GL_TRIANGLES);
 		glColor3f(1.0f, 0.0f, 0.0f); // Define a cor vermelha para um dos vértices
@@ -26,13 +29,15 @@ void drawTriangle(){
 		glVertex2f(90.0f, 10.0f);
 
 		glColor3f(0.0f, 0.0f, 1.0f); // Define a cor azul para um dos vértices
-		glVertex2f(dest_x, dest_y);
+		glVertex2f(curx, cury);
 	glEnd();
 }
 
 void Draw(){
 	
 	ClearScreen();
+
+	drawTriangle();
 
 	glFlush();
 }
@@ -62,15 +67,43 @@ void MouseHandle(int button, int state, int xx, int yy){
 		
 
 		dest_x = 100*(((float)xx)/winx);
-		dest_y = 100*(((float)yy)/winy);
+		dest_y = 100-(100*(((float)yy)/winy));
 	}
 }
 
 /* NOTE: nao ta funcionando ;-;*/
 void ResizeHandle(int width, int height){
 
-	glViewport(0, 0, width, height);
-	gluOrtho2D(0.0f, (float) width, 0.0f, (float) height);
-	ClearScreen(1.0f, 1.0f, 1.0f, 1.0f);
-	glFlush();
+	// glViewport(0, 0, width, height);
+	// glMatrixMode(GL_PROJECTION);
+	// glLoadIdentity();
+
+
+	// gluOrtho2D(0.0f, (width/winsizex)*100, 0.0f, (height/winsizey)*height);
+	// cout << width << endl;
+	// glMatrixMode(GL_MODELVIEW);
+	// glutPostRedisplay();
+	// ClearScreen(1.0f, 1.0f, 1.0f, 1.0f);
+	// glFlush();
+}
+
+float step = 0.1;
+
+void IdleHandle(){
+
+	if(curx < dest_x){
+		curx += step;
+	}
+	if(curx > dest_x){
+		curx -= step;
+	}
+
+	if(cury < dest_y){
+		cury += step;
+	}
+	if(cury > dest_y){
+		cury -= step;
+	}
+
+	glutPostRedisplay();
 }

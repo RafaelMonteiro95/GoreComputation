@@ -23,5 +23,6 @@ void Draw();
 void KeyboardHandle(unsigned char, int, int );
 void MouseHandle(int, int, int, int);
 void ResizeHandle(int width, int height);
+void IdleHandle();
 
 #endif

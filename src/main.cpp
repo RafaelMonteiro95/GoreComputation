@@ -25,9 +25,6 @@ using namespace std;
 
 #include "callback.hpp"
 
-int x = 0;
-int y = 0;
-
 int main(int argc, char* argv[]){
 
 	// Initialize glut and display
@@ -49,6 +46,7 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(&KeyboardHandle);	// Keyboard events
 	glutMouseFunc(&MouseHandle);		// Mouse events
 	glutReshapeFunc(&ResizeHandle);		// Window resize event
+	glutIdleFunc(&IdleHandle);
 
 	// The parameters are (left, right, bottom, top)
 	// This create a clipping area in OpenGL coordinates (not screen coordinate)
