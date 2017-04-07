@@ -7,7 +7,6 @@
 */
 
 #include <GL/glut.h>
-
 #include "graphics.hpp"
 #include "rgb_color.hpp"
 

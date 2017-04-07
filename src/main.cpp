@@ -26,6 +26,11 @@
 
 using namespace std;
 
+#include "callback.hpp"
+
+int x = 0;
+int y = 0;
+
 int main(int argc, char* argv[]){
 
 	// Initialize glut and display
