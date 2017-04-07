@@ -6,19 +6,21 @@
 
 */
 
-
+#include "coordinates.hpp"
 
 Coordinates::Coordinates() { 
-	this.x = 0;
-	this.y = 0;
+	this->x = 0;
+	this->y = 0;
 }
 
-Coordinates::Coordinates(int x, int y) {
-	this.x = x;
-	this.y = y;
+Coordinates::Coordinates(float x, float y) {
+	this->x = x;
+	this->y = y;
 }
 
-Coordinates& operator=(Coordinates& c){
-	this.x = c.x;
-	this.y = c.y;
+Coordinates::~Coordinates(){}
+
+void Coordinates::operator=(Coordinates& c){
+	this->x = c.x;
+	this->y = c.y;
 }

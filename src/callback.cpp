@@ -41,6 +41,7 @@ void MouseHandle(int button, int state, int x, int y){
 
 }
 
+/* NOTE: nao ta funcionando ;-;*/
 void ResizeHandle(int width, int height){
 
 	glViewport(0, 0, width, height);

@@ -8,10 +8,7 @@
 #include <iostream>
 #include <GL/glut.h>
 
-#include "rgb_color.hpp"
-#include "callback.hpp"
-#include "graphics.hpp"
-
+#include "free_gluteos.hpp"
 
 /* Application defines */
 #define CLIP_AREA_LEFT 		0.0
