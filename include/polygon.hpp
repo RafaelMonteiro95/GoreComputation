@@ -11,6 +11,7 @@
 
 #include <GL/glut.h>
 
+#include "rgb_color.hpp"
 #include "coordinates.hpp"
 
 namespace Polygons {
@@ -19,6 +20,7 @@ namespace Polygons {
 	public:
 		Polygon(int vertexes);
 		void setVertex(Coord::Coordinates *coord, int index);
+		void setVertexColor(Colors::RGBColor *color, int index);
 		Coord::Coordinates *getVertexes(int index);
 		Coord::Coordinates *getVertexes();
 		void drawPolygon();
@@ -27,6 +29,7 @@ namespace Polygons {
 	private:
 		int nVertexes;
 		Coord::Coordinates *vertexes;
+		Colors::RGBColor *color;
 	};
 
 }

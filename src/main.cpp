@@ -18,18 +18,49 @@
 
 #define DEFAULT_WINDOW_WIDTH	800
 #define DEFAULT_WINDOW_HEIGHT	600
-
 /* End application defines */
 
 using namespace std;
-
-#include "free_gluteos.hpp"
 
 int main(int argc, char* argv[]){
 
 	// Initialize glut and display
 	glutInit(&argc, argv);
 	initGL();
+
+	// BLOCO NOGIENTO DE CODEGO
+	Polygons::Polygon *triangle1 = new Polygons::Polygon(3);
+	triangle1->setVertex(new Coord::Coordinates(0.0, 0.0), 0);
+	triangle1->setVertex(new Coord::Coordinates(10.0, 0.0), 1);
+	triangle1->setVertex(new Coord::Coordinates(0.0, 10.0), 2);
+
+	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+
+	Polygons::Polygon *triangle2 = new Polygons::Polygon(4);
+	triangle2->setVertex(new Coord::Coordinates(20.0, 30.0), 0);
+	triangle2->setVertex(new Coord::Coordinates(30.0, 30.0), 1);
+	triangle2->setVertex(new Coord::Coordinates(30.0, 20.0), 2);
+	triangle2->setVertex(new Coord::Coordinates(20.0, 20.0), 3);
+
+	triangle2->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 3);
+
+	Polygons::Polygon *triangle3 = new Polygons::Polygon(6);
+	triangle3->setVertex(new Coord::Coordinates(50.0, 50.0), 0);
+	triangle3->setVertex(new Coord::Coordinates(50.0, 60.0), 1);
+	triangle3->setVertex(new Coord::Coordinates(60.0, 50.0), 2);
+	
+	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 3);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 4);
+	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 5);
+
 
 	// Initialize display mode
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
@@ -48,22 +79,6 @@ int main(int argc, char* argv[]){
 	glutReshapeFunc(&ResizeHandle);		// Window resize event
 	glutIdleFunc(NULL);
 
-	Polygons::Polygon *triangle1 = new Polygons::Polygon(3);
-	triangle1->setVertex(new Coord::Coordinates(0.0, 0.0), 0);
-	triangle1->setVertex(new Coord::Coordinates(10.0, 0.0), 0);
-	triangle1->setVertex(new Coord::Coordinates(0.0, 10.0), 0);
-
-
-	Polygons::Polygon *triangle2 = new Polygons::Polygon(3);
-	triangle2->setVertex(new Coord::Coordinates(100.0, 100.0), 1);
-	triangle2->setVertex(new Coord::Coordinates(100.0, 10.0), 1);
-	triangle2->setVertex(new Coord::Coordinates(10.0, 100.0), 1);
-
-	Polygons::Polygon *triangle3 = new Polygons::Polygon(3);
-	triangle3->setVertex(new Coord::Coordinates(50.0, 50.0), 2);
-	triangle3->setVertex(new Coord::Coordinates(50.0, 60.0), 2);
-	triangle3->setVertex(new Coord::Coordinates(60.0, 50.0), 2);
-
 	setPolygonsStupiFunacoq(triangle1, 0);
 	setPolygonsStupiFunacoq(triangle2, 1);
 	setPolygonsStupiFunacoq(triangle3, 2);
@@ -74,6 +89,10 @@ int main(int argc, char* argv[]){
 
 	// Start listening to glut events
 	glutMainLoop();
+
+	delete triangle1;
+	delete triangle2;
+	delete triangle3;
 	
 	return 0;
 }

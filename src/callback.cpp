@@ -8,10 +8,8 @@
 
 #include <GL/glut.h>
 #include <iostream>
-#include "callback.hpp"
-#include "graphics.hpp"
-#include "coordinates.hpp"
-#include "polygon.hpp"
+
+#include "free_gluteos.hpp"
 
 using namespace std;
 
@@ -81,6 +79,7 @@ void KeyboardHandle(unsigned char key, int x, int y){
 	int y 		- Screen y coordinate
 */
 void MouseHandle(int button, int state, int xx, int yy){
+	printf("TO CLICANO [%d, %d]\n", xx, yy);
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP){
 		float winx = glutGet(GLUT_WINDOW_WIDTH);
 		float winy = glutGet(GLUT_WINDOW_HEIGHT);
@@ -91,22 +90,16 @@ void MouseHandle(int button, int state, int xx, int yy){
 	}
 
 	glutIdleFunc(&IdleHandle);
+	glutPostRedisplay();
 }
 
 /* NOTE: nao ta funcionando ;-;*/
 void ResizeHandle(int width, int height){
 
-	// glViewport(0, 0, width, height);
-	// glMatrixMode(GL_PROJECTION);
-	// glLoadIdentity();
-
-
 	// gluOrtho2D(0.0f, (width/winsizex)*100, 0.0f, (height/winsizey)*height);
-	// cout << width << endl;
 	// glMatrixMode(GL_MODELVIEW);
+	// ClearScreen(0.6f, 0.0f, 0.20f, 1.0f);
 	// glutPostRedisplay();
-	// ClearScreen(1.0f, 1.0f, 1.0f, 1.0f);
-	// glFlush();
 }
 
 float step = 0.1;

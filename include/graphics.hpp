@@ -11,14 +11,16 @@
 
 #include "rgb_color.hpp"
 
+using namespace Colors;
+
 void initGL();
 
 void SetBackgroundColor();
 void SetBackgroundColor(float r, float g, float b, float a);
-void SetBackgroundColor(RGBColor c);
+void SetBackgroundColor(Colors::RGBColor c);
 
 void ClearScreen();
 void ClearScreen(float r, float g, float b, float a);
-void ClearScreen(RGBColor& c);
+void ClearScreen(Colors::RGBColor& c);
 
 #endif

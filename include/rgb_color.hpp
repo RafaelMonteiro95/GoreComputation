@@ -9,15 +9,16 @@
 #ifndef _RGB_COLOR_H_
 #define _RGB_COLOR_H_
 
-class RGBColor {
-	
+namespace Colors {
+	class RGBColor {
+
 	public:
 		float r, g, b, a;
 
+		RGBColor();
 		RGBColor(float r, float g, float b, float a);
 		virtual ~RGBColor();
-
-	
-};
+	};
+}
 
 #endif

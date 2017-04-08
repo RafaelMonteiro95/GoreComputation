@@ -6,20 +6,32 @@
 
 */
 
+#include <stdio.h>
 #include <GL/glut.h>
+
 #include "polygon.hpp"
 
 using namespace Polygons;
+using namespace Colors;
 
 Polygon::Polygon(int vertexes) {
 	this->nVertexes = vertexes; 
 	this->vertexes = new Coord::Coordinates[nVertexes];
+	this->color = new Colors::RGBColor[nVertexes];
 }
 
 void Polygon::setVertex(Coord::Coordinates *coord, int index) {
 
 	this->vertexes[index].x = coord->x;
 	this->vertexes[index].y = coord->y;
+}
+
+void Polygon::setVertexColor(RGBColor *color, int index) {
+
+	this->color[index].r = color->r;
+	this->color[index].g = color->g;
+	this->color[index].b = color->b;
+	this->color[index].a = color->a;
 }
 
 Coord::Coordinates *Polygon::getVertexes(int index) {
@@ -31,15 +43,14 @@ Coord::Coordinates *Polygon::getVertexes() {
 }
 
 void Polygon::drawPolygon() {
-	
-	glBegin(GL_POLYGON);	// Star OpenGL routine
-	
-	// Set polygon vertexes
-	for(int i = 0; i < this->nVertexes; i++)
-    	glVertex2f(this->vertexes[i].x, this->vertexes[i].y);
 
-  	glEnd();	// End OpenGL routine
-  	glFlush();	// Draw
+	glBegin(GL_POLYGON);
+		// Set polygon vertexes
+		for(int i = 0; i < this->nVertexes; i++){
+			glColor3f(1.0f, 0.0f, 0.0f); // Define a cor vermelha para um dos vértices
+			glVertex2f(this->vertexes[i].x, this->vertexes[i].y);
+		}
+	glEnd();
 }
 
 Polygon::~Polygon() {

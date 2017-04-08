@@ -9,17 +9,15 @@
 #ifndef _COORDINATES_H_
 #define _COORDINATES_H_
 
-namespace Coord{
+namespace Coord {
 	class Coordinates {
 		
-		public:
-			float x, y;
+	public:
+		float x, y;
 
-			Coordinates();
-			Coordinates(float x, float y);
-			virtual ~Coordinates();
-
-			//friend void operator = (Coordinates *c);
+		Coordinates();
+		Coordinates(float x, float y);
+		virtual ~Coordinates();
 	};
 }
 

@@ -20,8 +20,3 @@ Coordinates::Coordinates(float x, float y) {
 }
 
 Coordinates::~Coordinates(){}
-
-/*void operator=(Coordinates::Coordinates& c){
-	this->x = c.x;
-	this->y = c.y;
-}*/
