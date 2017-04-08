@@ -21,7 +21,7 @@ void initGL(){
 	if(G_BGColor != NULL) delete G_BGColor;
 
 	// Black
-	G_BGColor = new RGBColor(0.6f, 0.0f, 0.2f, 1.0f);
+	G_BGColor = new RGBColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 

@@ -47,7 +47,7 @@ void Polygon::drawPolygon() {
 	glBegin(GL_POLYGON);
 		// Set polygon vertexes
 		for(int i = 0; i < this->nVertexes; i++){
-			glColor3f(1.0f, 0.0f, 0.0f); // Define a cor vermelha para um dos vértices
+			glColor3f(this->color[i].r, this->color[i].b, this->color[i].g); // Define a cor vermelha para um dos vértices
 			glVertex2f(this->vertexes[i].x, this->vertexes[i].y);
 		}
 	glEnd();

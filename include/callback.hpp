@@ -21,7 +21,7 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long uint64;
 
-void setPolygonsStupiFunacoq(Polygons::Polygon *, int);
+void setPolygons(Polygons::Polygon *, int);
 void Draw();
 void KeyboardHandle(unsigned char, int, int );
 void MouseHandle(int, int, int, int);

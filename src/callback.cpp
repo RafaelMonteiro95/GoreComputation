@@ -16,46 +16,75 @@ using namespace std;
 #define FALSE 0
 #define TRUE 1
 
-float G_dest_x = 90;
-float G_dest_y = 90;
-
-float G_curx = 90;
-float G_cury = 90;
+float G_dest_x = 0;
+float G_dest_y = 0;
 
 int G_activeRedisplay = FALSE;
 
-Polygons::Polygon *p1, *p2, *p3;
+Polygons::Polygon *p1, *p2, *p3; 
 
-void setPolygonsStupiFunacoq(Polygons::Polygon *p, int i) {
-	if(i == 0) {
-		p1 = p;
-	} else if(i == 1) {
-		p2 = p;
-	} else if(i == 2) {
-		p3 = p;
+
+//variables used for moving stuff
+float objx[3] = {25.0f, 50.0f, 75.0f};
+float objy[3] = {50.0f, 50.0f, 50.0f};
+float stepx[3] = {0, 0, 0};
+float stepy[3] = {0, 0, 0};
+float speed[3] = {0.001, 0.002, 0.003};
+
+void setPolygons(Polygons::Polygon *p, int i) {
+	switch (i){
+		case 0:
+			p1 = p;
+			break;
+		case 1:
+			p2 = p;
+			break;
+		case 2:
+			p3 = p;
+			break;
 	}
 }
 
-void drawTriangle(){
-	glBegin(GL_TRIANGLES);
-		glColor3f(1.0f, 0.0f, 0.0f); // Define a cor vermelha para um dos vértices
-		glVertex2f(10.f, 10.0f);
+void drawPolygons(){
 
-		glColor3f(0.0f, 1.0f, 0.0f); // Define a cor verde para um dos vértices
-		glVertex2f(90.0f, 10.0f);
+	//for each polygon, draws it in the correct position using translation
+	for(int i = 0; i < 3; i++){
+		
+		//pushing previous matrix
+		glPushMatrix();
 
-		glColor3f(0.0f, 0.0f, 1.0f); // Define a cor azul para um dos vértices
-		glVertex2f(G_curx, G_cury);
-	glEnd();
+		//translates the new matrix one step closer to dest
+		glTranslatef(objx[i] + stepx[i],
+					 objy[i] + stepy[i],
+			 		 0.0f);
+
+		//draws the polygon
+		switch (i){
+			case 0:
+				p1->drawPolygon();
+				break;
+			case 1:
+				p2->drawPolygon();
+				break;
+			case 2:
+				p3->drawPolygon();
+				break;
+		}
+
+		//updates the object position
+		objx[i] += stepx[i];
+		objy[i] += stepy[i];
+
+		//returns to the default matrix
+		glPopMatrix();
+	}
 }
 
 void Draw(){
 
 	ClearScreen();
 
-	p1->drawPolygon();
-	p2->drawPolygon();
-	p3->drawPolygon();
+	drawPolygons();
 
 	glFlush();
 }
@@ -78,19 +107,20 @@ void KeyboardHandle(unsigned char key, int x, int y){
 	int x 		- Screen x coordinate
 	int y 		- Screen y coordinate
 */
-void MouseHandle(int button, int state, int xx, int yy){
-	printf("TO CLICANO [%d, %d]\n", xx, yy);
+void MouseHandle(int button, int state, int x, int y){
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP){
 		float winx = glutGet(GLUT_WINDOW_WIDTH);
 		float winy = glutGet(GLUT_WINDOW_HEIGHT);
-		
 
-		G_dest_x = 100*(((float)xx)/winx);
-		G_dest_y = 100-(100*(((float)yy)/winy));
+		G_dest_x = 100*(((float)x)/winx);
+		G_dest_y = 100-(100*(((float)y)/winy));
+
+		//sets the new step size for each polygon 
+		for(int i = 0; i < 3; i++){
+			stepx[i] = (G_dest_x - objx[i]) * speed[i];
+			stepy[i] = (G_dest_y - objy[i]) * speed[i];	
+		}
 	}
-
-	glutIdleFunc(&IdleHandle);
-	glutPostRedisplay();
 }
 
 /* NOTE: nao ta funcionando ;-;*/
@@ -102,23 +132,18 @@ void ResizeHandle(int width, int height){
 	// glutPostRedisplay();
 }
 
-float step = 0.1;
-
 void IdleHandle(){
 
-/*	if(G_curx < G_dest_x){
-		G_curx += step;
-	}
-	if(G_curx > G_dest_x){
-		G_curx -= step;
+	//checking if the polygons are out of the screen
+	for(int i = 0; i < 3; i++){
+		if(objx[i] > 100 || objx[i] < 0 || objy[i] > 100 || objy[i] < 0){
+			stepx[i] = 0.0f;
+			stepy[i] = 0.0f;
+			objx[i] = (25.0f)*(i+1);
+			objy[i] = 50.0f;
+		}
 	}
 
-	if(G_cury < G_dest_y){
-		G_cury += step;
-	}
-	if(G_cury > G_dest_y){
-		G_cury -= step;
-	}
-*/
+	//draws changes
 	glutPostRedisplay();
 }

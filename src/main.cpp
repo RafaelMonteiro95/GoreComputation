@@ -28,38 +28,44 @@ int main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	initGL();
 
-	// BLOCO NOGIENTO DE CODEGO
-	Polygons::Polygon *triangle1 = new Polygons::Polygon(3);
-	triangle1->setVertex(new Coord::Coordinates(0.0, 0.0), 0);
-	triangle1->setVertex(new Coord::Coordinates(10.0, 0.0), 1);
-	triangle1->setVertex(new Coord::Coordinates(0.0, 10.0), 2);
+	// Creating a p
+	Polygons::Polygon *p1 = new Polygons::Polygon(3);
+	p1->setVertex(new Coord::Coordinates(0.0, 5.0), 0);
+	p1->setVertex(new Coord::Coordinates(0.0, -5.0), 1);
+	p1->setVertex(new Coord::Coordinates(5.0, 0.0), 2);
 
-	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+	p1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	p1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	p1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
 
-	Polygons::Polygon *triangle2 = new Polygons::Polygon(4);
-	triangle2->setVertex(new Coord::Coordinates(20.0, 30.0), 0);
-	triangle2->setVertex(new Coord::Coordinates(30.0, 30.0), 1);
-	triangle2->setVertex(new Coord::Coordinates(30.0, 20.0), 2);
-	triangle2->setVertex(new Coord::Coordinates(20.0, 20.0), 3);
+	//creating a square
+	Polygons::Polygon *p2 = new Polygons::Polygon(4);
+	p2->setVertex(new Coord::Coordinates(5.0, 5.0), 0);
+	p2->setVertex(new Coord::Coordinates(5.0, -5.0), 1);
+	p2->setVertex(new Coord::Coordinates(-5.0, -5.0), 2);
+	p2->setVertex(new Coord::Coordinates(-5.0, 5.0), 3);
 
-	triangle2->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
-	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
-	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
-	triangle2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 3);
+	p2->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	p2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	p2->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+	p2->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 3);
 
-	Polygons::Polygon *triangle3 = new Polygons::Polygon(6);
-	triangle3->setVertex(new Coord::Coordinates(50.0, 50.0), 0);
-	triangle3->setVertex(new Coord::Coordinates(50.0, 60.0), 1);
-	triangle3->setVertex(new Coord::Coordinates(60.0, 50.0), 2);
+	//no idea what this is
+	Polygons::Polygon *p3 = new Polygons::Polygon(5);
+	p3->setVertex(new Coord::Coordinates(0.0, 7.0), 0);
+	p3->setVertex(new Coord::Coordinates(5.0, 3.0), 1);
+	p3->setVertex(new Coord::Coordinates(2.0, -4.0), 2);
+	p3->setVertex(new Coord::Coordinates(-2.0, -4.0), 3);
+	p3->setVertex(new Coord::Coordinates(-5.0, 3.0), 4);
+
+	// 0, 5, 2, -3, -5
+	// 5, 3, -3, -3, 3 
 	
-	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
-	triangle1->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 3);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 4);
-	triangle1->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 5);
+	p3->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 0);
+	p3->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 1);
+	p3->setVertexColor(new Colors::RGBColor(0.0f, 0.0f, 1.0f, 1.0f), 2);
+	p3->setVertexColor(new Colors::RGBColor(0.0f, 1.0f, 0.0f, 1.0f), 3);
+	p3->setVertexColor(new Colors::RGBColor(1.0f, 0.0f, 0.0f, 1.0f), 4);
 
 
 	// Initialize display mode
@@ -77,11 +83,11 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(&KeyboardHandle);	// Keyboard events
 	glutMouseFunc(&MouseHandle);		// Mouse events
 	glutReshapeFunc(&ResizeHandle);		// Window resize event
-	glutIdleFunc(NULL);
+	glutIdleFunc(&IdleHandle);
 
-	setPolygonsStupiFunacoq(triangle1, 0);
-	setPolygonsStupiFunacoq(triangle2, 1);
-	setPolygonsStupiFunacoq(triangle3, 2);
+	setPolygons(p1, 0);
+	setPolygons(p2, 1);
+	setPolygons(p3, 2);
 
 	// The parameters are (left, right, bottom, top)
 	// This create a clipping area in OpenGL coordinates (not screen coordinate)
@@ -90,9 +96,9 @@ int main(int argc, char* argv[]){
 	// Start listening to glut events
 	glutMainLoop();
 
-	delete triangle1;
-	delete triangle2;
-	delete triangle3;
+	delete p1;
+	delete p2;
+	delete p3;
 	
 	return 0;
 }
