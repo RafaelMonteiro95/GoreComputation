@@ -11,14 +11,32 @@
 #include "callback.hpp"
 #include "graphics.hpp"
 #include "coordinates.hpp"
+#include "polygon.hpp"
 
 using namespace std;
 
-float dest_x = 90;
-float dest_y = 90;
+#define FALSE 0
+#define TRUE 1
 
-float curx = 90;
-float cury = 90;
+float G_dest_x = 90;
+float G_dest_y = 90;
+
+float G_curx = 90;
+float G_cury = 90;
+
+int G_activeRedisplay = FALSE;
+
+Polygons::Polygon *p1, *p2, *p3;
+
+void setPolygonsStupiFunacoq(Polygons::Polygon *p, int i) {
+	if(i == 0) {
+		p1 = p;
+	} else if(i == 1) {
+		p2 = p;
+	} else if(i == 2) {
+		p3 = p;
+	}
+}
 
 void drawTriangle(){
 	glBegin(GL_TRIANGLES);
@@ -29,15 +47,17 @@ void drawTriangle(){
 		glVertex2f(90.0f, 10.0f);
 
 		glColor3f(0.0f, 0.0f, 1.0f); // Define a cor azul para um dos vértices
-		glVertex2f(curx, cury);
+		glVertex2f(G_curx, G_cury);
 	glEnd();
 }
 
 void Draw(){
-	
+
 	ClearScreen();
 
-	drawTriangle();
+	p1->drawPolygon();
+	p2->drawPolygon();
+	p3->drawPolygon();
 
 	glFlush();
 }
@@ -66,9 +86,11 @@ void MouseHandle(int button, int state, int xx, int yy){
 		float winy = glutGet(GLUT_WINDOW_HEIGHT);
 		
 
-		dest_x = 100*(((float)xx)/winx);
-		dest_y = 100-(100*(((float)yy)/winy));
+		G_dest_x = 100*(((float)xx)/winx);
+		G_dest_y = 100-(100*(((float)yy)/winy));
 	}
+
+	glutIdleFunc(&IdleHandle);
 }
 
 /* NOTE: nao ta funcionando ;-;*/
@@ -91,19 +113,19 @@ float step = 0.1;
 
 void IdleHandle(){
 
-	if(curx < dest_x){
-		curx += step;
+/*	if(G_curx < G_dest_x){
+		G_curx += step;
 	}
-	if(curx > dest_x){
-		curx -= step;
-	}
-
-	if(cury < dest_y){
-		cury += step;
-	}
-	if(cury > dest_y){
-		cury -= step;
+	if(G_curx > G_dest_x){
+		G_curx -= step;
 	}
 
+	if(G_cury < G_dest_y){
+		G_cury += step;
+	}
+	if(G_cury > G_dest_y){
+		G_cury -= step;
+	}
+*/
 	glutPostRedisplay();
 }

@@ -7,6 +7,8 @@
 */
 #include "coordinates.hpp"
 
+using namespace Coord;
+
 Coordinates::Coordinates() { 
 	this->x = 0;
 	this->y = 0;
@@ -19,7 +21,7 @@ Coordinates::Coordinates(float x, float y) {
 
 Coordinates::~Coordinates(){}
 
-void Coordinates::operator=(Coordinates& c){
+/*void operator=(Coordinates::Coordinates& c){
 	this->x = c.x;
 	this->y = c.y;
-}
+}*/

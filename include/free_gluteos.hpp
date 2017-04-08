@@ -13,6 +13,8 @@
 #include "rgb_color.hpp"
 #include "callback.hpp"
 #include "graphics.hpp"
+#include "coordinates.hpp"
+#include "polygon.hpp"
 /* End of include */
 
 #endif

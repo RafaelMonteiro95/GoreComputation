@@ -23,7 +23,7 @@
 
 using namespace std;
 
-#include "callback.hpp"
+#include "free_gluteos.hpp"
 
 int main(int argc, char* argv[]){
 
@@ -46,7 +46,27 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(&KeyboardHandle);	// Keyboard events
 	glutMouseFunc(&MouseHandle);		// Mouse events
 	glutReshapeFunc(&ResizeHandle);		// Window resize event
-	glutIdleFunc(&IdleHandle);
+	glutIdleFunc(NULL);
+
+	Polygons::Polygon *triangle1 = new Polygons::Polygon(3);
+	triangle1->setVertex(new Coord::Coordinates(0.0, 0.0), 0);
+	triangle1->setVertex(new Coord::Coordinates(10.0, 0.0), 0);
+	triangle1->setVertex(new Coord::Coordinates(0.0, 10.0), 0);
+
+
+	Polygons::Polygon *triangle2 = new Polygons::Polygon(3);
+	triangle2->setVertex(new Coord::Coordinates(100.0, 100.0), 1);
+	triangle2->setVertex(new Coord::Coordinates(100.0, 10.0), 1);
+	triangle2->setVertex(new Coord::Coordinates(10.0, 100.0), 1);
+
+	Polygons::Polygon *triangle3 = new Polygons::Polygon(3);
+	triangle3->setVertex(new Coord::Coordinates(50.0, 50.0), 2);
+	triangle3->setVertex(new Coord::Coordinates(50.0, 60.0), 2);
+	triangle3->setVertex(new Coord::Coordinates(60.0, 50.0), 2);
+
+	setPolygonsStupiFunacoq(triangle1, 0);
+	setPolygonsStupiFunacoq(triangle2, 1);
+	setPolygonsStupiFunacoq(triangle3, 2);
 
 	// The parameters are (left, right, bottom, top)
 	// This create a clipping area in OpenGL coordinates (not screen coordinate)

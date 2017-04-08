@@ -10,24 +10,25 @@
 #define _POLYGON_H_
 
 #include <GL/glut.h>
-#include <vector>
 
 #include "coordinates.hpp"
 
-using namespace std;
+namespace Polygons {
 
-class Polygon {
-public:
-	Polygon(int vertexes);
-	void setVertex(Coordinates coord, int index);
-	Coordinates *getVertexes(int index);
-	Coordinates *getVertexes();
-	void drawPolygon(Coordinates coord[], int nVertexes) ;
-	virtual ~Polygon();
+	class Polygon {
+	public:
+		Polygon(int vertexes);
+		void setVertex(Coord::Coordinates *coord, int index);
+		Coord::Coordinates *getVertexes(int index);
+		Coord::Coordinates *getVertexes();
+		void drawPolygon();
+		virtual ~Polygon();
 
-private:
-	int nVertexes;
-	Coordinates *vertexes;
-};
+	private:
+		int nVertexes;
+		Coord::Coordinates *vertexes;
+	};
+
+}
 
 #endif

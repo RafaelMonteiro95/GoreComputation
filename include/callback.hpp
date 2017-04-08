@@ -9,6 +9,8 @@
 #ifndef _CALLBACK_HPP_
 #define _CALLBACK_HPP_
 
+#include "polygon.hpp"
+
 typedef char int8;
 typedef short int16;
 typedef int int32;
@@ -19,6 +21,7 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long uint64;
 
+void setPolygonsStupiFunacoq(Polygons::Polygon, int);
 void Draw();
 void KeyboardHandle(unsigned char, int, int );
 void MouseHandle(int, int, int, int);

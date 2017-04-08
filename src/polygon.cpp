@@ -9,31 +9,34 @@
 #include <GL/glut.h>
 #include "polygon.hpp"
 
+using namespace Polygons;
+
 Polygon::Polygon(int vertexes) {
-	this->nVertexes = vertexes;
-	this->vertexes = new Coordinates[nVertexes];
+	this->nVertexes = vertexes; 
+	this->vertexes = new Coord::Coordinates[nVertexes];
 }
 
-void Polygon::setVertex(Coordinates coord, int index) {
+void Polygon::setVertex(Coord::Coordinates *coord, int index) {
 
-	this->vertexes[index] = coord;
+	this->vertexes[index].x = coord->x;
+	this->vertexes[index].y = coord->y;
 }
 
-Coordinates *Polygon::getVertexes(int index) {
+Coord::Coordinates *Polygon::getVertexes(int index) {
 	return &(this->vertexes[index]);
 }
 
-Coordinates *Polygon::getVertexes() {
+Coord::Coordinates *Polygon::getVertexes() {
 	return this->vertexes;
 }
 
-void Polygon::drawPolygon(Coordinates coord[], int nVertexes) {
+void Polygon::drawPolygon() {
 	
 	glBegin(GL_POLYGON);	// Star OpenGL routine
 	
 	// Set polygon vertexes
-	for(int i = 0; i < nVertexes; i++)
-    	glVertex2f(coord[i].x, coord[i].y);
+	for(int i = 0; i < this->nVertexes; i++)
+    	glVertex2f(this->vertexes[i].x, this->vertexes[i].y);
 
   	glEnd();	// End OpenGL routine
   	glFlush();	// Draw
