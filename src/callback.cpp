@@ -137,8 +137,8 @@ void IdleHandle(){
 	//checking if the polygons are out of the screen
 	for(int i = 0; i < 3; i++){
 		if(objx[i] > 100 || objx[i] < 0 || objy[i] > 100 || objy[i] < 0){
-			stepx[i] = 0.0f;
-			stepy[i] = 0.0f;
+			// stepx[i] = 0.0f;
+			// stepy[i] = 0.0f;
 			objx[i] = (25.0f)*(i+1);
 			objy[i] = 50.0f;
 		}
