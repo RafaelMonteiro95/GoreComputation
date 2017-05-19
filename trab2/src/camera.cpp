@@ -193,25 +193,25 @@ void drawSnowMan() {
 
 	// Draw Head
 	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.25f,20,20);
+	glutSolidSphere(0.4f,20,20);
 
 	// Draw Eyes
 	glPushMatrix();
 	glColor3f(0.0f,0.0f,0.0f);
-	glTranslatef(0.05f, 0.10f, 0.18f);
-	glutSolidSphere(0.05f,10,10);
+	glTranslatef(0.05f, 0.10f, 0.36f);
+	glutSolidSphere(0.1f,20,20);
 	glTranslatef(-0.1f, 0.0f, 0.0f);
-	glutSolidSphere(0.05f,10,10);
+	glutSolidSphere(0.1f,20,20);
 	glPopMatrix();
 
 	// Draw Nose
 	glColor3f(1.0f, 0.5f , 0.5f);
-	glutSolidCone(0.08f,0.5f,10,2);
+	glutSolidCone(0.08f,0.8f,10,2);
 
 	// Draw shit
 	glTranslatef(0.0f ,1.0f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-	glutSolidCone(0.8, -1, 10, 5);
+	glutSolidCone(0.6, -1, 10, 5);
 	
 }
 
@@ -219,7 +219,7 @@ void drawPotatoIceCream() {
 
 	// Draw Icecream Cone
 	glColor3f(0.3f + randRange(0.1), 0.2f + randRange(0.2) , 0.3f + randRange(0.2));
-	glTranslatef(0.0f, 2.00f, 0.0f);
+	glTranslatef(0.0f, 5.00f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.8, -5, 20, 5);
 
