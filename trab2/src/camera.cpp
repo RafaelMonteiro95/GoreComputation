@@ -85,20 +85,20 @@ class Camera {
 		}
 
 		void yawLeft(){
-		    // rot[Y] -= 1;
+		    rot[Y] -= 1;
 		}
 
 		void yawRight(){
-		    // rot[Y] += 1;
+		    rot[Y] += 1;
 		}
 
 		void pitchUp(){
-		    // rot[X] -= 1;
+		    rot[X] -= 1;
 		    // checkPitch();
 		}
 
 		void pitchDown(){
-		    // rot[X] += 1;
+		    rot[X] += 1;
 		    // checkPitch();
 		}
 
