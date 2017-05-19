@@ -92,6 +92,13 @@ void processKeys() {
 
 	// Movement
 	if(keys['w']){
+
+			// float rotxrad, rotyrad;
+			// rotyrad = (cam.rot[Y] / 180 * 3.141592654f);
+			// rotxrad = (cam.rot[X] / 180 * 3.141592654f); 
+			// cam.pos[X] += float(sin(rotyrad)) * 0.2;
+			// cam.pos[Z] -= float(cos(rotyrad)) * 0.2;
+			// cam.pos[Y] -= float(sin(rotxrad)) * 0.2;
 		cam.zoomIn();
 	}
 	

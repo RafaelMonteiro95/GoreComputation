@@ -23,17 +23,16 @@
 #define Z 2
 
 class Camera {
-
-	float speed;
-	float pos[];
-	float rot[];
-
-	void checkPitch(){
-		if(rot[X] > 90) rot[X] = 90;
-		if(rot[X] < -90) rot[X] = 90;
-	}
-
 	public:
+
+		float speed;
+		float pos[3];
+		float rot[3];
+
+		void checkPitch(){
+			if(rot[X] > 90) rot[X] = 90;
+			if(rot[X] < -90) rot[X] = 90;
+		}
 
 		Camera(){
 			speed = 0.3f;
@@ -48,7 +47,7 @@ class Camera {
 		void update() {
 		    glRotatef(rot[X],1.0,0.0,0.0);  //rotate our camera on teh  x-axis (left and right)
 		    glRotatef(rot[Y],0.0,1.0,0.0);  //rotate our camera on the  y-axis (up and down)
-		    // glRotatef(rot[Z],0.0,0.0,1.0);  //rotate our camera on the  z-axis (dunno)
+		    glRotatef(rot[Z],0.0,0.0,1.0);  //rotate our camera on the  z-axis (dunno)
 		    glTranslated(-pos[X],-pos[Y],-pos[Z]); //translate the screen to the position of our camera
 		}
 
@@ -94,12 +93,10 @@ class Camera {
 
 		void pitchUp(){
 		    rot[X] -= 1;
-		    // checkPitch();
 		}
 
 		void pitchDown(){
 		    rot[X] += 1;
-		    // checkPitch();
 		}
 
 };
