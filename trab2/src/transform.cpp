@@ -8,6 +8,12 @@
 
 #include "transform.hpp"
 
+Transform::Transform() {
+	this->position = new Vector3(0.0f, 0.0f, 0.0f);
+	this->rotation = new Vector3(0.0f, 0.0f, 0.0f);
+	this->scale = new Vector3(0.0f, 0.0f, 0.0f);
+}
+
 Transform::Transform(Vector3& position, Vector3& rotation, Vector3& scale){
 
 	this->position = new Vector3(position);

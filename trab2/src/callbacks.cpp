@@ -60,9 +60,9 @@ int g_WindowHandle; // Real declaration of global window handler
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
-Transform snowMen[36];
-Transform batata[36];
-Transform PotatoIceCream[36];
+Transform *snowMen;
+Transform *batata;
+Transform *PotatoIceCream;
 
 const GLfloat cyan[] = {0.0f, 0.8f, 0.8f, 1.0f};
 const GLfloat red[] = {0.9f, 0.1f, 0.2f, 1.0f};
@@ -75,10 +75,16 @@ GLfloat color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 void myInit(){
 	cam = new Camera();
+	snowMen = new Transform[36];
+	batata = new Transform[36];
+	PotatoIceCream = new Transform[36];
 }
 
 void myCleanup(){
 	delete cam;
+	delete[] snowMen;
+	delete[] batata;
+	delete[] PotatoIceCream;
 }
 
 void processSpecialKeys() {

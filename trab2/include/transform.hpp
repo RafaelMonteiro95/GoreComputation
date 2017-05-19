@@ -19,6 +19,7 @@ public:
 	Vector3 *rotation;
 	Vector3 *scale;
 
+	Transform();
 	Transform(Vector3& position, Vector3& rotation, Vector3& scale);
 	Transform(Vector3 *position, Vector3 *rotation, Vector3 *scale);
 	Transform(float px, float py, float pz, 
