@@ -6,12 +6,7 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <math.h>
-
 #include <GL/glut.h>
 
 #include "camera2.hpp"
@@ -115,11 +110,19 @@ void processKeys() {
 		cam->strafeRight();
 	}
 
-	if(keys[' ']) cam->transform->position->y += cam->speed;
-	else cam->transform->position->y -= cam->gravity;
+	if(keys['+']) {
+		cam->speed += 0.05f;
+		if(cam->speed > 2.0f)
+			cam->speed = 2.0f;
+	}
+	if(keys['-']) {
+		cam->speed -= 0.05f;
+		if(cam->speed < 0.01f)
+			cam->speed = 0.01f;
+	}
 
 	// Cleanup glut before exiting
-	if(keys[27]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
+	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
 void drawBatata() {
@@ -179,8 +182,6 @@ void Update(void){
 }
 
 void renderScene(void) {
-
-	srand(time(NULL));
 
 	// Clear Color and Depth Buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

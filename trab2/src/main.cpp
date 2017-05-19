@@ -6,11 +6,10 @@
 
 */
 
-#include "callbacks.hpp"
-#include <GL/glut.h>
-#include <GL/glu.h>
-#include <GL/gl.h>
 #include <math.h>
+#include <GL/glut.h>
+
+#include "callbacks.hpp"
 
 int main(int argc, char *argv[]) {
 

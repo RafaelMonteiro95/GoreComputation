@@ -6,12 +6,7 @@
 
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include <math.h>
-
 #include <GL/glut.h>
 
 #include "camera2.hpp"
@@ -32,64 +27,61 @@ Camera::~Camera(){
 
 void Camera::update() {
 	
-	if(transform->position->y < GROUND_LEVEL)
-		transform->position->y = GROUND_LEVEL;
-
     glRotatef(transform->rotation->x, 1.0f, 0.0f, 0.0);  //rotate our camera on the  x-axis (left and right)
     glRotatef(transform->rotation->y, 0.0f, 1.0f, 0.0);  //rotate our camera on the  y-axis (up and down)
     glRotatef(transform->rotation->z, 0.0f, 0.0f, 1.0);  //rotate our camera on the  z-axis (dunno)
-    glTranslated(-transform->rotation->x,
-				 -transform->rotation->y,
-				 -transform->rotation->z); //translate the screen to the position of our camera
+    glTranslated(-transform->position->x,
+				 -transform->position->y,
+				 -transform->position->z); //translate the screen to the position of our camera
     
 }
 
 void Camera::zoomIn(){
 	float rotxrad, rotyrad;
-	rotyrad = (transform->rotation->y / 180 * 3.141592654f);
-	rotxrad = (transform->rotation->x / 180 * 3.141592654f); 
-	transform->position->x += float(sin(rotyrad)) * 0.2;
-	transform->position->z -= float(cos(rotyrad)) * 0.2;
-	transform->position->y -= float(sin(rotxrad)) * 0.2;
+	rotyrad = (transform->rotation->y / 180.0f * M_PI);
+	rotxrad = (transform->rotation->x / 180.0f * M_PI); 
+	transform->position->x += float(sin(rotyrad)) * speed;
+	transform->position->z -= float(cos(rotyrad)) * speed;
+	transform->position->y -= float(sin(rotxrad)) * speed;
 }
 
 void Camera::zoomOut(){
 	float rotxrad, rotyrad;
-	rotyrad = (transform->rotation->y / 180 * 3.141592654f);
-	rotxrad = (transform->rotation->x / 180 * 3.141592654f); 
-	transform->position->x -= float(sin(rotyrad))* 0.2;
-	transform->position->z += float(cos(rotyrad))* 0.2;
-	transform->position->y += float(sin(rotxrad))* 0.2;
+	rotyrad = (transform->rotation->y / 180.0f * M_PI);
+	rotxrad = (transform->rotation->x / 180.0f * M_PI); 
+	transform->position->x -= float(sin(rotyrad))* speed;
+	transform->position->z += float(cos(rotyrad))* speed;
+	transform->position->y += float(sin(rotxrad))* speed;
 }
 
 void Camera::strafeRight(){
 	float rotyrad;
-	rotyrad = (transform->rotation->y / 180 * 3.141592654f);
-	transform->position->x += float(cos(rotyrad)) * 0.2;
-	transform->position->z += float(sin(rotyrad)) * 0.2;
+	rotyrad = (transform->rotation->y / 180.0f * M_PI);
+	transform->position->x += float(cos(rotyrad)) * speed;
+	transform->position->z += float(sin(rotyrad)) * speed;
 }
 
 void Camera::strafeLeft(){
 	float rotyrad;
-	rotyrad = (transform->rotation->y / 180 * 3.141592654f);
-	transform->position->x -= float(cos(rotyrad)) * 0.2;
-	transform->position->z -= float(sin(rotyrad)) * 0.2;
+	rotyrad = (transform->rotation->y / 180.0f * M_PI);
+	transform->position->x -= float(cos(rotyrad)) * speed;
+	transform->position->z -= float(sin(rotyrad)) * speed;
 }
 
 void Camera::yawLeft(){
-    transform->rotation->y -= 1;
+    transform->rotation->y -= 1.0f;
 }
 
 void Camera::yawRight(){
-    transform->rotation->y += 1;
+    transform->rotation->y += 1.0f;
 }
 
 void Camera::pitchUp(){
-    transform->rotation->x -= 1;
+    transform->rotation->x -= 1.0f;
 }
 
 void Camera::pitchDown(){
-    transform->rotation->x += 1;
+    transform->rotation->x += 1.0f;
 }
 
 void Camera::checkPitch(){
