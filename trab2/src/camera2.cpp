@@ -21,13 +21,9 @@ Camera::Camera(){
 	speed = 0.3f;
 	gravity = 0.098f;
 
-	pos[X] = 0.0f;
-	pos[Y] = GROUND_LEVEL;
-	pos[Z] = -15.0f;
-
-	rot[X] = 0.0f;
-	rot[Y] = 0.0f;
-	rot[Z] = 0.0f;
+	trasform = new Transform(new Vector3(0.0f, GROUND_LEVEL, -15.0f),
+							new Vector3(0.0f, 0.0f, 0.0f),
+							new Vector3(1.0f, 1.0f, 1.0f),);
 }
 
 Camera::~Camera(){}
