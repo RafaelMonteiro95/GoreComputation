@@ -119,8 +119,8 @@ void processKeys() {
 	}
 	
 	if(keys['a']){
-		g_camx -= g_directionx*g_speed;
-		g_camz += g_directionz*g_speed;
+		g_camx += g_directionz*g_speed;
+		g_camz += g_directionx*g_speed;
 
 		// g_angle -= 0.05f;
 		// g_directionx = sin(g_angle);
@@ -133,8 +133,8 @@ void processKeys() {
 	}
 	
 	if(keys['d']){
-		g_camx += g_directionx*g_speed;
-		g_camz -= g_directionz*g_speed;
+		g_camx -= g_directionz*g_speed;
+		g_camz -= g_directionx*g_speed;
 
 		// g_angle += 0.05f;
 		// g_directionx = sin(g_angle);
