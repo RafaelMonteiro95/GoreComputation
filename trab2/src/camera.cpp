@@ -79,6 +79,15 @@ float g_directionx = 0.0f, g_directiony = 0.0f, g_directionz = -1.0f;
 // Angle of rotation for the camera direction
 float g_angle = 0.0;
 
+const GLfloat cyan[] = {0.0f, 0.8f, 0.8f, 1.0f};
+const GLfloat red[] = {0.9f, 0.1f, 0.2f, 1.0f};
+const GLfloat green[] = {0.0f, 0.1f, 0.0f, 1.0f};
+const GLfloat blue[] = {0.0f, 0.0f, 1.0f, 1.0f};
+const GLfloat black[] = {0.0f, 0.0f, 0.0f, 1.0f};
+const GLfloat white[] = {1.0f, 1.0f, 1.0f, 1.0f};
+
+GLfloat color[] = {0.0f, 0.0f, 0.0f, 1.0f};
+
 bool setSpeed(float speed){
 	if(speed < 0) return false;
 	g_speed = speed;
@@ -119,12 +128,9 @@ void processKeys() {
 	}
 	
 	if(keys['a']){
-		g_camx += g_directionz*g_speed;
-		g_camz += g_directionx*g_speed;
-
-		// g_angle -= 0.05f;
-		// g_directionx = sin(g_angle);
-		// g_directionz = -cos(g_angle);
+		g_angle -= 0.05f;
+		g_directionx = sin(g_angle);
+		g_directionz = -cos(g_angle);
 	}
 	
 	if(keys['s']){
@@ -133,12 +139,9 @@ void processKeys() {
 	}
 	
 	if(keys['d']){
-		g_camx -= g_directionz*g_speed;
-		g_camz -= g_directionx*g_speed;
-
-		// g_angle += 0.05f;
-		// g_directionx = sin(g_angle);
-		// g_directionz = -cos(g_angle);
+		g_angle += 0.05f;
+		g_directionx = sin(g_angle);
+		g_directionz = -cos(g_angle);
 	}
 	
 	if(keys[' ']){
@@ -177,15 +180,24 @@ void processKeys() {
 void drawBatata() {
 
 	// Draw Body
-	glColor3f(0.8f+randRange(0.2f), 0.2f+randRange(0.1f), 0.5f+randRange(0.3f));
-	glTranslatef(0.0f ,0.75f, 0.0f);
-	// glutSolidSphere(0.75f,20,20);
+	glColor3f(0.7f, 0.2f, 0.5f);
+	glNormal3d(0, 1, 0);
+	color[0] = 0.5f;
+	color[1] = 0.2f;
+	color[2] = 0.7f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+	glTranslatef(0.0f, 0.75f, 0.0f);
 	glutSolidTeapot(0.7f);
 }
 
 void drawSnowMan() {
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.5f, 0.5f, 0.5f);
+	glNormal3d(0, 1, 0);
+	color[0] = 0.3f;
+	color[1] = 0.3f;
+	color[2] = 0.3f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
 	// Draw Body
 	glTranslatef(0.0f ,0.75f, 0.0f);
@@ -197,7 +209,14 @@ void drawSnowMan() {
 
 	// Draw Eyes
 	glPushMatrix();
-	glColor3f(0.0f,0.0f,0.0f);
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glNormal3d(0, 1, 0);
+	color[0] = 0.0f;
+	color[1] = 0.0f;
+	color[2] = 0.0f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+
 	glTranslatef(0.05f, 0.10f, 0.36f);
 	glutSolidSphere(0.1f,20,20);
 	glTranslatef(-0.1f, 0.0f, 0.0f);
@@ -206,25 +225,42 @@ void drawSnowMan() {
 
 	// Draw Nose
 	glColor3f(1.0f, 0.5f , 0.5f);
+	glNormal3d(0, 1, 0);
+	color[0] = 1.0f;
+	color[1] = 0.5f;
+	color[2] = 0.5f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glutSolidCone(0.08f,0.8f,10,2);
 
 	// Draw shit
 	glTranslatef(0.0f ,1.0f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.6, -1, 10, 5);
-	
 }
 
 void drawPotatoIceCream() {
 
-	// Draw Icecream Cone
-	glColor3f(0.3f + randRange(0.1), 0.2f + randRange(0.2) , 0.3f + randRange(0.2));
+	// Draw Icecream Cone	
+	glColor3f(0.3f, 0.2f, 0.3f);
+	glNormal3d(0, 1, 0);
+	color[0] = 1.0f;
+	color[1] = 0.0f;
+	color[2] = 0.0f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+
 	glTranslatef(0.0f, 5.00f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.8, -5, 20, 5);
 
 	// Draw pOTATO
-	glColor3f(1.0f, 0.6f, 1.0f);
+	// glColor3f(1.0f, 0.6f, 1.0f);
+	glNormal3d(0, 1, 0);
+	
+	color[0] = 1.0f;
+	color[1] = 0.0f;
+	color[2] = 1.0f;
+
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glutSolidSphere(0.75f, 20, 20);
 }
 
@@ -234,11 +270,9 @@ void Update(void){
 	processSpecialKeys();
 	renderScene();
 
-
 	if(g_camy < GROUND_LEVEL){
 		g_camy = GROUND_LEVEL;
 	}
-
 }
 
 void renderScene(void) {
@@ -257,8 +291,8 @@ void renderScene(void) {
 			0.0f, 1.0f, 0.0f);
 
     // Draw ground
-	glColor3f(0.9f, 0.9f, 0.9f);
 	glBegin(GL_QUADS);
+		glColor3f(255.0f, 255.0f, 255.0f);
 		glVertex3f(-100.0f, 0.0f, -100.0f);
 		glVertex3f(-100.0f, 0.0f,  100.0f);
 		glVertex3f( 100.0f, 0.0f,  100.0f);
@@ -269,7 +303,7 @@ void renderScene(void) {
 	for(int i = -3; i < 3; i++){
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i*(7.0 + randRange(3.0)), 0, j*(7.0 + randRange(5.0)));
+			glTranslatef(i*7.0, 0, j*7.0);
 			drawSnowMan();
 			glPopMatrix();
 		}
@@ -279,7 +313,7 @@ void renderScene(void) {
 	for(int i = -3; i < 3; i++){
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i*(3.0 + randRange(31.0)), 0, j*(3.0 + randRange(51.0)));
+			glTranslatef(i*3.0, 0, j*3.0);
 			drawBatata();
 			glPopMatrix();
 		}
@@ -289,7 +323,7 @@ void renderScene(void) {
 	for(int i = -3; i < 3; i++){
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i*(13.0 + randRange(3.0)), 0, j*(13.0 + randRange(5.0)));
+			glTranslatef(i*22.0, 0, j*22.0);
 			drawPotatoIceCream();
 			glPopMatrix();
 		}
