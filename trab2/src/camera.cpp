@@ -22,7 +22,7 @@
 typedef struct { float x; float y; float z; } PointNoVertice;
 
 enum ascii_codes {
-
+	
 	ASCII_NUL,
 	ASCII_SOH,
 	ASCII_STX,
@@ -207,6 +207,12 @@ void drawSnowMan() {
 	// Draw Nose
 	glColor3f(1.0f, 0.5f , 0.5f);
 	glutSolidCone(0.08f,0.5f,10,2);
+
+	// Draw shit
+	glTranslatef(0.0f ,1.0f, 0.0f);
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+	glutSolidCone(0.8, -1, 10, 5);
+	
 }
 
 void drawPotatoIceCream() {
