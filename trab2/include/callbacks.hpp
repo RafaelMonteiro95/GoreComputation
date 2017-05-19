@@ -17,7 +17,7 @@ bool setSpeed(float speed);
 void drawBatata();
 void drawSnowMan();
 void drawPotatoIceCream();
-void Update(void);
+void update(void);
 void renderScene(void);
 void changeSize(int w, int h);
 void keyboardUp(unsigned char key, int x, int y);

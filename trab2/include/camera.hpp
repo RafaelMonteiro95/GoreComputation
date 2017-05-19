@@ -29,6 +29,7 @@ public:
 	Camera();
 	virtual ~Camera();
 
+	void checkHeight();
 	void checkPitch();
 	void update();
 	void zoomIn();

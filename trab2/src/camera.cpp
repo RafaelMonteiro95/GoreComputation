@@ -16,13 +16,19 @@ Camera::Camera(){
 	speed = 0.3f;
 	gravity = 0.098f;
 
-	transform = new Transform(new Vector3(0.0f, GROUND_LEVEL, -15.0f),
+	transform = new Transform(new Vector3(0.0f, GROUND_LEVEL, 15.0f),
 							new Vector3(0.0f, 0.0f, 0.0f),
 							new Vector3(1.0f, 1.0f, 1.0f));
 }
 
 Camera::~Camera(){
 	delete transform;
+}
+
+void Camera::checkHeight(){
+	if(transform->position->y < GROUND_LEVEL){
+		transform->position->y = GROUND_LEVEL;
+	}
 }
 
 void Camera::update() {
@@ -43,6 +49,7 @@ void Camera::zoomIn(){
 	transform->position->x += float(sin(rotyrad)) * speed;
 	transform->position->z -= float(cos(rotyrad)) * speed;
 	transform->position->y -= float(sin(rotxrad)) * speed;
+	checkHeight();
 }
 
 void Camera::zoomOut(){
@@ -52,6 +59,7 @@ void Camera::zoomOut(){
 	transform->position->x -= float(sin(rotyrad))* speed;
 	transform->position->z += float(cos(rotyrad))* speed;
 	transform->position->y += float(sin(rotxrad))* speed;
+	checkHeight();
 }
 
 void Camera::strafeRight(){
@@ -59,6 +67,7 @@ void Camera::strafeRight(){
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
 	transform->position->x += float(cos(rotyrad)) * speed;
 	transform->position->z += float(sin(rotyrad)) * speed;
+	checkHeight();
 }
 
 void Camera::strafeLeft(){
@@ -66,6 +75,7 @@ void Camera::strafeLeft(){
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
 	transform->position->x -= float(cos(rotyrad)) * speed;
 	transform->position->z -= float(sin(rotyrad)) * speed;
+	checkHeight();
 }
 
 void Camera::yawLeft(){
@@ -78,10 +88,12 @@ void Camera::yawRight(){
 
 void Camera::pitchUp(){
     transform->rotation->x -= 1.0f;
+    checkPitch();
 }
 
 void Camera::pitchDown(){
     transform->rotation->x += 1.0f;
+    checkPitch();
 }
 
 void Camera::checkPitch(){

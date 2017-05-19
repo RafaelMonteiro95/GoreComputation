@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	// register callbacks
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
-	glutIdleFunc(Update);
+	glutIdleFunc(update);
 	glutKeyboardFunc(keyboardDown);
 	glutKeyboardUpFunc(keyboardUp);
 	glutSpecialFunc(specialDown);

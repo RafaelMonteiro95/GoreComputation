@@ -60,9 +60,9 @@ int g_WindowHandle; // Real declaration of global window handler
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
-Transform *snowMen;
-Transform *batata;
-Transform *PotatoIceCream;
+Transform *snowman;
+Transform *teapot;
+Transform *icecream;
 
 const GLfloat cyan[] = {0.0f, 0.8f, 0.8f, 1.0f};
 const GLfloat red[] = {0.9f, 0.1f, 0.2f, 1.0f};
@@ -77,120 +77,33 @@ void myInit(){
 
 	cam = new Camera();
 
-	snowMen = new Transform[36];
-	batata = new Transform[36];
-	PotatoIceCream = new Transform[36];
+	snowman = new Transform(5.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f);
+	teapot = new Transform(0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f);
+	icecream = new Transform(-5.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f,
+							0.0f, 0.0f, 0.0f);
 
-	// // Draw 36 SnowMen
-	// for(int i = -3; i < 3; i++){
-	// 	for(int j = -3; j < 3; j++) {
-			
-	// 		glPushMatrix();
-	// 		glTranslatef(i*7.0, 0, j*7.0);
-			
-	// 		int index = (j+3) + (i+3)*6;
-			
-	// 		/* This is the object's pivot point */
-	// 		/* Set object position */
-	// 		snowMen[index].position.x = i*7.0;
-	// 		snowMen[index].position.y = 0.0;
-	// 		snowMen[index].position.z = j*7.0;
-			
-	// 		/* Set object rotation */
-	// 		snowMen[index].rotation.x = 0.0f;
-	// 		snowMen[index].rotation.y = 0.0f;
-	// 		snowMen[index].rotation.z = 0.0f;
-			
-	// 		/* Set object scale */
-	// 		snowMen[index].scale.x = 1.0f;
-	// 		snowMen[index].scale.y = 1.0f;
-	// 		snowMen[index].scale.z = 1.0f;
+	// drawSnowman();
 
-	// 		/* Move object to starting position */
-	// 		glTranslatef(snowMen[index].position.x,
-	// 					snowMen[index].position.y,
-	// 					snowMen[index].position.z);
-			
-	// 		glPopMatrix();
-	// 	}
-	// }
+	// glPushMatrix();
+	// drawTeapot();
+	// glPopMatrix();
 
-	// // Draw 36 PotatoIceCream
-	// for(int i = -3; i < 3; i++){
-	// 	for(int j = -3; j < 3; j++) {
-			
-	// 		glPushMatrix();
-	// 		glTranslatef(i*3.0, 0, j*3.0);
-			
-	// 		int index = (j+3) + (i+3)*6;
-			
-	// 		/* This is the object's pivot point */
-	// 		/* Set object position */
-	// 		PotatoIceCream[index].position.x = i*3.0;
-	// 		PotatoIceCream[index].position.y = 0.0;
-	// 		PotatoIceCream[index].position.z = j*3.0;
-			
-	// 		/* Set object rotation */
-	// 		PotatoIceCream[index].rotation.x = 0.0f;
-	// 		PotatoIceCream[index].rotation.y = 0.0f;
-	// 		PotatoIceCream[index].rotation.z = 0.0f;
-			
-	// 		/* Set object scale */
-	// 		PotatoIceCream[index].scale.x = 1.0f;
-	// 		PotatoIceCream[index].scale.y = 1.0f;
-	// 		PotatoIceCream[index].scale.z = 1.0f;
+	// glPushMatrix();
+	// drawTeapot();
+	// glPopMatrix();
 
-	// 		/* Move object to starting position */
-	// 		glTranslatef(PotatoIceCream[index].position.x,
-	// 					PotatoIceCream[index].position.y,
-	// 					PotatoIceCream[index].position.z);
-			
-	// 		drawSnowMan();
-	// 		glPopMatrix();
-	// 	}
-	// }
-
-	// // Draw 36 batata
-	// for(int i = -3; i < 3; i++){
-	// 	for(int j = -3; j < 3; j++) {
-			
-	// 		glPushMatrix();
-	// 		glTranslatef(i*17.0, 0, j*17.0);
-			
-	// 		int index = (j+3) + (i+3)*6;
-			
-	// 		/* This is the object's pivot point */
-	// 		/* Set object position */
-	// 		batata[index].position.x = i*17.0;
-	// 		batata[index].position.y = 0.0;
-	// 		batata[index].position.z = j*17.0;
-			
-	// 		/* Set object rotation */
-	// 		batata[index].rotation.x = 0.0f;
-	// 		batata[index].rotation.y = 0.0f;
-	// 		batata[index].rotation.z = 0.0f;
-			
-	// 		/* Set object scale */
-	// 		batata[index].scale.x = 1.0f;
-	// 		batata[index].scale.y = 1.0f;
-	// 		batata[index].scale.z = 1.0f;
-
-	// 		/* Move object to starting position */
-	// 		glTranslatef(batata[index].position.x,
-	// 					batata[index].position.y,
-	// 					batata[index].position.z);
-			
-	// 		drawSnowMan();
-	// 		glPopMatrix();
-	// 	}
-	// }
 }
 
 void myCleanup(){
 	delete cam;
-	delete[] snowMen;
-	delete[] batata;
-	delete[] PotatoIceCream;
+	delete snowman;
+	delete teapot;
+	delete icecream;
 }
 
 void processSpecialKeys() {
@@ -231,13 +144,13 @@ void processKeys() {
 		cam->strafeRight();
 	}
 
-	if(keys['+']) {
-		cam->speed += 0.05f;
+	if(keys['=']) {
+		cam->speed += 0.02f;
 		if(cam->speed > 2.0f)
 			cam->speed = 2.0f;
 	}
 	if(keys['-']) {
-		cam->speed -= 0.05f;
+		cam->speed -= 0.02f;
 		if(cam->speed < 0.01f)
 			cam->speed = 0.01f;
 	}
@@ -246,16 +159,35 @@ void processKeys() {
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
-void drawBatata() {
+void applyTransform(Transform* obj){
+	glTranslatef(obj->position->x, obj->position->y + 0.7, obj->position->z);
+	glScalef(obj->scale->x + 1, obj->scale->y + 1, obj->scale->z + 1);
 
-	// Draw Body
-	glColor3f(0.8f, 0.2f, 0.5f);
-	glTranslatef(0.0f ,0.75f, 0.0f);
-	// glutSolidSphere(0.75f,20,20);
-	glutSolidTeapot(0.7f);
+	glRotatef(obj->rotation->x, 1.0f, 0.0f, 0.0f);
+	glRotatef(obj->rotation->x, 0.0f, 1.0f, 0.0f);
+	glRotatef(obj->rotation->x, 0.0f, 0.0f, 1.0f);
 }
 
-void drawSnowMan() {
+void drawTeapot(Transform* teapot) {
+
+	glPushMatrix();
+
+	// Apllies transformations
+	applyTransform(teapot);
+
+	// Draws obj
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glutSolidTeapot(0.7f);
+
+	glPopMatrix();
+
+}
+
+void drawSnowman(Transform* snowman) {
+
+	glPushMatrix();
+
+	applyTransform(snowman);
 
 	glColor3f(0.2f, 0.3f, 0.9f);
 	glNormal3d(0, 1, 0);
@@ -274,14 +206,7 @@ void drawSnowMan() {
 
 	// Draw Eyes
 	glPushMatrix();
-
 	glColor3f(0.0f, 0.0f, 0.0f);
-	glNormal3d(0, 1, 0);
-	color[0] = 0.0f;
-	color[1] = 0.0f;
-	color[2] = 0.0f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-
 	glTranslatef(0.05f, 0.10f, 0.36f);
 	glutSolidSphere(0.1f,20,20);
 	glTranslatef(-0.1f, 0.0f, 0.0f);
@@ -297,43 +222,85 @@ void drawSnowMan() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glutSolidCone(0.08f,0.8f,10,2);
 
-	// Draw shit
-	glColor3f(0.9f, 0.3f , 0.33f);
-	glNormal3d(0.2f, 0.3f, 0.6f);
-	color[0] = 1.0f;
-	color[1] = 0.5f;
-	color[2] = 0.5f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-	glTranslatef(0.0f ,1.0f, 0.0f);
-	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-	glutSolidCone(0.6, -1, 10, 5);
 }
 
-void drawPotatoIceCream() {
+void drawIcecream(Transform* icecream) {
 
-	// Draw Icecream Cone	
-	glColor3f(0.3f, 0.2f, 0.3f);
+	applyTransform(icecream);
+
+	// Draw icecream Cone	
+	glColor3f(0.6f, 0.2f, 0.3f);
 	glNormal3d(0, 1, 0);
 	color[0] = 1.0f;
-	color[1] = 0.0f;
-	color[2] = 0.0f;
+	color[1] = 1.2f;
+	color[2] = 1.3f;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
-	glTranslatef(0.0f, 5.00f, 0.0f);
+	// glTranslatef(0.0f, 2.5f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-	glutSolidCone(0.8, -5, 20, 5);
+	glutSolidCone(0.8, -2.5, 20, 5);
 
-	// Draw pOTATO
+	// Draw icecream
 	glColor3f(1.0f, 0.6f, 1.0f);
 	glutSolidSphere(0.75f, 20, 20);
 }
 
-void Update(void){
+void drawTorus(Transform* torus){
+
+	applyTransform(torus);
+
+	glNormal3d(0, 1, 0);
+	color[0] = 1.0f;
+	color[1] = 1.2f;
+	color[2] = 1.3f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+
+	glRotatef(90,1,0,0);
+
+	glColor3f(0.0f, .5f, 0.5f);
+	glutSolidTorus(0.4f, 0.7f, 20, 20);
+}
+
+void drawCube(Transform* cube){
+
+	applyTransform(cube);
+
+	glNormal3d(0, 1, 0);
+	color[0] = 1.0f;
+	color[1] = 1.2f;
+	color[2] = 1.3f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+
+
+	glColor3f(0.3f, 0.5f, 0.0f);
+	glutSolidCube(1.5f);
+
+}
+
+void drawGround(){
+	glBegin(GL_QUADS);
+
+	glColor3f(255.0f, 255.0f, 255.0f);
+	glVertex3f(-100.0f, 0.0f, -100.0f);
+
+	glColor3f(255.0f, 0.0f, 255.0f);
+	glVertex3f(-100.0f, 0.0f,  100.0f);
+
+	glColor3f(255.0f, 255.0f, 0.0f);
+	glVertex3f( 100.0f, 0.0f,  100.0f);
+
+	glColor3f(0.0f, 255.0f, 255.0f);
+	glVertex3f( 100.0f, 0.0f, -100.0f);
+
+	glEnd();
+}
+
+void update(void){
 
 	processKeys();
 	processSpecialKeys();
-	renderScene();
 
+	glutPostRedisplay();
 }
 
 void renderScene(void) {
@@ -341,82 +308,27 @@ void renderScene(void) {
 	// Clear Color and Depth Buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-// void initObject(){
-
 	// Reset transformations
 	glLoadIdentity();
 
 	// Set the camera
 	cam->update();
-	// gluLookAt( g_camx, g_camy,  g_camz,
-			// g_camx + g_directionx, g_camy + g_directiony, g_camz + g_directionz,
-			// 0.0f, 1.0f, 0.0f);
 
     // Draw ground
-	glBegin(GL_QUADS);
-		glColor3f(20.0f, 20.0f, 20.0f);
-		glVertex3f(-100.0f, 0.0f, -100.0f);
-		glVertex3f(-100.0f, 0.0f,  100.0f);
-		glVertex3f( 100.0f, 0.0f,  100.0f);
-		glVertex3f( 100.0f, 0.0f, -100.0f);
-	glEnd();
+    drawGround();
 
-    // Draw 36 SnowMen
-	for(int i = -3; i < 3; i++){
-		for(int j = -3; j < 3; j++) {
-			
-			glPushMatrix();
-			glTranslatef(i*(7.0 + randRange(3.0)), 0, j*(7.0 + randRange(5.0)));
-			
-			// int index = (j+3) + (i+3)*6;
-			
-			// /* This is the object's pivot point */
-			// /* Set object position */
-			// snowMen[index].position.x = i*7.0;
-			// snowMen[index].position.y = 0.0;
-			// snowMen[index].position.z = j*7.0;
-			
-			// /* Set object rotation */
-			// snowMen[index].rotation.x = 0.0f;
-			// snowMen[index].rotation.y = 0.0f;
-			// snowMen[index].rotation.z = 0.0f;
-			
-			// /* Set object scale */
-			// snowMen[index].scale.x = 1.0f;
-			// snowMen[index].scale.y = 1.0f;
-			// snowMen[index].scale.z = 1.0f;
+    // Draw a Snowman
+	// drawSnowman();
+	drawTeapot(teapot);
+	drawTorus(icecream);
+	drawCube(icecream);
+	// glPopMatrix();
 
-			// /* Move object to starting position */
-			// glTranslatef(snowMen[index].position.x,
-			// 			snowMen[index].position.y,
-			// 			snowMen[index].position.z);
-			
-			drawSnowMan();
-			glPopMatrix();
-		}
-	}
-
-	// Draw 36 object Batata
-	for(int i = -3; i < 3; i++){
-		for(int j=-3; j < 3; j++) {
-			
-			glPushMatrix();
-			glTranslatef(i*(3.0 + randRange(31.0)), 0, j*(3.0 + randRange(51.0)));
-			drawBatata();
-			glPopMatrix();
-		}
-	}
-
-	// Draw 36 object PotatoIceCream
-	for(int i = -3; i < 3; i++){
-		for(int j=-3; j < 3; j++) {
-			
-			glPushMatrix();
-			glTranslatef(i*(13.0 + randRange(3.0)), 0, j*(13.0 + randRange(5.0)));
-			drawPotatoIceCream();
-			glPopMatrix();
-		}
-	}
+	// Draw a icecream cone
+	// glPushMatrix();
+	// glTranslatef(-5, 0, 0);
+	// drawIcecream();
+	// glPopMatrix();
 
 	glutSwapBuffers();
 }
