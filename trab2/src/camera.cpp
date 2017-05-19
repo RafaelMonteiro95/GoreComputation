@@ -162,6 +162,14 @@ void processKeys() {
 	
 	}
 
+	if(keys['+']){
+		g_speed += 0.01f;
+	}
+
+	if(keys['-']){
+		g_speed -= 0.01f;
+	}
+
 	// Cleanup glut before exiting
 	if(keys[27]) glutDestroyWindow(g_WindowHandle), exit(0);
 }
