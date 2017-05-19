@@ -6,20 +6,20 @@
 
 */
 
-#include "camera.hpp"
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <math.h>
 
 #include <GL/glut.h>
-#include <GL/glu.h>
-#include <GL/gl.h>
+
+#include "camera.hpp"
 
 #define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
+#define GROUND_LEVEL (1.0f)
 
-int g_WindowHandle; // Real declaration of global window handler
-bool keys[1024] = {0}; // keypress state
-bool skeys[1024] = {0}; // special keypress state
+typedef struct { float x; float y; float z; } PointNoVertice;
 
 enum ascii_codes {
 
@@ -58,17 +58,26 @@ enum ascii_codes {
 	ASCII_DEL = 127
 };
 
+int g_WindowHandle; // Real declaration of global window handler
+bool keys[255] = {0}; // keypress state
+bool skeys[255] = {0}; // special keypress state
+
+PointNoVertice snowMen[36];
+PointNoVertice batata[36];
+PointNoVertice PotatoIceCream[36];
+
+float g_gravity = 0.098f;
+
 // Camera translation speed
 float g_speed = 0.3f;
 
-// Angle of rotation for the camera direction
-float g_angle = 0.0;
+// XZ position of the camera
+float g_camx = 0.0f, g_camy = GROUND_LEVEL, g_camz = 5.0f;
 
 // Actual vector representing the camera's direction
-float g_directionx = 0.0f, g_directionz = -1.0f;
-
-// XZ position of the camera
-float g_camx = 0.0f, g_camz = 5.0f;
+float g_directionx = 0.0f, g_directiony = 0.0f, g_directionz = -1.0f;
+// Angle of rotation for the camera direction
+float g_angle = 0.0;
 
 bool setSpeed(float speed){
 	if(speed < 0) return false;
@@ -89,42 +98,53 @@ void processSpecialKeys() {
 	}
 	
 	if(skeys[GLUT_KEY_LEFT]){
-		g_angle -= 0.01f*g_speed;
+		g_angle -= 0.05f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
 	
 	if(skeys[GLUT_KEY_RIGHT]){
-		g_angle += 0.01f*g_speed;
+		g_angle += 0.05f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
-
 }
 
 void processKeys() {
 
 	// Movement
 	if(keys['w']){
-		g_camx -= g_directionx*g_speed;
-		g_camz -= g_directionz*g_speed;
-	}
-	
-	if(keys['a']){
-		g_angle += 0.01f;
-		g_directionx = sin(g_angle);
-		g_directionz = -cos(g_angle);
-	}
-	
-	if(keys['s']){
 		g_camx += g_directionx*g_speed;
 		g_camz += g_directionz*g_speed;
 	}
 	
+	if(keys['a']){
+		g_camx -= g_directionx*g_speed;
+		g_camz += g_directionz*g_speed;
+
+		// g_angle -= 0.05f;
+		// g_directionx = sin(g_angle);
+		// g_directionz = -cos(g_angle);
+	}
+	
+	if(keys['s']){
+		g_camx -= g_directionx*g_speed;
+		g_camz -= g_directionz*g_speed;
+	}
+	
 	if(keys['d']){
-		g_angle -= 0.01f;
-		g_directionx = sin(g_angle);
-		g_directionz = -cos(g_angle);
+		g_camx += g_directionx*g_speed;
+		g_camz -= g_directionz*g_speed;
+
+		// g_angle += 0.05f;
+		// g_directionx = sin(g_angle);
+		// g_directionz = -cos(g_angle);
+	}
+	
+	if(keys[' ']){
+		g_camy += g_speed;
+	} else {
+		g_camy -= g_gravity;
 	}
 	
 	// Translate 
@@ -142,38 +162,17 @@ void processKeys() {
 	
 	}
 
-	if(keys[27]){
-		// Cleanup glut before exiting
-		glutDestroyWindow(g_WindowHandle);
-		exit(0);
-	}
+	// Cleanup glut before exiting
+	if(keys[27]) glutDestroyWindow(g_WindowHandle), exit(0);
 }
-
 
 void drawBatata() {
 
-	glColor3f(0.9f, 0.5f, 0.3f);
-
 	// Draw Body
+	glColor3f(0.8f+randRange(0.2f), 0.2f+randRange(0.1f), 0.5f+randRange(0.3f));
 	glTranslatef(0.0f ,0.75f, 0.0f);
-	glutSolidSphere(0.75f,20,20);
-
-	// Draw Head
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.25f,20,20);
-
-	// Draw Eyes
-	glPushMatrix();
-	glColor3f(0.2f,0.3f,0.7f);
-	glTranslatef(0.05f, 0.10f, 0.18f);
-	glutSolidSphere(0.05f,10,10);
-	glTranslatef(-0.1f, 0.0f, 0.0f);
-	glutSolidSphere(0.05f,10,10);
-	glPopMatrix();
-
-	// Draw Nose
-	glColor3f(0.5f, 1.0f , 0.5f);
-	glutSolidCone(0.08f,0.5f,10,2);
+	// glutSolidSphere(0.75f,20,20);
+	glutSolidTeapot(0.7f);
 }
 
 void drawSnowMan() {
@@ -206,26 +205,13 @@ void drawPotatoIceCream() {
 
 	// Draw Icecream Cone
 	glColor3f(0.3f + randRange(0.1), 0.2f + randRange(0.2) , 0.3f + randRange(0.2));
+	glTranslatef(0.0f, 2.00f, 0.0f);
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.8, -5, 20, 5);
 
-	// Draw Body
-	glColor3f(randRange(1.0), 0.6f + randRange(0.2), 1.0f);
-	glTranslatef(0.0f, 0.75f, 0.0f);
+	// Draw pOTATO
+	glColor3f(1.0f, 0.6f, 1.0f);
 	glutSolidSphere(0.75f, 20, 20);
-
-	// Draw Head
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.25f, 20, 20);
-
-	// Draw Eyes
-	glPushMatrix();
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glTranslatef(0.05f, 0.10f, 0.18f);
-	glutSolidSphere(0.05f, 10, 10);
-	glTranslatef(-0.1f, 0.0f, 0.0f);
-	glutSolidSphere(0.05f, 10, 10);
-	glPopMatrix();
-
 }
 
 void Update(void){
@@ -233,6 +219,12 @@ void Update(void){
 	processKeys();
 	processSpecialKeys();
 	renderScene();
+
+
+	if(g_camy < GROUND_LEVEL){
+		g_camy = GROUND_LEVEL;
+	}
+
 }
 
 void renderScene(void) {
@@ -246,8 +238,8 @@ void renderScene(void) {
 	glLoadIdentity();
 
 	// Set the camera
-	gluLookAt( g_camx, 1.0f,  g_camz,
-			g_camx + g_directionx, 1.0f, g_camz + g_directionz,
+	gluLookAt( g_camx, g_camy,  g_camz,
+			g_camx + g_directionx, g_camy + g_directiony, g_camz + g_directionz,
 			0.0f, 1.0f, 0.0f);
 
     // Draw ground
@@ -269,7 +261,7 @@ void renderScene(void) {
 		}
 	}
 
-	// Draw 36 object 2
+	// Draw 36 object Batata
 	for(int i = -3; i < 3; i++){
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
@@ -279,7 +271,7 @@ void renderScene(void) {
 		}
 	}
 
-	// Draw 36 object 3
+	// Draw 36 object PotatoIceCream
 	for(int i = -3; i < 3; i++){
 		for(int j=-3; j < 3; j++) {
 			glPushMatrix();
