@@ -9,7 +9,7 @@
 #include <math.h>
 #include <GL/glut.h>
 
-#include "camera2.hpp"
+#include "camera.hpp"
 #include "callbacks.hpp"
 
 #define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
@@ -74,10 +74,116 @@ const GLfloat white[] = {1.0f, 1.0f, 1.0f, 1.0f};
 GLfloat color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 void myInit(){
+
 	cam = new Camera();
+
 	snowMen = new Transform[36];
 	batata = new Transform[36];
 	PotatoIceCream = new Transform[36];
+
+	// Draw 36 SnowMen
+	for(int i = -3; i < 3; i++){
+		for(int j = -3; j < 3; j++) {
+			
+			glPushMatrix();
+			glTranslatef(i*7.0, 0, j*7.0);
+			
+			int index = (j+3) + (i+3)*6;
+			
+			/* This is the object's pivot point */
+			/* Set object position */
+			snowMen[index].position.x = i*7.0;
+			snowMen[index].position.y = 0.0;
+			snowMen[index].position.z = j*7.0;
+			
+			/* Set object rotation */
+			snowMen[index].rotation.x = 0.0f;
+			snowMen[index].rotation.y = 0.0f;
+			snowMen[index].rotation.z = 0.0f;
+			
+			/* Set object scale */
+			snowMen[index].scale.x = 1.0f;
+			snowMen[index].scale.y = 1.0f;
+			snowMen[index].scale.z = 1.0f;
+
+			/* Move object to starting position */
+			glTranslatef(snowMen[index].position.x,
+						snowMen[index].position.y,
+						snowMen[index].position.z);
+			
+			glPopMatrix();
+		}
+	}
+
+	// Draw 36 PotatoIceCream
+	for(int i = -3; i < 3; i++){
+		for(int j = -3; j < 3; j++) {
+			
+			glPushMatrix();
+			glTranslatef(i*3.0, 0, j*3.0);
+			
+			int index = (j+3) + (i+3)*6;
+			
+			/* This is the object's pivot point */
+			/* Set object position */
+			PotatoIceCream[index].position.x = i*3.0;
+			PotatoIceCream[index].position.y = 0.0;
+			PotatoIceCream[index].position.z = j*3.0;
+			
+			/* Set object rotation */
+			PotatoIceCream[index].rotation.x = 0.0f;
+			PotatoIceCream[index].rotation.y = 0.0f;
+			PotatoIceCream[index].rotation.z = 0.0f;
+			
+			/* Set object scale */
+			PotatoIceCream[index].scale.x = 1.0f;
+			PotatoIceCream[index].scale.y = 1.0f;
+			PotatoIceCream[index].scale.z = 1.0f;
+
+			/* Move object to starting position */
+			glTranslatef(PotatoIceCream[index].position.x,
+						PotatoIceCream[index].position.y,
+						PotatoIceCream[index].position.z);
+			
+			drawSnowMan();
+			glPopMatrix();
+		}
+	}
+
+	// Draw 36 batata
+	for(int i = -3; i < 3; i++){
+		for(int j = -3; j < 3; j++) {
+			
+			glPushMatrix();
+			glTranslatef(i*17.0, 0, j*17.0);
+			
+			int index = (j+3) + (i+3)*6;
+			
+			/* This is the object's pivot point */
+			/* Set object position */
+			batata[index].position.x = i*17.0;
+			batata[index].position.y = 0.0;
+			batata[index].position.z = j*17.0;
+			
+			/* Set object rotation */
+			batata[index].rotation.x = 0.0f;
+			batata[index].rotation.y = 0.0f;
+			batata[index].rotation.z = 0.0f;
+			
+			/* Set object scale */
+			batata[index].scale.x = 1.0f;
+			batata[index].scale.y = 1.0f;
+			batata[index].scale.z = 1.0f;
+
+			/* Move object to starting position */
+			glTranslatef(batata[index].position.x,
+						batata[index].position.y,
+						batata[index].position.z);
+			
+			drawSnowMan();
+			glPopMatrix();
+		}
+	}
 }
 
 void myCleanup(){

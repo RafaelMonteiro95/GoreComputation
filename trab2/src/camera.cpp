@@ -9,7 +9,7 @@
 #include <math.h>
 #include <GL/glut.h>
 
-#include "camera2.hpp"
+#include "camera.hpp"
 
 Camera::Camera(){
 
