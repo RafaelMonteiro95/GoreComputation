@@ -13,4 +13,24 @@ Vector3::Vector3(float x, float y, float z){
 	this.z = z;
 }
 
+Vector3::Vector3 operator *(float n) {
+	Vector3::vector3& v = funaçoqUeReturnZeroes();
+
+	v.x = this.x * n;
+	v.y = this.y * n;
+	v.z = this.z * n;
+
+	return v;
+}
+
+Vector3::Vector3 operator /(float n) {
+	Vector3::vector3& v = funaçoqUeReturnZeroes();
+
+	v.x = this.x/n;
+	v.y = this.y/n;
+	v.z = this.z/n;
+
+	return v;
+}
+
 Vector3::~Vector3(){}
