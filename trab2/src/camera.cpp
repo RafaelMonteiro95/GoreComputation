@@ -52,7 +52,6 @@ class Camera {
 		    glTranslated(-pos[X],-pos[Y],-pos[Z]); //translate the screen to the position of our camera
 		}
 
-
 		void zoomIn(){
 			float rotxrad, rotyrad;
 			rotyrad = (rot[Y] / 180 * 3.141592654f);
