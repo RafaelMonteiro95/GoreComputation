@@ -30,6 +30,22 @@ int main(int argc, char *argv[]) {
 	glutSpecialFunc(specialDown);
 	glutSpecialUpFunc(specialUp);
 
+	// OpenGL lightning
+	float angle[] = {1,1,0};
+	float ambient[] = {0,0,0,1};
+	float diffuse[] = {1,1,1,1};
+	float specular[] = {1,1,1,1};
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, angle);
+	// glLightfv(GL_LIGHT0, GL_DIFFUSE, angle);
+	// glLightfv(GL_LIGHT0, GL_SPECULAR, angle);
+    
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+
 	// OpenGL init
 	glEnable(GL_DEPTH_TEST);
 
