@@ -6,7 +6,7 @@
 
 */
 
-#include "camera.hpp"
+#include "callbacks.hpp"
 #include <GL/glut.h>
 #include <GL/glu.h>
 #include <GL/gl.h>
