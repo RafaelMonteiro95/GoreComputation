@@ -14,7 +14,7 @@
 
 #include <GL/glut.h>
 
-#include "camera.cpp"
+#include "camera2.hpp"
 #include "callbacks.hpp"
 
 #define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
