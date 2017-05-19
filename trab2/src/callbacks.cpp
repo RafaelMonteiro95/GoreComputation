@@ -20,7 +20,7 @@
 #define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
 #define GROUND_LEVEL (1.0f)
 
-Camera cam;
+Camera *cam;
 
 typedef struct { float x; float y; float z; } PointNoVertice;
 
@@ -69,22 +69,30 @@ PointNoVertice snowMen[36];
 PointNoVertice batata[36];
 PointNoVertice PotatoIceCream[36];
 
+void myInit(){
+	cam = new Camera();
+}
+
+void myCleanup(){
+	delete cam;
+}
+
 void processSpecialKeys() {
 
 	if(skeys[GLUT_KEY_UP]){
-		cam.pitchUp();
+		cam->pitchUp();
 	}
 	
 	if(skeys[GLUT_KEY_DOWN]){
-		cam.pitchDown();
+		cam->pitchDown();
 	}
 	
 	if(skeys[GLUT_KEY_LEFT]){
-		cam.yawLeft();
+		cam->yawLeft();
 	}
 	
 	if(skeys[GLUT_KEY_RIGHT]){
-		cam.yawRight();
+		cam->yawRight();
 	}
 }
 
@@ -92,32 +100,32 @@ void processKeys() {
 
 	// Movement
 	if(keys['w']){
-		cam.zoomIn();
+		cam->zoomIn();
 	}
 	
 	if(keys['s']){
-		cam.zoomOut();
+		cam->zoomOut();
 	}
 	
 	if(keys['a']){
-		cam.strafeLeft();
+		cam->strafeLeft();
 	}
 	
 	if(keys['d']){
-		cam.strafeRight();
+		cam->strafeRight();
 	}
 
-	if(keys[' ']) cam.camy += cam.speed;
-	else cam.camy -= cam.gravity;
+	if(keys[' ']) cam->transform->position->y += cam->speed;
+	else cam->transform->position->y -= cam->gravity;
 
 	// Cleanup glut before exiting
-	if(keys[27]) glutDestroyWindow(g_WindowHandle), exit(0);
+	if(keys[27]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
 void drawBatata() {
 
 	// Draw Body
-	glColor3f(0.8f+randRange(0.2f), 0.2f+randRange(0.1f), 0.5f+randRange(0.3f));
+	glColor3f(0.8f, 0.2f, 0.5f);
 	glTranslatef(0.0f ,0.75f, 0.0f);
 	// glutSolidSphere(0.75f,20,20);
 	glutSolidTeapot(0.7f);
@@ -181,7 +189,7 @@ void renderScene(void) {
 	glLoadIdentity();
 
 	// Set the camera
-	cam.update();
+	cam->update();
 	// gluLookAt( g_camx, g_camy,  g_camz,
 			// g_camx + g_directionx, g_camy + g_directiony, g_camz + g_directionz,
 			// 0.0f, 1.0f, 0.0f);

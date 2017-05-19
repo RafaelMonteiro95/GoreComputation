@@ -18,13 +18,16 @@ public:
 	float z;
 
 	Vector3(float x, float y, float z);
-	Vector3 operator *(float n);
-	Vector3 operator /(float n);
+	Vector3(Vector3 &v);
+	Vector3(Vector3 *v);
 	virtual ~Vector3();
 
-	// Vector3& operator+(Vector3& v1, Vector3& v2){
-		
-	// }
+	Vector3& operator=(const Vector3& rhs);
+
+	Vector3& operator+(const Vector3& rhs);
+	Vector3& operator-(const Vector3& rhs);
+	Vector3& operator*(const float rhs);
+	Vector3& operator/(const float rhs);
 };
 
 #endif

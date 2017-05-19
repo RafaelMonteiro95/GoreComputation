@@ -9,6 +9,8 @@
 #ifndef _CAMERA_HPP_
 #define _CAMERA_HPP_
 
+#include "transform.hpp"
+
 #define GROUND_LEVEL (1.0f)
 
 #define X 0
@@ -20,9 +22,9 @@ class Camera {
 public:
 
 	float speed;
-	float pos[3];
-	float rot[3];
 	float gravity;
+
+	Transform *transform;
 
 	Camera();
 	virtual ~Camera();

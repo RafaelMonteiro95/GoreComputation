@@ -11,6 +11,8 @@
 
 extern int g_WindowHandle;
 
+void myInit();
+void myCleanup();
 bool setSpeed(float speed);
 void drawBatata();
 void drawSnowMan();

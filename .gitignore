@@ -1,5 +1,9 @@
 # Ignore "Integrantes.txt" for project on Github
 Integrantes.txt
+*vgcore*
+*build
+*build/
+*build/*
 
 # Compiled Object files
 *.slo

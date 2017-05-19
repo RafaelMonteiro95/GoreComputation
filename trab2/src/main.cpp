@@ -14,6 +14,9 @@
 
 int main(int argc, char *argv[]) {
 
+	// Initializa my things 
+	myInit();
+
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
