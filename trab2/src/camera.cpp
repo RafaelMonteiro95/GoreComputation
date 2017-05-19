@@ -19,7 +19,8 @@
 #define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
 #define GROUND_LEVEL (1.0f)
 
-typedef struct { float x; float y; float z; } PointNoVertice;
+typedef struct { float x; float y; float z; } vec3;
+typedef struct { vec3 position; vec3 rotation; vec3 scale; } transform;
 
 enum ascii_codes {
 	
@@ -62,9 +63,9 @@ int g_WindowHandle; // Real declaration of global window handler
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
-PointNoVertice snowMen[36];
-PointNoVertice batata[36];
-PointNoVertice PotatoIceCream[36];
+transform snowMen[36];
+transform batata[36];
+transform PotatoIceCream[36];
 
 float g_gravity = 0.098f;
 
@@ -107,13 +108,13 @@ void processSpecialKeys() {
 	}
 	
 	if(skeys[GLUT_KEY_LEFT]){
-		g_angle -= 0.05f;
+		g_angle -= 0.036f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
 	
 	if(skeys[GLUT_KEY_RIGHT]){
-		g_angle += 0.05f;
+		g_angle += 0.036f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
@@ -128,7 +129,7 @@ void processKeys() {
 	}
 	
 	if(keys['a']){
-		g_angle -= 0.05f;
+		g_angle -= 0.036f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
@@ -139,7 +140,7 @@ void processKeys() {
 	}
 	
 	if(keys['d']){
-		g_angle += 0.05f;
+		g_angle += 0.036f;
 		g_directionx = sin(g_angle);
 		g_directionz = -cos(g_angle);
 	}
@@ -233,6 +234,12 @@ void drawSnowMan() {
 	glutSolidCone(0.08f,0.8f,10,2);
 
 	// Draw shit
+	glColor3f(0.9f, 0.3f , 0.33f);
+	glNormal3d(0.2f, 0.3f, 0.6f);
+	color[0] = 1.0f;
+	color[1] = 0.5f;
+	color[2] = 0.5f;
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glTranslatef(0.0f ,1.0f, 0.0f);
 	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	glutSolidCone(0.6, -1, 10, 5);
@@ -275,6 +282,87 @@ void Update(void){
 	}
 }
 
+void initObject(){
+
+	// Reset transformations
+	glLoadIdentity();
+
+	// Draw 36 SnowMen
+	for(int i = -3; i < 3; i++){
+		for(int j = -3; j < 3; j++) {
+			
+			glPushMatrix();
+			
+			int index = (j+3) + (i+3)*6;
+			
+			/* This is the object's pivot point */
+			/* Set object position */
+			snowMen[index].position.x = i*7.0;
+			snowMen[index].position.y = 0.0;
+			snowMen[index].position.z = j*7.0;
+			
+			/* Set object rotation */
+			snowMen[index].rotation.x = 0.0f;
+			snowMen[index].rotation.y = 0.0f;
+			snowMen[index].rotation.z = 0.0f;
+			
+			/* Set object scale */
+			snowMen[index].scale.x = 1.0f;
+			snowMen[index].scale.y = 1.0f;
+			snowMen[index].scale.z = 1.0f;
+
+			/* Move object to starting position */
+			glTranslatef(snowMen[index].position.x,
+						snowMen[index].position.y,
+						snowMen[index].position.z);
+			
+			drawSnowMan();
+			glPopMatrix();
+		}
+	}
+
+	// Draw 36 object Batata
+	for(int i = -3; i < 3; i++){
+		for(int j=-3; j < 3; j++) {
+			
+			glPushMatrix();
+			
+			int index = (j+3) + (i+3)*6;
+			batata[index].position.x = i*3.0;
+			batata[index].position.y = 0.0;
+			batata[index].position.z = j*3.0;
+			glTranslatef(batata[index].position.x, 
+						batata[index].position.y, 
+						batata[index].position.z);
+			
+			drawBatata();
+			glPopMatrix();
+		}
+	}
+
+	// Draw 36 object PotatoIceCream
+	for(int i = -3; i < 3; i++){
+		for(int j=-3; j < 3; j++) {
+			
+			glPushMatrix();
+			
+			int index = (j+3) + (i+3)*6;
+			
+			PotatoIceCream[index].position.x = i*22.0;
+			PotatoIceCream[index].position.y = 0.0;
+			PotatoIceCream[index].position.z = j*22.0;
+			glTranslatef(PotatoIceCream[index].position.x, 
+						PotatoIceCream[index].position.y, 
+						PotatoIceCream[index].position.z);
+
+			drawPotatoIceCream();
+			glPopMatrix();
+		}
+	}
+
+	glutSwapBuffers();
+}
+
 void renderScene(void) {
 
 	srand(time(NULL));
@@ -284,6 +372,31 @@ void renderScene(void) {
 
 	// Reset transformations
 	glLoadIdentity();
+
+	// Iterate through all objects
+	for (int i = 0; i < 36; i++){
+
+		glPushMatrix();
+
+		m = {
+			{, , , (1-batata[index].scale.x)*batata[index].position.x},
+			{, , , (1-batata[index].scale.y)*batata[index].position.y},
+			{, , , (1-batata[index].scale.z)*batata[index].position.z},
+			{0, 0, 0, 1}
+		}
+		glLoadMatrix();			
+
+		PotatoIceCream[index].position.x = i*22.0;
+		PotatoIceCream[index].position.y = 0.0;
+		PotatoIceCream[index].position.z = j*22.0;
+		glTranslatef(PotatoIceCream[index].position.x, 
+					PotatoIceCream[index].position.y, 
+					PotatoIceCream[index].position.z);
+
+		drawPotatoIceCream();
+		glPopMatrix();
+	}
+
 
 	// Set the camera
 	gluLookAt( g_camx, g_camy,  g_camz,
@@ -299,35 +412,7 @@ void renderScene(void) {
 		glVertex3f( 100.0f, 0.0f, -100.0f);
 	glEnd();
 
-    // Draw 36 SnowMen
-	for(int i = -3; i < 3; i++){
-		for(int j=-3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*7.0, 0, j*7.0);
-			drawSnowMan();
-			glPopMatrix();
-		}
-	}
-
-	// Draw 36 object Batata
-	for(int i = -3; i < 3; i++){
-		for(int j=-3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*3.0, 0, j*3.0);
-			drawBatata();
-			glPopMatrix();
-		}
-	}
-
-	// Draw 36 object PotatoIceCream
-	for(int i = -3; i < 3; i++){
-		for(int j=-3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*22.0, 0, j*22.0);
-			drawPotatoIceCream();
-			glPopMatrix();
-		}
-	}
+    
 
 	glutSwapBuffers();
 }
