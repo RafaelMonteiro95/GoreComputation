@@ -107,6 +107,9 @@ void processKeys() {
 		cam.strafeRight();
 	}
 
+	if(keys[' ']) cam.camy += cam.speed;
+	else cam.camy -= cam.gravity;
+
 	// Cleanup glut before exiting
 	if(keys[27]) glutDestroyWindow(g_WindowHandle), exit(0);
 }

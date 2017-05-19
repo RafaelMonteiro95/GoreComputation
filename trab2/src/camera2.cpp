@@ -17,10 +17,14 @@
 #include "camera2.hpp"
 
 Camera::Camera(){
+
 	speed = 0.3f;
+	gravity = 0.098f;
+
 	pos[X] = 0.0f;
 	pos[Y] = GROUND_LEVEL;
 	pos[Z] = -15.0f;
+
 	rot[X] = 0.0f;
 	rot[Y] = 0.0f;
 	rot[Z] = 0.0f;
@@ -29,10 +33,15 @@ Camera::Camera(){
 Camera::~Camera(){}
 
 void Camera::update() {
+	
+	if(g_camy < GROUND_LEVEL)
+		g_camy = GROUND_LEVEL;
+
     glRotatef(rot[X],1.0,0.0,0.0);  //rotate our camera on teh  x-axis (left and right)
     glRotatef(rot[Y],0.0,1.0,0.0);  //rotate our camera on the  y-axis (up and down)
     glRotatef(rot[Z],0.0,0.0,1.0);  //rotate our camera on the  z-axis (dunno)
     glTranslated(-pos[X],-pos[Y],-pos[Z]); //translate the screen to the position of our camera
+    
 }
 
 void Camera::zoomIn(){
@@ -87,3 +96,5 @@ void Camera::checkPitch(){
 	if(rot[X] > 90) rot[X] = 90;
 	if(rot[X] < -90) rot[X] = 90;
 }
+
+

@@ -22,6 +22,7 @@ public:
 	float speed;
 	float pos[3];
 	float rot[3];
+	float gravity;
 
 	Camera();
 	virtual ~Camera();
@@ -36,6 +37,7 @@ public:
 	void yawRight();
 	void pitchUp();
 	void pitchDown();
+
 };
 
 #endif
