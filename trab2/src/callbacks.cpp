@@ -9,6 +9,7 @@
 #include <math.h>
 #include <GL/glut.h>
 
+#include "vector3.hpp"
 #include "camera.hpp"
 #include "callbacks.hpp"
 #include "draw.hpp"
@@ -17,6 +18,8 @@
 #define TEAPOT 0
 #define TORUS 1
 #define CUBE 2
+#define NEXT 1
+#define PREVIOUS -1
 
 typedef int OBJECT_TYPE;
 
@@ -65,6 +68,7 @@ enum ascii_codes {
 };
 
 int g_WindowHandle; // Real declaration of global window handler
+int selectedObject = 0;
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
@@ -125,6 +129,12 @@ void processSpecialKeys() {
 	}
 }
 
+void selectObject(int which){
+	selectedObject += which;
+	if(selectedObject > 2) selectedObject = 0;
+	if(selectedObject < 0) selectedObject = 2;
+}
+
 // function that processes normal button presses (such as 'w', 'a', 's' and 'd')
 void processKeys() {
 
@@ -158,6 +168,40 @@ void processKeys() {
 			cam->speed = 0.01f;
 	}
 
+	// translate right
+	if(keys['i']){
+		objects[selectedObject].transform->position->x += 0.3f;
+	}
+
+	// translate left
+	if(keys['u']){
+		objects[selectedObject].transform->position->x -= 0.3f;
+	}
+
+	// rotate right
+	if(keys['k']){
+		objects[selectedObject].transform->rotation->x += 10.0f;
+	}
+
+	// rotate left
+	if(keys['j']){
+		objects[selectedObject].transform->rotation->x -= 10.0f;
+	}
+
+	// scale up
+	if(keys['m']){
+		objects[selectedObject].transform->scale->x += 0.1f;
+		objects[selectedObject].transform->scale->y += 0.1f;
+		objects[selectedObject].transform->scale->z += 0.1f;
+	}
+
+	// scale down
+	if(keys['n']){
+		objects[selectedObject].transform->scale->x -= 0.1f;
+		objects[selectedObject].transform->scale->y -= 0.1f;
+		objects[selectedObject].transform->scale->z -= 0.1f;
+	}
+
 	// Cleanup glut before exiting
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
@@ -188,6 +232,7 @@ void renderScene(void) {
 
     // Draw a Snowman
     for(int i = 0; i < 3; i++){
+		glPushMatrix();
     	switch(objects[i].type){
     	case TEAPOT:
     		drawTeapot(objects[i].transform);
@@ -204,6 +249,7 @@ void renderScene(void) {
 		default:
 			break;
 		}
+		glPopMatrix();
     }
 
 	//swap buffers, outputting all drawings done
@@ -239,6 +285,22 @@ void changeSize(int w, int h) {
 
 // sets key presses when some key is pressed
 void keyboardUp(unsigned char key, int x, int y){ keys[key] = false; }
-void keyboardDown(unsigned char key, int x, int y){ keys[key] = true; }
+void keyboardDown(unsigned char key, int x, int y){
+	switch(key){
+
+		case 't':
+			selectObject(PREVIOUS);
+			break;
+
+		case 'y':
+			selectObject(NEXT);
+			break;
+			
+		default:
+			keys[key] = true;
+			break;
+	}
+}
+
 void specialUp(int key, int x, int y){ skeys[key] = false; }
 void specialDown(int key, int x, int y){ skeys[key] = true; }

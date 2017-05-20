@@ -8,7 +8,7 @@
 
 #ifndef _VECTOR3_HPP_
 #define _VECTOR3_HPP_
-
+;
 class Vector3 {
 
 public:
