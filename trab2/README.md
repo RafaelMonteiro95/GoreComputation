@@ -1,9 +1,9 @@
-#Integrantes
+# Integrantes
 {	Lucas Alexandre Soares		-	9293265}
 {	Rafael Augusto Monteiro		-	9293095}
 {	Giovanna Oliveira Guimarães	-	9293693}
 
-#Makefile rules
+# Makefile rules
 
 {all: compile project}
 {run: run executable}
