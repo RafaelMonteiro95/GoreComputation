@@ -20,8 +20,8 @@ void applyTransform(Transform* obj){
 	glScalef(obj->scale->x + 1, obj->scale->y + 1, obj->scale->z + 1);
 
 	glRotatef(obj->rotation->x, 1.0f, 0.0f, 0.0f);
-	glRotatef(obj->rotation->x, 0.0f, 1.0f, 0.0f);
-	glRotatef(obj->rotation->x, 0.0f, 0.0f, 1.0f);
+	glRotatef(obj->rotation->y, 0.0f, 1.0f, 0.0f);
+	glRotatef(obj->rotation->z, 0.0f, 0.0f, 1.0f);
 }
 
 void drawSnowman(Transform* snowman) {
