@@ -11,13 +11,21 @@
 
 #include "camera.hpp"
 #include "callbacks.hpp"
+#include "draw.hpp"
 
-#define randRange(max) ( ((float) (rand()/RAND_MAX)) * max )
-#define GROUND_LEVEL (1.0f)
+//defining scene objects types
+#define TEAPOT 0
+#define TORUS 1
+#define CUBE 2
 
-Camera *cam;
+typedef int OBJECT_TYPE;
 
-typedef struct { float x; float y; float z; } PointNoVertice;
+/* Each scene object contains a reference to it's transform properties
+and a OBJECT_TYPE, which is used to call the correct drawing function defined in draw.hpp*/
+typedef struct _sceneObject{
+	Transform* transform;
+	OBJECT_TYPE type;
+} sceneObject;
 
 enum ascii_codes {
 
@@ -60,52 +68,44 @@ int g_WindowHandle; // Real declaration of global window handler
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
-Transform *snowman;
-Transform *teapot;
-Transform *icecream;
+Camera* cam;
 
-const GLfloat cyan[] = {0.0f, 0.8f, 0.8f, 1.0f};
-const GLfloat red[] = {0.9f, 0.1f, 0.2f, 1.0f};
-const GLfloat green[] = {0.0f, 0.1f, 0.0f, 1.0f};
-const GLfloat blue[] = {0.0f, 0.0f, 1.0f, 1.0f};
-const GLfloat black[] = {0.0f, 0.0f, 0.0f, 1.0f};
-const GLfloat white[] = {1.0f, 1.0f, 1.0f, 1.0f};
-
-GLfloat color[] = {0.0f, 0.0f, 0.0f, 1.0f};
+//list of scene objects.
+sceneObject objects[3];
 
 void myInit(){
 
 	cam = new Camera();
 
-	snowman = new Transform(5.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f);
-	teapot = new Transform(0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f);
-	icecream = new Transform(-5.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f,
-							0.0f, 0.0f, 0.0f);
+	//object 0 is a Teapot located in (5,0,0)
+	objects[0].transform = new Transform(5.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	objects[0].type = TEAPOT;
 
-	// drawSnowman();
+	//object 1 is a Torus located in (0,0,0)
+	objects[1].transform = new Transform(0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	objects[1].type = TORUS;
 
-	// glPushMatrix();
-	// drawTeapot();
-	// glPopMatrix();
-
-	// glPushMatrix();
-	// drawTeapot();
-	// glPopMatrix();
-
+	//object 2 is a Cube located in (-5,0,0)
+	objects[2].transform = new Transform(-5.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	objects[2].type = CUBE;
 }
 
+// function that deletes "camera" and "sceneObject" objects
 void myCleanup(){
 	delete cam;
-	delete snowman;
-	delete teapot;
-	delete icecream;
+
+	for(int i = 0; i < 3; i++){
+		delete objects[i].transform;
+	}
 }
 
+// function that processes special key buttons (such as arrows)
 void processSpecialKeys() {
 
 	if(skeys[GLUT_KEY_UP]){
@@ -125,6 +125,7 @@ void processSpecialKeys() {
 	}
 }
 
+// function that processes normal button presses (such as 'w', 'a', 's' and 'd')
 void processKeys() {
 
 	// Movement
@@ -144,11 +145,13 @@ void processKeys() {
 		cam->strafeRight();
 	}
 
+	//increases camera speed when plus is pressed
 	if(keys['=']) {
 		cam->speed += 0.02f;
 		if(cam->speed > 2.0f)
 			cam->speed = 2.0f;
 	}
+	//decreases camera speed when minus is pressed 
 	if(keys['-']) {
 		cam->speed -= 0.02f;
 		if(cam->speed < 0.01f)
@@ -159,142 +162,7 @@ void processKeys() {
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
-void applyTransform(Transform* obj){
-	glTranslatef(obj->position->x, obj->position->y + 0.7, obj->position->z);
-	glScalef(obj->scale->x + 1, obj->scale->y + 1, obj->scale->z + 1);
-
-	glRotatef(obj->rotation->x, 1.0f, 0.0f, 0.0f);
-	glRotatef(obj->rotation->x, 0.0f, 1.0f, 0.0f);
-	glRotatef(obj->rotation->x, 0.0f, 0.0f, 1.0f);
-}
-
-void drawTeapot(Transform* teapot) {
-
-	glPushMatrix();
-
-	// Apllies transformations
-	applyTransform(teapot);
-
-	// Draws obj
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glutSolidTeapot(0.7f);
-
-	glPopMatrix();
-
-}
-
-void drawSnowman(Transform* snowman) {
-
-	glPushMatrix();
-
-	applyTransform(snowman);
-
-	glColor3f(0.2f, 0.3f, 0.9f);
-	glNormal3d(0, 1, 0);
-	color[0] = 0.6f;
-	color[1] = 0.3f;
-	color[2] = 0.9f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-
-	// Draw Body
-	glTranslatef(0.0f ,0.75f, 0.0f);
-	glutSolidSphere(0.75f,20,20);
-
-	// Draw Head
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.4f,20,20);
-
-	// Draw Eyes
-	glPushMatrix();
-	glColor3f(0.0f, 0.0f, 0.0f);
-	glTranslatef(0.05f, 0.10f, 0.36f);
-	glutSolidSphere(0.1f,20,20);
-	glTranslatef(-0.1f, 0.0f, 0.0f);
-	glutSolidSphere(0.1f,20,20);
-	glPopMatrix();
-
-	// Draw Nose
-	glColor3f(1.0f, 0.5f , 0.5f);
-	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 0.5f;
-	color[2] = 0.5f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-	glutSolidCone(0.08f,0.8f,10,2);
-
-}
-
-void drawIcecream(Transform* icecream) {
-
-	applyTransform(icecream);
-
-	// Draw icecream Cone	
-	glColor3f(0.6f, 0.2f, 0.3f);
-	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-
-	// glTranslatef(0.0f, 2.5f, 0.0f);
-	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-	glutSolidCone(0.8, -2.5, 20, 5);
-
-	// Draw icecream
-	glColor3f(1.0f, 0.6f, 1.0f);
-	glutSolidSphere(0.75f, 20, 20);
-}
-
-void drawTorus(Transform* torus){
-
-	applyTransform(torus);
-
-	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-
-	glRotatef(90,1,0,0);
-
-	glColor3f(0.0f, .5f, 0.5f);
-	glutSolidTorus(0.4f, 0.7f, 20, 20);
-}
-
-void drawCube(Transform* cube){
-
-	applyTransform(cube);
-
-	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-
-
-	glColor3f(0.3f, 0.5f, 0.0f);
-	glutSolidCube(1.5f);
-
-}
-
-void drawGround(){
-	glBegin(GL_QUADS);
-
-	glColor3f(255.0f, 255.0f, 255.0f);
-	glVertex3f(-100.0f, 0.0f, -100.0f);
-
-	glColor3f(255.0f, 0.0f, 255.0f);
-	glVertex3f(-100.0f, 0.0f,  100.0f);
-
-	glColor3f(255.0f, 255.0f, 0.0f);
-	glVertex3f( 100.0f, 0.0f,  100.0f);
-
-	glColor3f(0.0f, 255.0f, 255.0f);
-	glVertex3f( 100.0f, 0.0f, -100.0f);
-
-	glEnd();
-}
-
+// GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
 
 	processKeys();
@@ -303,6 +171,7 @@ void update(void){
 	glutPostRedisplay();
 }
 
+// GlutDisplayFunc callback. Clears screen and draws the scene
 void renderScene(void) {
 
 	// Clear Color and Depth Buffers
@@ -318,29 +187,38 @@ void renderScene(void) {
     drawGround();
 
     // Draw a Snowman
-	// drawSnowman();
-	drawTeapot(teapot);
-	drawTorus(icecream);
-	drawCube(icecream);
-	// glPopMatrix();
+    for(int i = 0; i < 3; i++){
+    	switch(objects[i].type){
+    	case TEAPOT:
+    		drawTeapot(objects[i].transform);
+    		break;
 
-	// Draw a icecream cone
-	// glPushMatrix();
-	// glTranslatef(-5, 0, 0);
-	// drawIcecream();
-	// glPopMatrix();
+    	case TORUS:
+    		drawTorus(objects[i].transform);
+    		break;
 
+    	case CUBE:
+    		drawCube(objects[i].transform);
+    		break;
+
+		default:
+			break;
+		}
+    }
+
+	//swap buffers, outputting all drawings done
 	glutSwapBuffers();
 }
 
+// glutReshapeFunc callback. Corrects the aspect ratio when the window size changes
 void changeSize(int w, int h) {
 
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
-	if (h == 0)
-		h = 1;
+	if (h == 0) h = 1;
 
 	float _w = w, _h = h;
+
 	float ratio = _w/_h;
 
 	// Use the Projection Matrix
@@ -359,6 +237,7 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+// sets key presses when some key is pressed
 void keyboardUp(unsigned char key, int x, int y){ keys[key] = false; }
 void keyboardDown(unsigned char key, int x, int y){ keys[key] = true; }
 void specialUp(int key, int x, int y){ skeys[key] = false; }
