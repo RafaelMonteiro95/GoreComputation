@@ -6,9 +6,9 @@
 void applyTransform(Transform* obj);
 void drawSnowman(Transform* snowman) ;
 void drawIcecream(Transform* icecream);
-void drawTorus(Transform* torus);
-void drawCube(Transform* cube);
+void drawTorus(Transform* torus, bool selected);
+void drawCube(Transform* cube, bool selected);
 void drawGround();
-void drawTeapot(Transform* teapot);
+void drawTeapot(Transform* teapot, bool selected);
 
 #endif

@@ -2,7 +2,7 @@
 
 	Giovanna Oliveira Guimarães		-	9293693
 	Lucas Alexandre Soares 			-	9293265
-	Rafael Jureg Monteiro 			-	9293095
+	Rafael Augusto Monteiro 			-	9293095
 
 */
 
@@ -68,7 +68,7 @@ enum ascii_codes {
 };
 
 int g_WindowHandle; // Real declaration of global window handler
-int selectedObject = 0;
+int selectedObject = 0; // object that will handle transformations
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
@@ -230,25 +230,28 @@ void renderScene(void) {
     // Draw ground
     drawGround();
 
-    // Draw a Snowman
+    // Draws scene objects
     for(int i = 0; i < 3; i++){
+
 		glPushMatrix();
+
     	switch(objects[i].type){
     	case TEAPOT:
-    		drawTeapot(objects[i].transform);
+    		selectedObject - TEAPOT == 0 ? drawTeapot(objects[i].transform, true): drawTeapot(objects[i].transform, false);
     		break;
 
     	case TORUS:
-    		drawTorus(objects[i].transform);
+    		selectedObject - TORUS == 0 ? drawTorus(objects[i].transform, true): drawTorus(objects[i].transform, false);
     		break;
 
     	case CUBE:
-    		drawCube(objects[i].transform);
+    		selectedObject - CUBE == 0 ? drawCube(objects[i].transform, true): drawCube(objects[i].transform, false);
     		break;
 
 		default:
 			break;
 		}
+
 		glPopMatrix();
     }
 
@@ -294,6 +297,12 @@ void keyboardDown(unsigned char key, int x, int y){
 
 		case 'y':
 			selectObject(NEXT);
+			break;
+
+		case ' ':
+			myCleanup();
+			myInit();
+			selectedObject = 0;
 			break;
 			
 		default:

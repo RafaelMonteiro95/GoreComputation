@@ -64,6 +64,12 @@ __y__|Seleciona próximo objeto|
 |__m__|Diminui a escala do objeto em 10%|
 
 
+## Outros
+|Tecla|Função|
+|-----|------|
+|__espaço__|Reseta a câmera e a cena|
+
+
 # Makefile rules
 
 `all` compile project  

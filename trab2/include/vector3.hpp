@@ -2,7 +2,7 @@
 
 	Giovanna Oliveira Guimarães		-	9293693
 	Lucas Alexandre Soares 			-	9293265
-	Rafael Jureg Monteiro 			-	9293095
+	Rafael Augusto Monteiro 			-	9293095
 
 */
 
