@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
 	glutInitWindowSize(1400, 900);
-	g_WindowHandle = glutCreateWindow("FreeGluteos3D v2.0");
+	g_WindowHandle = glutCreateWindow("LightiningGluteos v3.0");
 
 	// register callbacks
 	glutDisplayFunc(renderScene);
