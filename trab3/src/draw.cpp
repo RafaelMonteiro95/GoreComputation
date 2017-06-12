@@ -124,7 +124,7 @@ void drawCube(Transform* cube, bool selected){
 
 
 void drawSky(){
-	glColor3f(0.0f,0.0f,1.0f);
+	// glColor3f(0.0f,0.0f,1.0f);
 	glutSolidSphere(60.0f,5,5);
 }
 

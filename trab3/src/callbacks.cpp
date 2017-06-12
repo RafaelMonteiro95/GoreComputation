@@ -75,7 +75,7 @@ bool skeys[255] = {0}; // special keypress state
 Camera* cam;
 
 //list of scene objects.
-sceneObject objects[3];
+sceneObject objects[2];
 
 void myInit(){
 
@@ -87,24 +87,18 @@ void myInit(){
 								0.0f, 0.0f, 0.0f);
 	objects[0].type = TEAPOT;
 
-	//object 1 is a Torus located in (0,0,0)
-	objects[1].transform = new Transform(0.0f, 0.0f, 0.0f,
+	//object 1 is a Torus located in (-5,0,0)
+	objects[1].transform = new Transform(-5.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	objects[1].type = TORUS;
-
-	//object 2 is a Cube located in (-5,0,0)
-	objects[2].transform = new Transform(-5.0f, 0.0f, 0.0f,
-								0.0f, 0.0f, 0.0f,
-								0.0f, 0.0f, 0.0f);
-	objects[2].type = CUBE;
 }
 
 // function that deletes "camera" and "sceneObject" objects
 void myCleanup(){
 	delete cam;
 
-	for(int i = 0; i < 3; i++){
+	for(int i = 0; i < 2; i++){
 		delete objects[i].transform;
 	}
 }
@@ -168,40 +162,6 @@ void processKeys() {
 			cam->speed = 0.01f;
 	}
 
-	// translate right
-	if(keys['i']){
-		objects[selectedObject].transform->position->x += 0.3f;
-	}
-
-	// translate left
-	if(keys['u']){
-		objects[selectedObject].transform->position->x -= 0.3f;
-	}
-
-	// rotate right
-	if(keys['k']){
-		objects[selectedObject].transform->rotation->x += 10.0f;
-	}
-
-	// rotate left
-	if(keys['j']){
-		objects[selectedObject].transform->rotation->x -= 10.0f;
-	}
-
-	// scale up
-	if(keys['m']){
-		objects[selectedObject].transform->scale->x += 0.1f;
-		objects[selectedObject].transform->scale->y += 0.1f;
-		objects[selectedObject].transform->scale->z += 0.1f;
-	}
-
-	// scale down
-	if(keys['n']){
-		objects[selectedObject].transform->scale->x -= 0.1f;
-		objects[selectedObject].transform->scale->y -= 0.1f;
-		objects[selectedObject].transform->scale->z -= 0.1f;
-	}
-
 	// Cleanup glut before exiting
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
@@ -231,7 +191,7 @@ void renderScene(void) {
     drawGround();
 
     // Draws scene objects
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 2; i++){
 
 		glPushMatrix();
 
@@ -242,10 +202,6 @@ void renderScene(void) {
 
     	case TORUS:
     		selectedObject - TORUS == 0 ? drawTorus(objects[i].transform, true): drawTorus(objects[i].transform, false);
-    		break;
-
-    	case CUBE:
-    		selectedObject - CUBE == 0 ? drawCube(objects[i].transform, true): drawCube(objects[i].transform, false);
     		break;
 
 		default:
@@ -266,9 +222,9 @@ void changeSize(int w, int h) {
 	// (you cant make a window of zero width).
 	if (h == 0) h = 1;
 
-	float _w = w, _h = h;
+	// float _w = w, _h = h;
 
-	float ratio = _w/_h;
+	float ratio = (float)w / (float)h;
 
 	// Use the Projection Matrix
 	glMatrixMode(GL_PROJECTION);
@@ -280,7 +236,7 @@ void changeSize(int w, int h) {
 	glViewport(0, 0, w, h);
 
 	// Set the correct perspective.
-	gluPerspective(45.0f, ratio, 0.1f, 100.0f);
+	gluPerspective(45.0f, ratio, 0.1f, 500.0f);
 
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
@@ -290,14 +246,6 @@ void changeSize(int w, int h) {
 void keyboardUp(unsigned char key, int x, int y){ keys[key] = false; }
 void keyboardDown(unsigned char key, int x, int y){
 	switch(key){
-
-		case 't':
-			selectObject(PREVIOUS);
-			break;
-
-		case 'y':
-			selectObject(NEXT);
-			break;
 
 		case ' ':
 			myCleanup();
