@@ -1,6 +1,6 @@
 # C and C++ makefile
 # Project name
-NAME=FreeGluteosShading
+NAME=LightiningGluteos
 
 
 # Directories
@@ -34,17 +34,12 @@ DEPSPP=$(wildcard $(INCDIR)/*.hpp)
 OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.c=$(OBJDIR)/%.o))
 OBJ += $(foreach file, $(SRCPP), $(file:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o))
 
-# Find renamed or removed .o files
-DEL_OBJ=$(wildcard $(OBJDIR)/*.o)
-DEL_OBJ=$(filter-out %.o, $(OBJC))
-
 CC=g++
 CFLAGS=-O3 -I./$(INCDIR) 
 
-USER_LIBS=
+USER_LIBS=-lGL -lglut -lGLU 
 DEFAULT_LIBS=-lm
 LIBS=$(USER_LIBS) $(DEFAULT_LIBS)
-
 
 ifdef debug
 	CFLAGS += -Wall -Wextra -g -D DEBUG
@@ -63,16 +58,15 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
 	@echo Building $*
 	@$(CC) -c -o $@ $< $(CFLAGS)
-
+	
 .PHONY: main
-main: checkname $(OBJ)
+main: $(OBJ)
 	@echo Linking object files
 	@$(CC) -o $(BLDDIR)/$(NAME) $^ $(CFLAGS) $(LIBS)
-
-
+	
 .PHONY: run
 # Run directives
-run: checkname
+run: 
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 
 # Utility directives
@@ -84,11 +78,11 @@ clean: checkname
 	clear
 	clear
 
-cleanobj: checkname
+cleanobj: 
 	-rm -f $(OBJDIR)/*.o
 
 .PHONY: list
-list: checkname
+list: 
 	clear
 	ls -lhR
 
@@ -137,7 +131,7 @@ readme: checkname
 	@echo "" >> $(NAME)/README.md
 
 # Check for directory existence and create them if necessary
-checkdirs: checkname
+checkdirs:
 	if [ ! -d $(BLDDIR)/ ]; then mkdir -p $(BLDDIR)/; fi
 	if [ ! -d $(INCDIR)/ ]; then mkdir -p $(INCDIR)/; fi
 	if [ ! -d $(LIBDIR)/ ]; then mkdir -p $(LIBDIR)/; fi

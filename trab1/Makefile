@@ -41,7 +41,7 @@ DEL_OBJ=$(filter-out %.o, $(OBJC))
 CC=g++
 CFLAGS=-O3 -I./$(INCDIR) 
 
-USER_LIBS=
+USER_LIBS=-lGL -lglut -lGLU 
 DEFAULT_LIBS=-lm
 LIBS=$(USER_LIBS) $(DEFAULT_LIBS)
 
