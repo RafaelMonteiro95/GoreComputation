@@ -58,3 +58,17 @@ void setOrthographicProjection() {
 	// switch back to modelview mode
 	glMatrixMode(GL_MODELVIEW);
 }
+
+void displayText(float x, float y, const char *mstring){
+
+	//drawing some text
+	setOrthographicProjection();
+
+	glPushMatrix();
+	glLoadIdentity();
+	glColor3f(1.0f, 1.0f, 1.0f);//needs to be called before RasterPos
+	renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
+	glPopMatrix();
+
+	restorePerspectiveProjection();
+}

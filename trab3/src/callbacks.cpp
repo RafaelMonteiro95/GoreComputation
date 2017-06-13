@@ -312,20 +312,6 @@ void processKeys() {
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
-void displayText(float x, float y, const char *mstring){
-
-	//drawing some text
-	setOrthographicProjection();
-
-	glPushMatrix();
-	glLoadIdentity();
-	glColor3f(1.0f, 1.0f, 1.0f);//needs to be called before RasterPos
-	renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
-	glPopMatrix();
-
-	restorePerspectiveProjection();
-}
-
 void DisplayDebugInfo(){
     
     char str[255];
@@ -424,27 +410,33 @@ void updateLightning(void){
 	
 	if(glIsEnabled(GL_LIGHT0)){
 
+		glPushMatrix();
 		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
 		glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
+		glPopMatrix();
 
 	} else if(glIsEnabled(GL_LIGHT1)){
 		
+		glPushMatrix();
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lights[LIGHT1][COLOR]);
 		glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
 		glLightfv(GL_LIGHT1, GL_POSITION, lights[LIGHT1][POSITION]);
+		glPopMatrix();
 
 	} else if(glIsEnabled(GL_LIGHT2)){
 
+		glPushMatrix();
 		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lights[LIGHT2][COLOR]);
 		glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
 		glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
 		glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);
 		glLightfv(GL_LIGHT2, GL_POSITION, lights[LIGHT2][POSITION]);
+		glPopMatrix();
 	}
 }
 
@@ -461,37 +453,32 @@ void renderScene(void) {
 	cam->update();
 
     // Draw ground
-    glPushAttrib(GL_LIGHTING_BIT);
-    drawGround();
-    glPopAttrib();
+    // drawGround();
     // Draw sun
-    glPushAttrib(GL_LIGHTING_BIT);
     drawSun(sun);
-    glPopAttrib();
 
     // Draws scene objects
     for(int i = 0; i < 3; i++){
 
-    	glPushAttrib(GL_LIGHTING_BIT);
     	glPushMatrix();
 
     	char buf[255];
     	switch(objects[i].type){
     	case TEAPOT:
-			sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
+			// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		 //    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
     		drawTeapot(objects[i].transform, objects[i].color);
     		break;
 
     	case TORUS:
-    		sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
+    		// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    // displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
     		drawTorus(objects[i].transform, objects[i].color);
     		break;
 
     	case CUBE:
-    		sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
+    		// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    // displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
     		drawCube(objects[i].transform, objects[i].color);
     		break;
 
@@ -500,7 +487,6 @@ void renderScene(void) {
 		}
 
 		glPopMatrix();
-    	glPopAttrib();
     }
 
     DisplayDebugInfo();
