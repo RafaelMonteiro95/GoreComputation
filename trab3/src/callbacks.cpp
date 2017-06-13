@@ -96,6 +96,8 @@ GLfloat *debug_vectors[N_ATT];
 int indexi = 0;
 GLfloat *selected = angle;
 
+void updateLightning(void);
+
 void InitLightning(){
 	
 	// OpenGL lightning
