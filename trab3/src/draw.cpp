@@ -27,6 +27,25 @@ void applyTransform(Transform* obj){
 	glRotatef(obj->rotation->z, 0.0f, 0.0f, 1.0f);
 }
 
+void drawSun(Transform* sun){
+	glPushMatrix();
+
+	// glColor3f(1.0f,1.0f,0.0f);
+	glNormal3d(0, 1, 0);
+	color[0] = 0.7f;
+	color[1] = 0.6f;
+	color[2] = 0.2f;
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+
+
+	applyTransform(sun);
+	glutSolidTeapot(10.0f);
+	// drawSnowman(sun);
+	// glutSolidSphere(10.0f,10,10);
+
+	glPopMatrix();
+}
+
 void drawSnowman(Transform* snowman) {
 
 	glPushMatrix();

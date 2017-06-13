@@ -161,6 +161,8 @@ void InitLightning(){
 	glShadeModel(GL_SMOOTH);
 }
 
+Transform* sol;
+
 void myInit(){
 
 	cam = new Camera();
@@ -182,6 +184,10 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	objects[2].type = CUBE;
+
+	sol = new Transform(0.0f, -5.0f, -10.0f,
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
 
 	InitLightning();
 }
@@ -370,6 +376,11 @@ void update(void){
 
 	glutPostRedisplay();
 	updateLightning();
+
+	sol->position->y += 0.01f;
+	sol->rotation->y += 1;
+	sol->rotation->z += 1;
+	sol->rotation->x += 1;
 }
 
 void updateLightning(void){
@@ -414,6 +425,8 @@ void renderScene(void) {
 
     // Draw ground
     drawGround();
+    // Draw sun
+    drawSun(sol);
 
     // Draws scene objects
     for(int i = 0; i < 3; i++){
