@@ -571,9 +571,9 @@ void changeSize(int w, int h) {
 	// (you cant make a window of zero width).
 	if (h == 0) h = 1;
 
-	float _w = w, _h = h;
+	// float _w = w, _h = h;
 
-	float ratio = _w/_h;
+	float ratio = (float)w / (float)h;
 
 	// Use the Projection Matrix
 	glMatrixMode(GL_PROJECTION);
@@ -585,7 +585,7 @@ void changeSize(int w, int h) {
 	glViewport(0, 0, w, h);
 
 	// Set the correct perspective.
-	gluPerspective(45.0f, ratio, 0.1f, 100.0f);
+	gluPerspective(45.0f, ratio, 0.1f, 500.0f);
 
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);

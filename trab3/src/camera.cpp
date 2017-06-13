@@ -45,10 +45,12 @@ void Camera::update() {
 void Camera::zoomIn(){
 	float rotxrad, rotyrad;
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
-	rotxrad = (transform->rotation->x / 180.0f * M_PI); 
+	rotxrad = (transform->rotation->x / 180.0f * M_PI);
+
 	transform->position->x += float(sin(rotyrad)) * speed;
 	transform->position->z -= float(cos(rotyrad)) * speed;
 	transform->position->y -= float(sin(rotxrad)) * speed;
+
 	checkHeight();
 }
 
