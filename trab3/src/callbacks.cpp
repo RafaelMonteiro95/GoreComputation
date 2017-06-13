@@ -135,13 +135,13 @@ GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{/* Light source 0 - light is at infinit
 										{0.0f, 0.0f, 1.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 1	  */
-										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
+										{0.3f, 0.8f, 0.1f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
 										{0.0f, 1.0f, 0.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 2	  */
-										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
+										{0.4f, 1.0f, 0.4f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
 										{0.0f, 0.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{1.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
