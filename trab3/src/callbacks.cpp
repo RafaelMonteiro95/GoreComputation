@@ -22,6 +22,8 @@
 #define CUBE 2
 #define NEXT 1
 #define PREVIOUS -1
+#define SMOOTH true
+#define FLAT false
 
 typedef int OBJECT_TYPE;
 
@@ -74,6 +76,8 @@ int selectedObject = 0; // object that will handle transformations
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
+bool shading_mode = SMOOTH;
+
 Camera* cam;
 
 // Color
@@ -84,32 +88,73 @@ GLfloat red[] = {1.0, 0.0, 0.0};
 //list of scene objects.
 sceneObject objects[3];
 
-#define N_ATT	5
-GLfloat angle[]		= {1.0f, 1.0f, 0.2f, 0.0f}; // last value isnt used, its just for my convenience 
-GLfloat ambient[]	= {1.0f, 0.8f, 0.6f, 1.0f};
-GLfloat diffuse[]	= {0.3f, 0.3f, 0.3f, 1.0f};
-GLfloat specular[]	= {1.0f, 0.5f, 0.2f, 1.0f};
-GLfloat position[]	= {1.0f, 0.5f, 0.2f, 1.0f}; // last value isnt used, its just for my convenience 
+// Map our light defines to GL_LIGHTX defines (they dont start at 0 to index 
+// vectors)
+GLenum gl_lights[] = {GL_LIGHT0, GL_LIGHT1, GL_LIGHT2};
+#define getLight(number) (gl_lights[number])
 
-GLfloat step = 0.1f;
-GLfloat *debug_vectors[N_ATT];
-int indexi = 0;
-GLfloat *selected = angle;
+// Our lights defines
+#define MAX_LIGHTS	3
+ #define LIGHT0 	0
+ #define LIGHT1 	1
+ #define LIGHT2 	2
+
+// Our attributes defines
+#define N_ATT		5
+ #define ANGLE		0
+ #define AMBIENT	1
+ #define DIFFUSE	2
+ #define SPECULAR	3
+ #define POSITION	4
+
+// Dont ask, just accept
+/* 3D vector that stores the attributes of each light. If you don't understand
+just accept it. */
+GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{
+										{1.0f, 1.0f, 0.2f, 0.0f},
+										{1.0f, 0.8f, 0.6f, 1.0f},
+										{0.3f, 0.3f, 0.3f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f}
+									},
+									{
+										{1.0f, 1.0f, 0.2f, 0.0f},
+										{1.0f, 0.8f, 0.6f, 1.0f},
+										{0.3f, 0.3f, 0.3f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f}
+									},
+									{
+										{1.0f, 1.0f, 0.2f, 0.0f},
+										{1.0f, 0.8f, 0.6f, 1.0f},
+										{0.3f, 0.3f, 0.3f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f},
+										{1.0f, 0.5f, 0.2f, 1.0f}
+									}};
+
+// Max values for each attribute
+GLfloat maxs[] = {1.0f, 1.0f, 1.0f, 1.0f, 500.0f};
+// Step for changing each attribute
+GLfloat step[] = {0.1f, 0.1f, 0.1f, 0.1f, 1.0f};
+
+// Actual selected light source
+int selectedLight = LIGHT0;
+// Actual selected attribute
+int selectedAttribute = ANGLE;
 
 void updateLightning(void);
 
 void InitLightning(){
 	
 	// OpenGL lightning
-
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lights[LIGHT0][AMBIENT]);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][ANGLE]);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
+	glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -138,15 +183,6 @@ void myInit(){
 								0.0f, 0.0f, 0.0f);
 	objects[2].type = CUBE;
 
-	// DEBUG
-	debug_vectors[0] = angle;
-	debug_vectors[1] = ambient;
-	debug_vectors[2] = diffuse;
-	debug_vectors[3] = specular;
-	debug_vectors[4] = position;
-
-	selected = debug_vectors[indexi];
-	
 	InitLightning();
 }
 
@@ -271,34 +307,48 @@ void displayText(float x, float y, const char *mstring){
 	restorePerspectiveProjection();
 }
 
-void debugprintcoisas(){
+void DisplayDebugInfo(){
     
     char str[255];
-    
+    char str2[255];
+
     sprintf(str, "Camera pos: (%.2f, %.2f, %.2f)", cam->transform->position->x,
     										 cam->transform->position->y,
     										 cam->transform->position->z);
     displayText(5.0f, 30.0f, str);
 
-	if(indexi == 0){
-		sprintf(str, "Selected angle [%d]", indexi);
-	} else if(indexi == 1){
-		sprintf(str, "Selected ambient [%d]", indexi);
-	} else if(indexi == 2){
-		sprintf(str, "Selected diffuse [%d]", indexi);
-	} else if(indexi == 3){
-		sprintf(str, "Selected specular [%d]", indexi);
-	} else if(indexi == 4){
-		sprintf(str, "Selected lightpos [%d]", indexi);
-	}
-
+    // TODO
+    sprintf(str, "Selected light %d attribute ", selectedLight);
+     
+	if(selectedAttribute == ANGLE)
+		strcat(str, "ANGLE");
+	else if(selectedAttribute == AMBIENT)
+		strcat(str, "AMBIENT");
+	else if(selectedAttribute == DIFFUSE)
+		strcat(str, "DIFFUSE");
+	else if(selectedAttribute == SPECULAR)
+		strcat(str, "SPECULAR");
+	else if(selectedAttribute == POSITION)
+		strcat(str, "POSITION");
+	
     displayText(5.0f, 50.0f, str);
 
-    sprintf(str, "(%.1f, %.1f, %.1f, %.1f)", selected[0],
-    								 selected[1],
-    								 selected[2],
-    								 selected[3]);
-    displayText(200.0f, 50.0f, str);
+    sprintf(str, "(%.1f, %.1f, %.1f, %.1f)",
+		lights[selectedLight][selectedAttribute][0],
+		lights[selectedLight][selectedAttribute][1],
+		lights[selectedLight][selectedAttribute][2],
+		lights[selectedLight][selectedAttribute][3]);
+    displayText(330.0f, 50.0f, str);
+	
+	bool light0 = glIsEnabled(GL_LIGHT0);
+	bool light1 = glIsEnabled(GL_LIGHT1);
+	bool light2 = glIsEnabled(GL_LIGHT2);
+    sprintf(str, "Light source 1 is %s", light0 ? "enabled" : "disabled");
+    displayText(830.0f, 30.0f, str);
+    sprintf(str, "Light source 2 is %s", light0 ? "enabled" : "disabled");
+    displayText(830.0f, 50.0f, str);
+    sprintf(str, "Light source 3 is %s", light0 ? "enabled" : "disabled");
+    displayText(830.0f, 70.0f, str);
 }
 
 // GlutIdleFunc callback. Processes keys and redraw scene
@@ -312,36 +362,30 @@ void update(void){
 }
 
 void updateLightning(void){
+	
 	if(glIsEnabled(GL_LIGHT0)){
 
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
-		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-		glLightfv(GL_LIGHT0, GL_POSITION, position);
-
-	    glEnable(GL_COLOR_MATERIAL);
-	    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-		glShadeModel(GL_SMOOTH);
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][ANGLE]);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
+		glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
 
 	} else if(glIsEnabled(GL_LIGHT1)){
 		
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, angle);
-		glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-		glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
-		glLightfv(GL_LIGHT1, GL_POSITION, position);
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lights[LIGHT1][ANGLE]);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
+		glLightfv(GL_LIGHT1, GL_POSITION, lights[LIGHT1][POSITION]);
 
 	} else if(glIsEnabled(GL_LIGHT2)){
 
-		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, angle);
-		glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
-		glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
-		glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
-		glLightfv(GL_LIGHT2, GL_POSITION, position);
+		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lights[LIGHT2][ANGLE]);
+		glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
+		glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
+		glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);
+		glLightfv(GL_LIGHT2, GL_POSITION, lights[LIGHT2][POSITION]);
 	}
 }
 
@@ -394,7 +438,7 @@ void renderScene(void) {
 		glPopMatrix();
     }
 
-    debugprintcoisas();
+    DisplayDebugInfo();
 
 	//swap buffers, outputting all drawings done
 	glutSwapBuffers();
@@ -449,63 +493,63 @@ void keyboardDown(unsigned char key, int x, int y){
 			break;
 
 		case 'z':
-			selected[0] += step;
-			if(selected[0] > 1.0f) selected[0] = 1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][0] += step[indexi];
+			if(lights[selectedLight][selectedAttribute][0] > maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][0] = maxs[indexi];
+			break;
 		case 'x':
-			selected[1] += step;
-			if(selected[1] > 1.0f) selected[1] = 1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][1] += step[indexi];
+			if(lights[selectedLight][selectedAttribute][1] > maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][1] = maxs[indexi];
+			break;
 		case 'c':
-			selected[2] += step;
-			if(selected[2] > 1.0f) selected[2] = 1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][2] += step[indexi];
+			if(lights[selectedLight][selectedAttribute][2] > maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][2] = maxs[indexi];
+			break;
 		case 'v': 
-			if(indexi != 0) {
-				selected[3] += step;
-				if(selected[3] > 1.0f) selected[3] = 1.0f;
-			}
-		break;
+			lights[selectedLight][selectedAttribute][3] += step[indexi];
+			if(lights[selectedLight][selectedAttribute][3] > maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][3] = maxs[indexi];
+			break;
 
 		case 'Z':
-			selected[0] -= step;
-			if(selected[0] < -1.0f) selected[0] = -1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][0] -= step[indexi];
+			if(lights[selectedLight][selectedAttribute][0] < -maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][0] = -maxs[indexi];
+			break;
 		case 'X':
-			selected[1] -= step;
-			if(selected[1] < -1.0f) selected[1] = -1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][1] -= step[indexi];
+			if(lights[selectedLight][selectedAttribute][1] < -maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][1] = -maxs[indexi];
+			break;
 		case 'C':
-			selected[2] -= step;
-			if(selected[2] < -1.0f) selected[2] = -1.0f;
-		break;
+			lights[selectedLight][selectedAttribute][2] -= step[indexi];
+			if(lights[selectedLight][selectedAttribute][2] < -maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][2] = -maxs[indexi];
+			break;
 		case 'V': 
-			if(indexi != 0) {
-				selected[3] -= step;
-				if(selected[3] < -1.0f) selected[3] = -1.0f;
+			lights[selectedLight][selectedAttribute][3] -= step[indexi];
+			if(lights[selectedLight][selectedAttribute][3] < -maxs[indexi]) 
+				lights[selectedLight][selectedAttribute][3] = -maxs[indexi];
+			break;
+
+		case 'F': 
+			if(shading_mode == SMOOTH){
+				glShadeModel(GL_FLAT);
+				shading_mode = FLAT;
+			} else if(shading_mode == FLAT){
+				glShadeModel(GL_SMOOTH);
+				shading_mode = SMOOTH;
 			}
-		break;
+			break;
 
-		// Enable/Disable lightning
-		// TODO
-		case '0':
-			selected[0] -= step;
-			if(selected[0] < -1.0f) selected[0] = -1.0f;
-		break;
-		case 'E':
-			selected[1] -= step;
-			if(selected[1] < -1.0f) selected[1] = -1.0f;
-		break;
-		case 'D':
-			selected[2] -= step;
-			if(selected[2] < -1.0f) selected[2] = -1.0f;
-		break;
-		case 'S':
-			selected[2] -= step;
-			if(selected[2] < -1.0f) selected[2] = -1.0f;
-		break;
+		case 'q': 
+			glIsEnabled(getLight(selectedLight))   ? 
+				glDisable(getLight(selectedLight)) : 
+				glEnable(getLight(selectedLight));
+			break;
 
-			
 		default:
 			keys[key] = true;
 			break;
@@ -521,15 +565,23 @@ void specialDown(int key, int x, int y){
 
 		// Debug lightning
 		case GLUT_KEY_F1:
-			indexi--;
-			if(indexi < 0) indexi = N_ATT-1;
-			selected = debug_vectors[indexi];			
+			selectedLight--;
+			if(selectedLight < 0) selectedLight = MAX_LIGHTS-1;
 			break;
 
 		case GLUT_KEY_F2:
-			indexi++;
-			if(indexi > N_ATT-1) indexi = 0;
-			selected = debug_vectors[indexi];
+			selectedLight++;
+			if(selectedLight > MAX_LIGHTS-1) selectedLight = 0;
+			break;
+
+		case GLUT_KEY_F3:
+			selectedAttribute--;
+			if(selectedAttribute < 0) selectedAttribute = N_ATT-1;
+			break;
+
+		case GLUT_KEY_F4:
+			selectedAttribute++;
+			if(selectedAttribute > N_ATT-1) selectedAttribute = 0;
 			break;
 
 		default:

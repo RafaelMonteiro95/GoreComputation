@@ -6,13 +6,13 @@
 
 */
 
+#include <stdio.h>
 #include <math.h>
 #include <GL/glut.h>
 
 #include "callbacks.hpp"
 
 int main(int argc, char *argv[]) {
-
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
