@@ -8,11 +8,22 @@
 #include <GL/glut.h>
 #include "text2d.hpp"
 
+/* DONT END STRING WITH A \n VAI DA RUIM DEMAIS*/
 void renderBitmapString(float x, float y, void *font, const char *string) {
 
 	const char *c;
 	glRasterPos2f(x, y);
+
+	int i = 0;
+
 	for (c=string; *c != '\0'; c++) {
+		i++;
+		if(*c == '\n'){
+			i = 0;
+			y += 20;
+			c++;
+			glRasterPos2f(x, y);
+		}
 		glutBitmapCharacter(font, *c);
 	}
 }

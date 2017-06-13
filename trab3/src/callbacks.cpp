@@ -87,14 +87,14 @@ Camera* cam;
 Transform* sun;
 
 // Color
-GLfloat red[] 	 = {1.0f, 0.0f, 0.0f};
-GLfloat green[]  = {0.0f, 1.0f, 0.0f};
-GLfloat blue[] 	 = {0.0f, 0.0f, 1.0f};
+GLfloat red[] 	 = {0.3f, 0.1f, 0.1f};
+GLfloat green[]  = {0.1f, 0.3f, 0.1f};
+GLfloat blue[] 	 = {0.1f, 0.1f, 0.5f};
 GLfloat white[]  = {1.0f, 1.0f, 1.0f};
 GLfloat black[]  = {0.0f, 0.0f, 0.0f};
 GLfloat gray[]   = {0.5f, 0.5f, 0.5f};
 GLfloat cyan[] 	 = {0.1f, 0.8f, 1.0f};
-GLfloat pink[]	 = {0.8f, 0.0f, 0.8f};
+GLfloat pink[]	 = {0.3f, 0.1f, 0.3f};
 GLfloat purple[] = {0.1f, 0.0f, 0.3f};
 GLfloat yellow[] = {1.0f, 1.0f, 0.2f};
 GLfloat brown[]  = {0.3f, 0.1f, 0.0f};
@@ -129,28 +129,28 @@ enum ATTRIBUTES{
 /* 3D vector that stores the attributes of each light. If you don't understand
 just accept it. */
 GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{/* Light source 0 - light is at infinity by default  */
-										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute AMBIENT
-										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute DIFFUSE
+										{1.0f, 0.0f, 0.0f, 1.0f},	// Attribute AMBIENT
+										{0.8f, 0.8f, 0.8f, 1.0f},	// Attribute DIFFUSE
 										{1.0f, 1.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 0.0f, 1.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 1	  */
-										{0.3f, 0.8f, 0.1f, 1.0f},	// Attribute AMBIENT
-										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
-										{0.0f, 1.0f, 0.0f, 1.0f},	// Attribute SPECULAR
+										{0.0f, 1.0f, 0.0f, 1.0f},	// Attribute AMBIENT
+										{0.8f, 0.0f, 0.8f, 1.0f},	// Attribute DIFFUSE
+										{1.0f, 1.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 2	  */
-										{0.4f, 1.0f, 0.4f, 1.0f},	// Attribute AMBIENT
-										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
-										{0.0f, 0.0f, 1.0f, 1.0f},	// Attribute SPECULAR
+										{0.0f, 0.0f, 1.0f, 1.0f},	// Attribute AMBIENT
+										{0.8f, 0.0f, 0.8f, 1.0f},	// Attribute DIFFUSE
+										{1.0f, 1.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{1.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									}};
 
 // Max values for each attribute
-GLfloat maxs[] = {1.0f, 1.0f, 1.0f, 1.0f, 500.0f};
+GLfloat maxs[] = {1.0f, 1.0f, 1.0f, 500.0f};
 // Step for changing each attribute
-GLfloat step[] = {0.1f, 0.1f, 0.1f, 0.1f, 1.0f};
+GLfloat step[] = {0.1f, 0.1f, 0.1f, 0.3f};
 
 // Actual selected light source
 int selectedLight = LIGHT0;
@@ -164,6 +164,8 @@ void InitLightning(){
 	// OpenGL lightning
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
 
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lights[LIGHT0][AMBIENT]);
 
@@ -172,8 +174,21 @@ void InitLightning(){
 	glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
 	glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
 
+	glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
+	glLightfv(GL_LIGHT1, GL_POSITION, lights[LIGHT1][POSITION]);
+
+	glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);
+	glLightfv(GL_LIGHT2, GL_POSITION, lights[LIGHT2][POSITION]);
+
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
+    glDisable(GL_LIGHT1);
+    glDisable(GL_LIGHT2);
 }
 
 void myInit(){
@@ -184,7 +199,7 @@ void myInit(){
 	objects[0].transform = new Transform(5.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
-	memcpy(objects[0].color, purple, sizeof(GLfloat)*3);
+	memcpy(objects[0].color, red, sizeof(GLfloat)*3);
 	objects[0].type = TEAPOT;
 
 	//object 1 is a Torus located in (0,0,0)
@@ -198,10 +213,10 @@ void myInit(){
 	objects[2].transform = new Transform(-5.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
-	memcpy(objects[2].color, brown, sizeof(GLfloat)*3);
+	memcpy(objects[2].color, green, sizeof(GLfloat)*3);
 	objects[2].type = CUBE;
 
-	sun = new Transform(0.0f, -5.0f, -30.0f,
+	sun = new Transform(0.0f, -5.0f, -50.0f,
 				0.0f, 0.0f, 0.0f,
 				0.0f, 0.0f, 0.0f);
 
@@ -334,84 +349,61 @@ void DisplayDebugInfo(){
     
     char str[255];
     char str2[255];
+    GLfloat *selectedAtt = lights[selectedLight][selectedAttribute];
 
-    sprintf(str, "Camera pos: (%.2f, %.2f, %.2f)", cam->transform->position->x,
+    /* Display Camera */
+    sprintf(str, "Camera pos: (%.2f, %.2f, %.2f)\n", cam->transform->position->x,
     										 cam->transform->position->y,
     										 cam->transform->position->z);
-    displayText(5.0f, 30.0f, str);
+    displayText(5.0f, 40.0f, str);
 
-    sprintf(str, "Selected light %d attribute ", selectedLight);
+    /* Display Light and its attributes*/
+    char lightstr[255] = "Selected light X attribute ";
+    lightstr[15] = selectedLight + '0';
      
-	/*if(selectedAttribute == COLOR)
-		strcat(str, "COLOR");
-	else */if(selectedAttribute == AMBIENT)
-		strcat(str, "AMBIENT");
+	// Add attribute name
+	if(selectedAttribute == AMBIENT)
+		strcat(lightstr, "AMBIENT");
 	else if(selectedAttribute == DIFFUSE)
-		strcat(str, "DIFFUSE");
+		strcat(lightstr, "DIFFUSE");
 	else if(selectedAttribute == SPECULAR)
-		strcat(str, "SPECULAR");
+		strcat(lightstr, "SPECULAR");
 	else if(selectedAttribute == POSITION)
-		strcat(str, "POSITION");
+		strcat(lightstr, "POSITION");
 	
-    displayText(5.0f, 50.0f, str);
+	// Add attribute value
+    sprintf(str, " (%.1f, %.1f, %.1f, %.1f)",
+		selectedAtt[0], selectedAtt[1], selectedAtt[2], selectedAtt[3]);
 
-    sprintf(str, "(%.1f, %.1f, %.1f, %.1f)",
-		lights[selectedLight][selectedAttribute][0],
-		lights[selectedLight][selectedAttribute][1],
-		lights[selectedLight][selectedAttribute][2],
-		lights[selectedLight][selectedAttribute][3]);
-    if(selectedAttribute == POSITION && 
-    	(lights[selectedLight][selectedAttribute][3] == 0.0 || 
-    		lights[selectedLight][selectedAttribute][3] == -0.0))
+    strcat(lightstr, str);
+
+    if(selectedAttribute == POSITION && (selectedAtt[3] == 0.0 || selectedAtt[3] == -0.0))
     	strcat(str, "  AT INFINITY!");
-    displayText(330.0f, 50.0f, str);
+
+    displayText(5.0f, 60.0f, lightstr);
 	
 	bool light0 = glIsEnabled(GL_LIGHT0);
 	bool light1 = glIsEnabled(GL_LIGHT1);
 	bool light2 = glIsEnabled(GL_LIGHT2);
-    sprintf(str, "Light source 0, at (%.2f, %.2f, %.2f), is %s", 
+    sprintf(str, "Light source 0, at (%.2f, %.2f, %.2f), is %s\nLight source 1, at (%.2f, %.2f, %.2f), is %s\nLight source 2, at (%.2f, %.2f, %.2f), is %s", 
     	lights[LIGHT0][POSITION][0],
     	lights[LIGHT0][POSITION][1],
     	lights[LIGHT0][POSITION][2],
-    	light0 ? "enabled" : "disabled");
-    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 30.0f, str);
-    sprintf(str, "Light source 1, at (%.2f, %.2f, %.2f), is %s", 
+    	light0 ? "enabled" : "disabled",
     	lights[LIGHT1][POSITION][0],
     	lights[LIGHT1][POSITION][1],
     	lights[LIGHT1][POSITION][2],
-    	light1 ? "enabled" : "disabled");
-    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 50.0f, str);
-    sprintf(str, "Light source 2, at (%.2f, %.2f, %.2f), is %s", 
+    	light1 ? "enabled" : "disabled",
     	lights[LIGHT2][POSITION][0],
     	lights[LIGHT2][POSITION][1],
     	lights[LIGHT2][POSITION][2],
     	light2 ? "enabled" : "disabled");
-    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 70.0f, str);
+
+    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 40.0f, str);
 }
 
 void DisplayControls(){
-
-	char buf[255];
-
-	sprintf(buf, "WASD and Arrow Keys to move around");
-	displayText(5, 500, buf);
-
-	sprintf(buf, "F1/F2 cycle through light sources");
-	displayText(5, 520, buf);
-
-	sprintf(buf, "F3/F4 cycle through lights attributes");
-	displayText(5, 540, buf);
-
-	sprintf(buf, "Z X C V to increment attribute value");
-	displayText(5, 560, buf);
-
-	sprintf(buf, "SHIFT + (Z X C V) to decrement attribute value");
-	displayText(5, 580, buf);
-
-	sprintf(buf, "If a light source is not at infinity (position[3] == 0),");
-	displayText(5, 600, buf);
-	sprintf(buf, "it will be drawn at screen as a black sphere.");
-	displayText(5, 620, buf);
+	displayText(5, 500, "WASD and Arrow Keys to move around\nF1/F2 cycle through light sources\nF3/F4 cycle through lights attributes\nZ X C V to increment attribute value\nQ to enable/disable light source\nSHIFT+F to change between FLAT and GOURAUD\nSHIFT + (Z X C V) to decrement attribute value\nIf a light source is not at infinity (position[3] == 0),\nit will be drawn at screen as a black sphere.");
 }
 
 // GlutIdleFunc callback. Processes keys and redraw scene
@@ -443,8 +435,7 @@ void update(void){
 	objects[1].transform->rotation->x += 0.5f;
 	objects[2].transform->rotation->y += 0.5f;
 
-	for (int i = 0; i < 3; i++)
-	{
+	for (int i = 0; i < 3; i++){
 		lightSources[i].transform->position->x = lights[i][POSITION][0];
 		lightSources[i].transform->position->y = lights[i][POSITION][1];
 		lightSources[i].transform->position->z = lights[i][POSITION][2];
@@ -527,7 +518,6 @@ void renderScene(void) {
 		default:
 			break;
 		}
-
 		glPopMatrix();
     }
 
@@ -543,16 +533,14 @@ void renderScene(void) {
 		glPopMatrix();
 	}
 
-	if(showDebug)
+	if(showDebug){
     	DisplayDebugInfo();
-    if(showControls)
+	}
+    if(showControls){
     	DisplayControls();
+    }
 
-    char buf[50];
-    sprintf(buf, "F9 - Show/Hide controls");
-    displayText(600, 20, buf);
-    sprintf(buf, "F10 - Show/Hide debug");
-    displayText(600, 40, buf);
+    displayText(600, 40, "F9 - Show/Hide controls\nF10 - Show/Hide debug\nTry running the command \"make run reileao=1\"");
 
 	//swap buffers, outputting all drawings done
 	glutSwapBuffers();

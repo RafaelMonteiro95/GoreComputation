@@ -29,9 +29,9 @@ void drawSun(Transform* sun){
 	glPushMatrix();
 
 	glNormal3d(0, 1, 0);
-	GLfloat color[] = {0.2f, 0.2f, 0.0f};
+	GLfloat color[] = {0.3f, 0.2f, 0.0f};
 	// glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-	glColor3f(color[0], color[1], color[2]);
+	glColor3f(0.4f, 0.4f, 0.1f);
 
 	applyTransform(sun);
 	// glutSolidTeapot(10.0f);
@@ -114,7 +114,7 @@ void drawCube(Transform* cube, GLfloat color[3]){
 
 	glNormal3d(0, 1, 0);
 	glMaterialfv(GL_BACK, GL_DIFFUSE, color);
-	glMaterialf(GL_BACK, GL_SHININESS, 200);
+	glMaterialf(GL_BACK, GL_SHININESS, 64);
 	glColor3f(color[0], color[1], color[2]);
 
 	glutSolidCube(1.5f);
@@ -139,14 +139,14 @@ void drawTeapot(Transform* teapot, GLfloat color[3]) {
 
 	glNormal3d(0, 1, 0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 255);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 32	);
 	glColor3f(color[0], color[1], color[2]);
 
 	glutSolidTeapot(0.7f);
 }
 
 void drawSky(){
-	glColor3f(0.0f, 0.3f, 1.0f);
+	glColor3f(0.0f, 0.6f, 1.0f);
 	glutSolidSphere(60.0f,5,5);
 }
 
