@@ -20,6 +20,7 @@
 #define TEAPOT 0
 #define TORUS 1
 #define CUBE 2
+#define SPHERE 3
 #define NEXT 1
 #define PREVIOUS -1
 #define SMOOTH true
@@ -77,6 +78,9 @@ int selectedObject = 0; // object that will handle transformations
 bool keys[255] = {0}; // keypress state
 bool skeys[255] = {0}; // special keypress state
 
+bool showControls = true;
+bool showDebug = false;
+
 bool shading_mode = SMOOTH;
 
 Camera* cam;
@@ -96,6 +100,7 @@ GLfloat brown[]  = {0.3f, 0.1f, 0.0f};
 
 //list of scene objects.
 sceneObject objects[3];
+sceneObject lightSources[3];
 
 // Map our light defines to GL_LIGHTX defines (they dont start at 0 to index 
 // vectors)
@@ -123,7 +128,7 @@ GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{/* Light source 0 - light is at infinit
 										{0.5f, 0.5f, 0.1f, 0.0f},	// Attribute COLOR
 										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute DIFFUSE
-										{1.0f, 0.0f, 0.0f, 1.0f},	// Attribute SPECULAR
+										{1.0f, 1.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 0.0f, 1.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 1	  */
@@ -180,7 +185,6 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[0].color, cyan, sizeof(GLfloat)*3);
-	fprintf(stderr, "color 0: (%f, %f, %f)\n", objects[0].color[0], objects[0].color[1], objects[0].color[2]);
 	objects[0].type = TEAPOT;
 
 	//object 1 is a Torus located in (0,0,0)
@@ -188,7 +192,6 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[1].color, purple, sizeof(GLfloat)*3);
-	fprintf(stderr, "color 1: (%f, %f, %f)\n", objects[1].color[0], objects[1].color[1], objects[1].color[2]);
 	objects[1].type = TORUS;
 
 	//object 2 is a Cube located in (-5,0,0)
@@ -196,13 +199,25 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[2].color, brown, sizeof(GLfloat)*3);
-	fprintf(stderr, "color 2: (%f, %f, %f)\n", objects[2].color[0], objects[2].color[1], objects[2].color[2]);
 	objects[2].type = CUBE;
 
 	sun = new Transform(0.0f, -5.0f, -30.0f,
 				0.0f, 0.0f, 0.0f,
 				0.0f, 0.0f, 0.0f);
 
+
+	lightSources[0].transform = new Transform(lights[LIGHT0][POSITION][0], lights[LIGHT0][POSITION][1], lights[LIGHT0][POSITION][2],
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	lightSources[0].type = SPHERE;
+	lightSources[1].transform = new Transform(lights[LIGHT1][POSITION][0], lights[LIGHT1][POSITION][1], lights[LIGHT1][POSITION][2],
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	lightSources[1].type = SPHERE;
+	lightSources[2].transform = new Transform(lights[LIGHT2][POSITION][0], lights[LIGHT2][POSITION][1], lights[LIGHT2][POSITION][2],
+								0.0f, 0.0f, 0.0f,
+								0.0f, 0.0f, 0.0f);
+	lightSources[2].type = SPHERE;
 	InitLightning();
 }
 
@@ -374,6 +389,31 @@ void DisplayDebugInfo(){
     displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 70.0f, str);
 }
 
+void DisplayControls(){
+
+	char buf[255];
+
+	sprintf(buf, "WASD and Arrow Keys to move around");
+	displayText(5, 500, buf);
+
+	sprintf(buf, "F1/F2 cycle through light sources");
+	displayText(5, 520, buf);
+
+	sprintf(buf, "F3/F4 cycle through lights attributes");
+	displayText(5, 540, buf);
+
+	sprintf(buf, "Z X C V to increment attribute value");
+	displayText(5, 560, buf);
+
+	sprintf(buf, "SHIFT + (Z X C V) to decrement attribute value");
+	displayText(5, 580, buf);
+
+	sprintf(buf, "If a light source is not at infinity (position[3] == 0),");
+	displayText(5, 600, buf);
+	sprintf(buf, "it will be drawn at screen as a black sphere.");
+	displayText(5, 620, buf);
+}
+
 // GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
 
@@ -384,9 +424,9 @@ void update(void){
 	updateLightning();
 
 	sun->position->y += 0.01f;
-	sun->rotation->y += 1;
-	sun->rotation->z += 1;
-	sun->rotation->x += 1;
+	// sun->rotation->y += 1;
+	// sun->rotation->z += 1;
+	// sun->rotation->x += 1;
 
 	static float count;
 	float sine = sinf(count);
@@ -405,6 +445,13 @@ void update(void){
 	objects[0].transform->rotation->z += 0.5f;
 	objects[1].transform->rotation->x += 0.5f;
 	objects[2].transform->rotation->y += 0.5f;
+
+	for (int i = 0; i < 3; i++)
+	{
+		lightSources[i].transform->position->x = lights[i][POSITION][0];
+		lightSources[i].transform->position->y = lights[i][POSITION][1];
+		lightSources[i].transform->position->z = lights[i][POSITION][2];
+	}
 
 	count += 0.03f;
 }
@@ -456,9 +503,9 @@ void renderScene(void) {
 	cam->update();
 
     // Draw ground
-    // drawGround();
+    drawGround();
     // Draw sun
-    // drawSun(sun);
+    drawSun(sun);
 
     // Draws scene objects
     for(int i = 0; i < 3; i++){
@@ -468,20 +515,18 @@ void renderScene(void) {
     	char buf[255];
     	switch(objects[i].type){
     	case TEAPOT:
-			sprintf(buf, "tpot (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
     		drawTeapot(objects[i].transform, objects[i].color);
     		break;
 
     	case TORUS:
-    		sprintf(buf, "torus (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
     		drawTorus(objects[i].transform, objects[i].color);
     		break;
 
     	case CUBE:
-    		sprintf(buf, "cubo (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
+    		drawCube(objects[i].transform, objects[i].color);
+    		break;
+
+    	case SPHERE:
     		drawCube(objects[i].transform, objects[i].color);
     		break;
 
@@ -492,7 +537,28 @@ void renderScene(void) {
 		glPopMatrix();
     }
 
-    DisplayDebugInfo();
+    // Draw light bulbs
+    for(int i = 0; i < 3; i++){
+
+    	glPushMatrix();
+
+    	// If not at infinity, draw light bulb
+		if(lights[i][POSITION][3] != 0.0f)
+			drawSphere(lightSources[i].transform, black);
+
+		glPopMatrix();
+	}
+
+	if(showDebug)
+    	DisplayDebugInfo();
+    if(showControls)
+    	DisplayControls();
+
+    char buf[50];
+    sprintf(buf, "F9 - Show/Hide controls");
+    displayText(600, 20, buf);
+    sprintf(buf, "F10 - Show/Hide debug");
+    displayText(600, 40, buf);
 
 	//swap buffers, outputting all drawings done
 	glutSwapBuffers();
@@ -615,7 +681,7 @@ void keyboardDown(unsigned char key, int x, int y){
 }
 
 void specialUp(int key, int x, int y){ (void) x, (void) y, skeys[key] = false; }
-void specialDown(int key, int x, int y){ 
+void specialDown(int key, int x, int y){
 	
 	(void) x, (void) y;
 
@@ -643,6 +709,13 @@ void specialDown(int key, int x, int y){
 		case GLUT_KEY_F4:
 			selectedAttribute++;
 			if(selectedAttribute > N_ATT-1) selectedAttribute = 0;
+			break;
+
+		case GLUT_KEY_F9:
+			showControls = !showControls;
+			break;
+		case GLUT_KEY_F10:
+			showDebug =  !showDebug;
 			break;
 
 		default:

@@ -29,13 +29,15 @@ void drawSun(Transform* sun){
 	glPushMatrix();
 
 	glNormal3d(0, 1, 0);
-	GLfloat color[] = {1.0f, 1.0f, 0.0f};
-	// glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+	GLfloat color[] = {0.2f, 0.2f, 0.0f};
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
+	glColor3f(color[0], color[1], color[2]);
 
 	applyTransform(sun);
-	glutSolidTeapot(10.0f);
+	// glutSolidTeapot(10.0f);
 	// drawSnowman(sun);
-	// glutSolidSphere(10.0f,10,10);
+	glutSolidSphere(10.0f,30,30);
 
 	glPopMatrix();
 }
@@ -97,13 +99,10 @@ void drawTorus(Transform* torus, GLfloat color[3]){
 
 	applyTransform(torus);
 
-	char buf[255];
-	sprintf(buf, "torus color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 550.0f, buf);
-
 	glNormal3d(0, 1, 0);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glMaterialf(GL_FRONT, GL_SHININESS, 128);
+	glColor3f(color[0], color[1], color[2]);
 
 	glRotatef(90,1,0,0);
 
@@ -114,15 +113,24 @@ void drawCube(Transform* cube, GLfloat color[3]){
 
 	applyTransform(cube);
 
-	char buf[255];
-	sprintf(buf, "cube color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 570.0f, buf);
-
 	glNormal3d(0, 1, 0);
 	glMaterialfv(GL_BACK, GL_DIFFUSE, color);
 	glMaterialf(GL_BACK, GL_SHININESS, 200);
+	glColor3f(color[0], color[1], color[2]);
 
 	glutSolidCube(1.5f);
+}
+
+void drawSphere(Transform* sphere, GLfloat color[3]){
+
+	applyTransform(sphere);
+
+	glNormal3d(0, 1, 0);
+	// glMaterialfv(GL_BACK, GL_DIFFUSE, color);
+	// glMaterialf(GL_BACK, GL_SHININESS, 200);
+	glColor3f(color[0], color[1], color[2]);
+
+	glutSolidSphere(0.05f,20,30);
 }
 
 void drawTeapot(Transform* teapot, GLfloat color[3]) {
@@ -130,19 +138,16 @@ void drawTeapot(Transform* teapot, GLfloat color[3]) {
 	// Apllies transformations
 	applyTransform(teapot);
 
-	char buf[255];
-	sprintf(buf, "tpot color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 590.0f, buf);
-
 	glNormal3d(0, 1, 0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 255);
+	glColor3f(color[0], color[1], color[2]);
 
 	glutSolidTeapot(0.7f);
 }
 
 void drawSky(){
-	glColor3f(0.3f, 0.4f, 1.0f);
+	glColor3f(0.0f, 0.0f, 1.0f);
 	glutSolidSphere(60.0f,5,5);
 }
 
@@ -151,16 +156,16 @@ void drawGround(){
 	glPushMatrix();
 	glBegin(GL_QUADS);
 
-		glColor3f(255.0f, 255.0f, 255.0f);
+		glColor3f(0.2f, 0.4f, 0.6f);
 		glVertex3f(-30.0f, 0.0f, -30.0f);
 
-		glColor3f(255.0f, 0.0f, 255.0f);
+		glColor3f(0.4f, 0.2f, 0.8f);
 		glVertex3f(-30.0f, 0.0f,  30.0f);
 
-		glColor3f(255.0f, 255.0f, 0.0f);
+		glColor3f(0.2f, 0.8f, 0.8f);
 		glVertex3f( 30.0f, 0.0f,  30.0f);
 
-		glColor3f(0.0f, 255.0f, 255.0f);
+		glColor3f(0.4f, 0.2f, 0.8f);
 		glVertex3f( 30.0f, 0.0f, -30.0f);
 
 	glEnd();

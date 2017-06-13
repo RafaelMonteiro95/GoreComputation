@@ -72,8 +72,12 @@ main: $(OBJ)
 
 .PHONY: run
 # Run directives
-run: 
+run: reileao
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
+	killall python2
+
+reileao:
+	cplay *.mp3 &
 
 # Utility directives
 .PHONY: clean
