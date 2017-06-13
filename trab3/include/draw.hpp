@@ -4,6 +4,7 @@
 #include "transform.hpp"
 
 void applyTransform(Transform* obj);
+void drawSun(Transform* sun);
 void drawSnowman(Transform* snowman) ;
 void drawIcecream(Transform* icecream);
 void drawTorus(Transform* torus, bool selected);
