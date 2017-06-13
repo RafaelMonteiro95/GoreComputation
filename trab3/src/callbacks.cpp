@@ -94,7 +94,8 @@ GLfloat white[]  = {1.0f, 1.0f, 1.0f};
 GLfloat black[]  = {0.0f, 0.0f, 0.0f};
 GLfloat gray[]   = {0.5f, 0.5f, 0.5f};
 GLfloat cyan[] 	 = {0.1f, 0.8f, 1.0f};
-GLfloat purple[] = {1.0f, 0.0f, 1.0f};
+GLfloat pink[]	 = {0.8f, 0.0f, 0.8f};
+GLfloat purple[] = {0.1f, 0.0f, 0.3f};
 GLfloat yellow[] = {1.0f, 1.0f, 0.2f};
 GLfloat brown[]  = {0.3f, 0.1f, 0.0f};
 
@@ -109,37 +110,37 @@ GLenum gl_lights[] = {GL_LIGHT0, GL_LIGHT1, GL_LIGHT2};
 
 // Our lights defines
 #define MAX_LIGHTS	3
- #define LIGHT0 	0
- #define LIGHT1 	1
- #define LIGHT2 	2
+enum LIGHTS{
+	LIGHT0,
+	LIGHT1,
+	LIGHT2
+};
 
 // Our attributes defines
-#define N_ATT		5
- #define COLOR		0
- #define AMBIENT	1
- #define DIFFUSE	2
- #define SPECULAR	3
- #define POSITION	4
+#define N_ATT		4
+enum ATTRIBUTES{
+	AMBIENT,
+	DIFFUSE,
+	SPECULAR,
+	POSITION
+};
 
 // Dont ask, just accept
 /* 3D vector that stores the attributes of each light. If you don't understand
 just accept it. */
 GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{/* Light source 0 - light is at infinity by default  */
-										{0.5f, 0.5f, 0.1f, 0.0f},	// Attribute COLOR
 										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute DIFFUSE
 										{1.0f, 1.0f, 1.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 0.0f, 1.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 1	  */
-										{0.0f, 0.5f, 0.9f, 0.0f},	// Attribute COLOR
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
 										{0.0f, 1.0f, 0.0f, 1.0f},	// Attribute SPECULAR
 										{0.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									},
 									{	/* Light source 2	  */
-										{0.5f, 1.0f, 0.2f, 0.0f},	// Attribute COLOR
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
 										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
 										{0.0f, 0.0f, 1.0f, 1.0f},	// Attribute SPECULAR
@@ -154,7 +155,7 @@ GLfloat step[] = {0.1f, 0.1f, 0.1f, 0.1f, 1.0f};
 // Actual selected light source
 int selectedLight = LIGHT0;
 // Actual selected attribute
-int selectedAttribute = COLOR;
+int selectedAttribute = AMBIENT;
 
 void updateLightning(void);
 
@@ -163,8 +164,9 @@ void InitLightning(){
 	// OpenGL lightning
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lights[LIGHT0][AMBIENT]);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
@@ -172,9 +174,7 @@ void InitLightning(){
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-	glShadeModel(GL_SMOOTH);
 }
-
 
 void myInit(){
 
@@ -184,14 +184,14 @@ void myInit(){
 	objects[0].transform = new Transform(5.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
-	memcpy(objects[0].color, cyan, sizeof(GLfloat)*3);
+	memcpy(objects[0].color, purple, sizeof(GLfloat)*3);
 	objects[0].type = TEAPOT;
 
 	//object 1 is a Torus located in (0,0,0)
 	objects[1].transform = new Transform(0.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
-	memcpy(objects[1].color, purple, sizeof(GLfloat)*3);
+	memcpy(objects[1].color, pink, sizeof(GLfloat)*3);
 	objects[1].type = TORUS;
 
 	//object 2 is a Cube located in (-5,0,0)
@@ -342,9 +342,9 @@ void DisplayDebugInfo(){
 
     sprintf(str, "Selected light %d attribute ", selectedLight);
      
-	if(selectedAttribute == COLOR)
+	/*if(selectedAttribute == COLOR)
 		strcat(str, "COLOR");
-	else if(selectedAttribute == AMBIENT)
+	else */if(selectedAttribute == AMBIENT)
 		strcat(str, "AMBIENT");
 	else if(selectedAttribute == DIFFUSE)
 		strcat(str, "DIFFUSE");
@@ -416,6 +416,10 @@ void DisplayControls(){
 
 // GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
+	
+	static float count;
+	float sine = sinf(count);
+	float cossine = cosf(count);
 
 	processKeys();
 	processSpecialKeys();
@@ -424,13 +428,6 @@ void update(void){
 	updateLightning();
 
 	sun->position->y += 0.01f;
-	// sun->rotation->y += 1;
-	// sun->rotation->z += 1;
-	// sun->rotation->x += 1;
-
-	static float count;
-	float sine = sinf(count);
-	float cossine = cosf(count);
 
 	// Translate objects
 	objects[0].transform->position->x += 0.025f*sine;
@@ -461,7 +458,6 @@ void updateLightning(void){
 	if(glIsEnabled(GL_LIGHT0)){
 
 		glPushMatrix();
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
@@ -471,7 +467,6 @@ void updateLightning(void){
 	} else if(glIsEnabled(GL_LIGHT1)){
 		
 		glPushMatrix();
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lights[LIGHT1][COLOR]);
 		glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
@@ -481,7 +476,6 @@ void updateLightning(void){
 	} else if(glIsEnabled(GL_LIGHT2)){
 
 		glPushMatrix();
-		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lights[LIGHT2][COLOR]);
 		glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
 		glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
 		glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);

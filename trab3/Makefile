@@ -72,9 +72,14 @@ main: $(OBJ)
 
 .PHONY: run
 # Run directives
+ifdef reileao
 run: reileao
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 	killall python2
+endif
+
+run: 
+	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 
 reileao:
 	cplay *.mp3 &
