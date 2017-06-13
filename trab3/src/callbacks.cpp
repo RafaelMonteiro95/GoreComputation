@@ -32,6 +32,7 @@ and a OBJECT_TYPE, which is used to call the correct drawing function defined in
 typedef struct _sceneObject{
 	Transform* transform;
 	OBJECT_TYPE type;
+	GLfloat color[3];
 } sceneObject;
 
 enum ascii_codes {
@@ -79,11 +80,19 @@ bool skeys[255] = {0}; // special keypress state
 bool shading_mode = SMOOTH;
 
 Camera* cam;
+Transform* sun;
 
 // Color
-GLfloat white[] = {1.0, 1.0, 1.0};
-GLfloat purple[] = {1.0, 0.0, 1.0};
-GLfloat red[] = {1.0, 0.0, 0.0};
+GLfloat red[] 	 = {1.0f, 0.0f, 0.0f};
+GLfloat green[]  = {0.0f, 1.0f, 0.0f};
+GLfloat blue[] 	 = {0.0f, 0.0f, 1.0f};
+GLfloat white[]  = {1.0f, 1.0f, 1.0f};
+GLfloat black[]  = {0.0f, 0.0f, 0.0f};
+GLfloat gray[]   = {0.5f, 0.5f, 0.5f};
+GLfloat cyan[] 	 = {0.1f, 0.8f, 1.0f};
+GLfloat purple[] = {1.0f, 0.0f, 1.0f};
+GLfloat yellow[] = {1.0f, 1.0f, 0.2f};
+GLfloat brown[]  = {0.3f, 0.1f, 0.0f};
 
 //list of scene objects.
 sceneObject objects[3];
@@ -101,7 +110,7 @@ GLenum gl_lights[] = {GL_LIGHT0, GL_LIGHT1, GL_LIGHT2};
 
 // Our attributes defines
 #define N_ATT		5
- #define ANGLE		0
+ #define COLOR		0
  #define AMBIENT	1
  #define DIFFUSE	2
  #define SPECULAR	3
@@ -110,26 +119,26 @@ GLenum gl_lights[] = {GL_LIGHT0, GL_LIGHT1, GL_LIGHT2};
 // Dont ask, just accept
 /* 3D vector that stores the attributes of each light. If you don't understand
 just accept it. */
-GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{
-										{1.0f, 1.0f, 0.2f, 0.0f},
-										{1.0f, 0.8f, 0.6f, 1.0f},
-										{0.3f, 0.3f, 0.3f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f}
+GLfloat lights[MAX_LIGHTS][N_ATT][4] = {{/* Light source 0 - light is at infinity by default  */
+										{0.5f, 0.5f, 0.1f, 0.0f},	// Attribute COLOR
+										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute AMBIENT
+										{1.0f, 0.8f, 0.3f, 1.0f},	// Attribute DIFFUSE
+										{1.0f, 0.0f, 0.0f, 1.0f},	// Attribute SPECULAR
+										{0.0f, 0.0f, 1.0f, 0.0f}	// Attribute POSITION
 									},
-									{
-										{1.0f, 1.0f, 0.2f, 0.0f},
-										{1.0f, 0.8f, 0.6f, 1.0f},
-										{0.3f, 0.3f, 0.3f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f}
+									{	/* Light source 1	  */
+										{0.0f, 0.5f, 0.9f, 0.0f},	// Attribute COLOR
+										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
+										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
+										{0.0f, 1.0f, 0.0f, 1.0f},	// Attribute SPECULAR
+										{0.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									},
-									{
-										{1.0f, 1.0f, 0.2f, 0.0f},
-										{1.0f, 0.8f, 0.6f, 1.0f},
-										{0.3f, 0.3f, 0.3f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f},
-										{1.0f, 0.5f, 0.2f, 1.0f}
+									{	/* Light source 2	  */
+										{0.5f, 1.0f, 0.2f, 0.0f},	// Attribute COLOR
+										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute AMBIENT
+										{1.0f, 0.8f, 0.6f, 1.0f},	// Attribute DIFFUSE
+										{0.0f, 0.0f, 1.0f, 1.0f},	// Attribute SPECULAR
+										{1.0f, 1.0f, 0.0f, 0.0f}	// Attribute POSITION
 									}};
 
 // Max values for each attribute
@@ -140,7 +149,7 @@ GLfloat step[] = {0.1f, 0.1f, 0.1f, 0.1f, 1.0f};
 // Actual selected light source
 int selectedLight = LIGHT0;
 // Actual selected attribute
-int selectedAttribute = ANGLE;
+int selectedAttribute = COLOR;
 
 void updateLightning(void);
 
@@ -150,10 +159,10 @@ void InitLightning(){
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lights[LIGHT0][AMBIENT]);
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][ANGLE]);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
+	// glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
+	// glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
+	// glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
 	glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
 
     glEnable(GL_COLOR_MATERIAL);
@@ -161,33 +170,35 @@ void InitLightning(){
 	glShadeModel(GL_SMOOTH);
 }
 
-Transform* sol;
 
 void myInit(){
 
 	cam = new Camera();
 
 	//object 0 is a Teapot located in (5,0,0)
-	objects[0].transform = new Transform(5.0f, 0.0f, 0.0f,
+	objects[0].transform = new Transform(5.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
+	memcpy(objects[0].color, cyan, sizeof(GLfloat)*3);
 	objects[0].type = TEAPOT;
 
 	//object 1 is a Torus located in (0,0,0)
-	objects[1].transform = new Transform(0.0f, 0.0f, 0.0f,
+	objects[1].transform = new Transform(0.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
+	memcpy(objects[1].color, purple, sizeof(GLfloat)*3);
 	objects[1].type = TORUS;
 
 	//object 2 is a Cube located in (-5,0,0)
-	objects[2].transform = new Transform(-5.0f, 0.0f, 0.0f,
+	objects[2].transform = new Transform(-5.0f, 2.0f, 0.0f,
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
+	memcpy(objects[2].color, brown, sizeof(GLfloat)*3);
 	objects[2].type = CUBE;
 
-	sol = new Transform(0.0f, -5.0f, -10.0f,
-								0.0f, 0.0f, 0.0f,
-								0.0f, 0.0f, 0.0f);
+	sun = new Transform(0.0f, -5.0f, -30.0f,
+				0.0f, 0.0f, 0.0f,
+				0.0f, 0.0f, 0.0f);
 
 	InitLightning();
 }
@@ -196,10 +207,10 @@ void myInit(){
 // function that deletes "camera" and "sceneObject" objects
 void myCleanup(){
 	delete cam;
+	delete sun;
 
-	for(int i = 0; i < 3; i++){
+	for(int i = 0; i < 3; i++)
 		delete objects[i].transform;
-	}
 }
 
 // function that processes special key buttons (such as arrows)
@@ -261,6 +272,7 @@ void processKeys() {
 			cam->speed = 0.01f;
 	}
 
+	/* Dont need this now
 	// translate right
 	if(keys['i']){
 		objects[selectedObject].transform->position->x += 0.3f;
@@ -294,6 +306,7 @@ void processKeys() {
 		objects[selectedObject].transform->scale->y -= 0.1f;
 		objects[selectedObject].transform->scale->z -= 0.1f;
 	}
+	*/
 
 	// Cleanup glut before exiting
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
@@ -325,8 +338,8 @@ void DisplayDebugInfo(){
 
     sprintf(str, "Selected light %d attribute ", selectedLight);
      
-	if(selectedAttribute == ANGLE)
-		strcat(str, "ANGLE");
+	if(selectedAttribute == COLOR)
+		strcat(str, "COLOR");
 	else if(selectedAttribute == AMBIENT)
 		strcat(str, "AMBIENT");
 	else if(selectedAttribute == DIFFUSE)
@@ -343,29 +356,33 @@ void DisplayDebugInfo(){
 		lights[selectedLight][selectedAttribute][1],
 		lights[selectedLight][selectedAttribute][2],
 		lights[selectedLight][selectedAttribute][3]);
+    if(selectedAttribute == POSITION && 
+    	(lights[selectedLight][selectedAttribute][3] == 0.0 || 
+    		lights[selectedLight][selectedAttribute][3] == -0.0))
+    	strcat(str, "  AT INFINITY!");
     displayText(330.0f, 50.0f, str);
 	
 	bool light0 = glIsEnabled(GL_LIGHT0);
 	bool light1 = glIsEnabled(GL_LIGHT1);
 	bool light2 = glIsEnabled(GL_LIGHT2);
-    sprintf(str, "Light source 0, at, (%.2f, %.2f, %.2f) is %s", 
+    sprintf(str, "Light source 0, at (%.2f, %.2f, %.2f), is %s", 
     	lights[LIGHT0][POSITION][0],
     	lights[LIGHT0][POSITION][1],
     	lights[LIGHT0][POSITION][2],
     	light0 ? "enabled" : "disabled");
-    displayText(830.0f, 30.0f, str);
-    sprintf(str, "Light source 1, at, (%.2f, %.2f, %.2f) is %s", 
+    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 30.0f, str);
+    sprintf(str, "Light source 1, at (%.2f, %.2f, %.2f), is %s", 
     	lights[LIGHT1][POSITION][0],
     	lights[LIGHT1][POSITION][1],
     	lights[LIGHT1][POSITION][2],
     	light1 ? "enabled" : "disabled");
-    displayText(830.0f, 50.0f, str);
-    sprintf(str, "Light source 2, at, (%.2f, %.2f, %.2f) is %s", 
+    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 50.0f, str);
+    sprintf(str, "Light source 2, at (%.2f, %.2f, %.2f), is %s", 
     	lights[LIGHT2][POSITION][0],
     	lights[LIGHT2][POSITION][1],
     	lights[LIGHT2][POSITION][2],
     	light2 ? "enabled" : "disabled");
-    displayText(830.0f, 70.0f, str);
+    displayText(glutGet(GLUT_WINDOW_WIDTH) -400.0f, 70.0f, str);
 }
 
 // GlutIdleFunc callback. Processes keys and redraw scene
@@ -377,17 +394,37 @@ void update(void){
 	glutPostRedisplay();
 	updateLightning();
 
-	sol->position->y += 0.01f;
-	sol->rotation->y += 1;
-	sol->rotation->z += 1;
-	sol->rotation->x += 1;
+	sun->position->y += 0.01f;
+	sun->rotation->y += 1;
+	sun->rotation->z += 1;
+	sun->rotation->x += 1;
+
+	static float count;
+	float sine = sinf(count);
+	float cossine = cosf(count);
+
+	// Translate objects
+	objects[0].transform->position->x += 0.025f*sine;
+	objects[0].transform->position->y += 0.025f*cossine;
+
+	objects[1].transform->position->y -= 0.025f*sine;
+
+	objects[2].transform->position->x -= 0.025f*cossine;
+	objects[2].transform->position->y -= 0.025f*sine;
+
+	// Rotate objects
+	objects[0].transform->rotation->z += 0.5f;
+	objects[1].transform->rotation->x += 0.5f;
+	objects[2].transform->rotation->y += 0.5f;
+
+	count += 0.03f;
 }
 
 void updateLightning(void){
 	
 	if(glIsEnabled(GL_LIGHT0)){
 
-		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][ANGLE]);
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
 		glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
@@ -395,7 +432,7 @@ void updateLightning(void){
 
 	} else if(glIsEnabled(GL_LIGHT1)){
 		
-		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lights[LIGHT1][ANGLE]);
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lights[LIGHT1][COLOR]);
 		glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
@@ -403,7 +440,7 @@ void updateLightning(void){
 
 	} else if(glIsEnabled(GL_LIGHT2)){
 
-		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lights[LIGHT2][ANGLE]);
+		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lights[LIGHT2][COLOR]);
 		glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
 		glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
 		glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);
@@ -424,35 +461,38 @@ void renderScene(void) {
 	cam->update();
 
     // Draw ground
+    glPushAttrib(GL_LIGHTING_BIT);
     drawGround();
+    glPopAttrib();
     // Draw sun
-    drawSun(sol);
+    glPushAttrib(GL_LIGHTING_BIT);
+    drawSun(sun);
+    glPopAttrib();
 
     // Draws scene objects
     for(int i = 0; i < 3; i++){
 
-		glPushMatrix();
+    	glPushAttrib(GL_LIGHTING_BIT);
+    	glPushMatrix();
 
+    	char buf[255];
     	switch(objects[i].type){
     	case TEAPOT:
-    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
-    		selectedObject - TEAPOT == 0 ? drawTeapot(objects[i].transform, true): drawTeapot(objects[i].transform, false);
+			sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
+    		drawTeapot(objects[i].transform, objects[i].color);
     		break;
 
     	case TORUS:
-    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
-    		selectedObject - TORUS == 0 ? drawTorus(objects[i].transform, true): drawTorus(objects[i].transform, false);
+    		sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
+    		drawTorus(objects[i].transform, objects[i].color);
     		break;
 
     	case CUBE:
-    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
-            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
-    		selectedObject - CUBE == 0 ? drawCube(objects[i].transform, true): drawCube(objects[i].transform, false);
+    		sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
+    		drawCube(objects[i].transform, objects[i].color);
     		break;
 
 		default:
@@ -460,6 +500,7 @@ void renderScene(void) {
 		}
 
 		glPopMatrix();
+    	glPopAttrib();
     }
 
     DisplayDebugInfo();
@@ -516,6 +557,7 @@ void keyboardDown(unsigned char key, int x, int y){
 			selectedObject = 0;
 			break;
 
+		// Increment selected attribute values
 		case 'z':
 			lights[selectedLight][selectedAttribute][0] += step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][0] > maxs[selectedAttribute]) 
@@ -537,6 +579,7 @@ void keyboardDown(unsigned char key, int x, int y){
 				lights[selectedLight][selectedAttribute][3] = maxs[selectedAttribute];
 			break;
 
+		// Dencrement selected attribute values
 		case 'Z':
 			lights[selectedLight][selectedAttribute][0] -= step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][0] < -maxs[selectedAttribute]) 
@@ -558,6 +601,7 @@ void keyboardDown(unsigned char key, int x, int y){
 				lights[selectedLight][selectedAttribute][3] = -maxs[selectedAttribute];
 			break;
 
+		// Change tonalization mode
 		case 'F': 
 			if(shading_mode == SMOOTH){
 				glShadeModel(GL_FLAT);
@@ -568,6 +612,7 @@ void keyboardDown(unsigned char key, int x, int y){
 			}
 			break;
 
+		// Enable/disable lightning
 		case 'q': 
 			glIsEnabled(getLight(selectedLight))   ? 
 				glDisable(getLight(selectedLight)) : 
@@ -587,22 +632,25 @@ void specialDown(int key, int x, int y){
 
 	switch(key){
 
-		// Debug lightning
+		// Go to previous light source
 		case GLUT_KEY_F1:
 			selectedLight--;
 			if(selectedLight < 0) selectedLight = MAX_LIGHTS-1;
 			break;
 
+		// Go to next light source
 		case GLUT_KEY_F2:
 			selectedLight++;
 			if(selectedLight > MAX_LIGHTS-1) selectedLight = 0;
 			break;
 
+		// Go to previous attribute
 		case GLUT_KEY_F3:
 			selectedAttribute--;
 			if(selectedAttribute < 0) selectedAttribute = N_ATT-1;
 			break;
 
+		// Go to next attribute
 		case GLUT_KEY_F4:
 			selectedAttribute++;
 			if(selectedAttribute > N_ATT-1) selectedAttribute = 0;

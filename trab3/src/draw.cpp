@@ -11,12 +11,10 @@
 #include <GL/glut.h>
 
 #include "draw.hpp"
+#include "text2d.hpp"
 
 #define HIGHLIGHTED 0.5f, 0.2f, 0.9f
 #define NOT_HIGHLIGHTED 0.3f, 0.3f, 0.3f
-
-//color array
-GLfloat color[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 void applyTransform(Transform* obj){
 	glTranslatef(obj->position->x, obj->position->y + 0.7, obj->position->z);
@@ -30,13 +28,9 @@ void applyTransform(Transform* obj){
 void drawSun(Transform* sun){
 	glPushMatrix();
 
-	// glColor3f(1.0f,1.0f,0.0f);
 	glNormal3d(0, 1, 0);
-	color[0] = 0.7f;
-	color[1] = 0.6f;
-	color[2] = 0.2f;
+	GLfloat color[] = {1.0f, 1.0f, 0.0f};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-
 
 	applyTransform(sun);
 	glutSolidTeapot(10.0f);
@@ -46,7 +40,7 @@ void drawSun(Transform* sun){
 	glPopMatrix();
 }
 
-void drawSnowman(Transform* snowman) {
+void drawSnowman(Transform* snowman, GLfloat color[3]) {
 
 	glPushMatrix();
 
@@ -54,9 +48,6 @@ void drawSnowman(Transform* snowman) {
 
 	// glColor3f(0.2f, 0.3f, 0.9f);
 	glNormal3d(0, 1, 0);
-	color[0] = 0.6f;
-	color[1] = 0.3f;
-	color[2] = 0.9f;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
 	// Draw Body
@@ -79,24 +70,18 @@ void drawSnowman(Transform* snowman) {
 	// Draw Nose
 	// glColor3f(1.0f, 0.5f , 0.5f);
 	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 0.5f;
-	color[2] = 0.5f;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 	glutSolidCone(0.08f,0.8f,10,2);
 
 }
 
-void drawIcecream(Transform* icecream) {
+void drawIcecream(Transform* icecream, GLfloat color[3]) {
 
 	applyTransform(icecream);
 
 	// Draw icecream Cone	
 	// glColor3f(0.6f, 0.2f, 0.3f);
 	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
 	// glTranslatef(0.0f, 2.5f, 0.0f);
@@ -108,45 +93,50 @@ void drawIcecream(Transform* icecream) {
 	glutSolidSphere(0.75f, 20, 20);
 }
 
-void drawTorus(Transform* torus, bool selected){
+void drawTorus(Transform* torus, GLfloat color[3]){
 
 	applyTransform(torus);
 
 	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+	glMaterialf(GL_FRONT, GL_SHININESS, 128);
 
 	glRotatef(90,1,0,0);
 
-	// selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
 	glutSolidTorus(0.4f, 0.7f, 20, 20);
 }
 
-void drawCube(Transform* cube, bool selected){
+void drawCube(Transform* cube, GLfloat color[3]){
 
 	applyTransform(cube);
 
 	glNormal3d(0, 1, 0);
-	color[0] = 1.0f;
-	color[1] = 1.2f;
-	color[2] = 1.3f;
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+	glMaterialfv(GL_BACK, GL_DIFFUSE, color);
+	glMaterialf(GL_BACK, GL_SHININESS, 200);
 
-
-	// selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
 	glutSolidCube(1.5f);
+}
 
+void drawTeapot(Transform* teapot, GLfloat color[3]) {
+
+	// Apllies transformations
+	applyTransform(teapot);
+
+	glNormal3d(0, 1, 0);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 255);
+
+	glutSolidTeapot(0.7f);
 }
 
 void drawSky(){
-	glColor3f(0.0f,0.0f,1.0f);
+	glColor3f(0.3f, 0.4f, 1.0f);
 	glutSolidSphere(60.0f,5,5);
 }
 
 void drawGround(){
 
+	glPushMatrix();
 	glBegin(GL_QUADS);
 
 		glColor3f(255.0f, 255.0f, 255.0f);
@@ -162,23 +152,9 @@ void drawGround(){
 		glVertex3f( 30.0f, 0.0f, -30.0f);
 
 	glEnd();
-
-	drawSky();
-}
-
-
-void drawTeapot(Transform* teapot, bool selected) {
-
-	glPushMatrix();
-
-	// Apllies transformations
-	applyTransform(teapot);
-
-	// Draws obj
-	selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
-	// selected? glColorMaterial(GL_FRONT): glColor3f(NOT_HIGHLIGHTED);
-	glutSolidTeapot(0.7f);
-
 	glPopMatrix();
 
+	glPushMatrix();
+		drawSky();
+	glPopMatrix();
 }

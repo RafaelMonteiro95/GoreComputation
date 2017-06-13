@@ -3,13 +3,13 @@
 
 #include "transform.hpp"
 
-void applyTransform(Transform* obj);
 void drawSun(Transform* sun);
-void drawSnowman(Transform* snowman) ;
-void drawIcecream(Transform* icecream);
-void drawTorus(Transform* torus, bool selected);
-void drawCube(Transform* cube, bool selected);
+void drawSnowman(Transform* snowman, GLfloat color[3]);
+void drawIcecream(Transform* icecream, GLfloat color[3]);
+void drawTorus(Transform* torus, GLfloat color[3]);
+void drawCube(Transform* cube, GLfloat color[3]);
+void drawTeapot(Transform* teapot, GLfloat color[3]);
+void drawSky();
 void drawGround();
-void drawTeapot(Transform* teapot, bool selected);
 
 #endif

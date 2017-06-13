@@ -58,16 +58,16 @@ all: checkname checkdirs clean main
 # Compile directives
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 	echo Building $*
-	$(CC) -c -o $@ $< $(CFLAGS)
+	@$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
 	echo Building $*
-	$(CC) -c -o $@ $< $(CFLAGS)
+	@$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: main
 main: $(OBJ)
 	echo Linking object files
-	$(CC) -o $(BLDDIR)/$(NAME) $^ $(CFLAGS) $(LIBS)
+	@$(CC) -o $(BLDDIR)/$(NAME) $^ $(CFLAGS) $(LIBS)
 
 
 .PHONY: run
