@@ -6,6 +6,9 @@
 
 */
 
+#include <stdio.h>
+#include <string.h>
+#include <string>
 #include <math.h>
 #include <GL/glut.h>
 
@@ -13,6 +16,7 @@
 #include "camera.hpp"
 #include "callbacks.hpp"
 #include "draw.hpp"
+#include "text2d.hpp"
 
 //defining scene objects types
 #define TEAPOT 0
@@ -77,20 +81,28 @@ Camera* cam;
 //list of scene objects.
 sceneObject objects[3];
 
+GLfloat angle[]		= {1.0f, 1.0f, 0.2f};
+GLfloat ambient[]	= {1.0f, 0.8f, 0.6f, 1.0f};
+GLfloat diffuse[]	= {0.3f, 0.3f, 0.3f, 1.0f};
+GLfloat specular[]	= {1.0f, 0.5f, 0.2f, 1.0f};
+
+GLfloat step = 0.2f;
+GLfloat *selected = angle;
+GLfloat *debug_vectors[4];
+int indexi = 1;
+
+using namespace std;
+
 void InitLightning(){
 	
 	// OpenGL lightning
-	float angle[] = {1,1,0};
-	float ambient[] = {1,1,1,1};
-	float diffuse[] = {1,1,1,1};
-	float specular[] = {1,1,1,1};
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, angle);
-	// glLightfv(GL_LIGHT0, GL_DIFFUSE, angle);
-	// glLightfv(GL_LIGHT0, GL_SPECULAR, angle);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
     
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
@@ -118,6 +130,11 @@ void myInit(){
 								0.0f, 0.0f, 0.0f);
 	objects[2].type = CUBE;
 
+	// DEBUG
+	debug_vectors[0] = angle;
+	debug_vectors[1] = ambient;
+	debug_vectors[2] = diffuse;
+	debug_vectors[3] = specular;
 	InitLightning();
 }
 
@@ -226,15 +243,88 @@ void processKeys() {
 
 	// Cleanup glut before exiting
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
+
+
+	// Debug alter lightning
+	if(skeys[GLUT_KEY_F1]){
+		indexi--;
+		if(indexi < 0) indexi = 3;
+		selected = debug_vectors[indexi];
+	}
+
+	if(skeys[GLUT_KEY_F2]){
+		indexi++;
+		if(indexi > 3) indexi = 0;
+		selected = debug_vectors[indexi];
+	}
+
+	if(keys['z']) {
+		selected[0] += step;
+		if(selected[0] > 1.0f) selected[0] = 1.0f;
+	}
+	if(keys['x']) {
+		selected[1] += step;
+		if(selected[1] > 1.0f) selected[1] = 1.0f;
+	}
+	if(keys['c']) {
+		selected[2] += step;
+		if(selected[2] > 1.0f) selected[2] = 1.0f;
+	}
+	if(keys['v'] && indexi != 0) {
+		selected[3] += step;
+		if(selected[3] > 1.0f) selected[3] = 1.0f;
+	}
+
+	if(keys['Z']) {
+		selected[0] -= step;
+		if(selected[0] < -1.0f) selected[0] = -1.0f;
+	}
+	if(keys['X']) {
+		selected[1] -= step;
+		if(selected[1] < -1.0f) selected[1] = -1.0f;
+	}
+	if(keys['C']) {
+		selected[2] -= step;
+		if(selected[2] < -1.0f) selected[2] = -1.0f;
+	}
+	if(keys['V'] && indexi != 0) {
+		selected[3] -= step;
+		if(selected[3] < -1.0f) selected[3] = -1.0f;
+	}
+}
+
+void displayText(float x, float y, const char *mstring){
+
+	//drawing some text
+	setOrthographicProjection();
+
+	glPushMatrix();
+	glLoadIdentity();
+	// renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
+	renderBitmapString(5, 30, GLUT_BITMAP_8_BY_13, "Lighthouse3D");
+	glPopMatrix();
+
+	restorePerspectiveProjection();
 }
 
 // GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
 
+	static int count;
+
 	processKeys();
 	processSpecialKeys();
 
 	glutPostRedisplay();
+	InitLightning();
+	
+	displayText(5.0f, 30.0f, "teste string");
+	if(count % 60 == 0){
+		count = 0;
+		printf("cam position: (%f, %f, %f)\n", cam->transform->position->x,
+										 cam->transform->position->y,
+										 cam->transform->position->z);
+	}
 }
 
 // GlutDisplayFunc callback. Clears screen and draws the scene
