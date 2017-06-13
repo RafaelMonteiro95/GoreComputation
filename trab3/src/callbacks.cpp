@@ -160,9 +160,9 @@ void InitLightning(){
 	glEnable(GL_LIGHT0);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lights[LIGHT0][AMBIENT]);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lights[LIGHT0][COLOR]);
-	// glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
-	// glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
-	// glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
 	glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
 
     glEnable(GL_COLOR_MATERIAL);
@@ -180,6 +180,7 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[0].color, cyan, sizeof(GLfloat)*3);
+	fprintf(stderr, "color 0: (%f, %f, %f)\n", objects[0].color[0], objects[0].color[1], objects[0].color[2]);
 	objects[0].type = TEAPOT;
 
 	//object 1 is a Torus located in (0,0,0)
@@ -187,6 +188,7 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[1].color, purple, sizeof(GLfloat)*3);
+	fprintf(stderr, "color 1: (%f, %f, %f)\n", objects[1].color[0], objects[1].color[1], objects[1].color[2]);
 	objects[1].type = TORUS;
 
 	//object 2 is a Cube located in (-5,0,0)
@@ -194,6 +196,7 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	memcpy(objects[2].color, brown, sizeof(GLfloat)*3);
+	fprintf(stderr, "color 2: (%f, %f, %f)\n", objects[2].color[0], objects[2].color[1], objects[2].color[2]);
 	objects[2].type = CUBE;
 
 	sun = new Transform(0.0f, -5.0f, -30.0f,
@@ -455,7 +458,7 @@ void renderScene(void) {
     // Draw ground
     // drawGround();
     // Draw sun
-    drawSun(sun);
+    // drawSun(sun);
 
     // Draws scene objects
     for(int i = 0; i < 3; i++){
@@ -465,20 +468,20 @@ void renderScene(void) {
     	char buf[255];
     	switch(objects[i].type){
     	case TEAPOT:
-			// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		 //    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
+			sprintf(buf, "tpot (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 650.0f, buf);
     		drawTeapot(objects[i].transform, objects[i].color);
     		break;
 
     	case TORUS:
-    		// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    // displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
+    		sprintf(buf, "torus (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 670.0f, buf);
     		drawTorus(objects[i].transform, objects[i].color);
     		break;
 
     	case CUBE:
-    		// sprintf(buf, "color (%.f, %.f, %.f, )", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
-		    // displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
+    		sprintf(buf, "cubo (%.2f, %.2f, %.2f)", objects[i].color[0], objects[i].color[1], objects[i].color[2]);
+		    displayText(glutGet(GLUT_WINDOW_WIDTH) - 400.0f, 690.0f, buf);
     		drawCube(objects[i].transform, objects[i].color);
     		break;
 

@@ -98,12 +98,12 @@ void drawTorus(Transform* torus, GLfloat color[3]){
 	applyTransform(torus);
 
 	char buf[255];
-	sprintf(buf, "torus color (%.f, %.f, %.f, )", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 200.0f, 750.0f, buf);
+	sprintf(buf, "torus color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
+	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 550.0f, buf);
 
 	glNormal3d(0, 1, 0);
-	// glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
-	// glMaterialf(GL_FRONT, GL_SHININESS, 128);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
+	glMaterialf(GL_FRONT, GL_SHININESS, 128);
 
 	glRotatef(90,1,0,0);
 
@@ -115,12 +115,12 @@ void drawCube(Transform* cube, GLfloat color[3]){
 	applyTransform(cube);
 
 	char buf[255];
-	sprintf(buf, "cube color (%.f, %.f, %.f, )", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 200.0f, 770.0f, buf);
+	sprintf(buf, "cube color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
+	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 570.0f, buf);
 
 	glNormal3d(0, 1, 0);
-	// glMaterialfv(GL_BACK, GL_DIFFUSE, color);
-	// glMaterialf(GL_BACK, GL_SHININESS, 200);
+	glMaterialfv(GL_BACK, GL_DIFFUSE, color);
+	glMaterialf(GL_BACK, GL_SHININESS, 200);
 
 	glutSolidCube(1.5f);
 }
@@ -131,12 +131,12 @@ void drawTeapot(Transform* teapot, GLfloat color[3]) {
 	applyTransform(teapot);
 
 	char buf[255];
-	sprintf(buf, "tpot color (%.f, %.f, %.f, )", color[0], color[1], color[2]);
-	displayText(glutGet(GLUT_WINDOW_WIDTH) - 200.0f, 790.0f, buf);
+	sprintf(buf, "tpot color (%.2f, %.2f, %.2f)", color[0], color[1], color[2]);
+	displayText(glutGet(GLUT_WINDOW_WIDTH) - 300.0f, 590.0f, buf);
 
 	glNormal3d(0, 1, 0);
-	// glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
-	// glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 255);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 255);
 
 	glutSolidTeapot(0.7f);
 }
