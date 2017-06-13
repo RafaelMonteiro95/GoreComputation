@@ -1,3 +1,9 @@
+/* 2D text for glut source file
+
+	Giovanna Oliveira Guimarães		-	9293693
+	Lucas Alexandre Soares 			-	9293265
+	Rafael Augusto Monteiro 		-	9293095
+*/
 
 #include <GL/glut.h>
 #include "text2d.hpp"

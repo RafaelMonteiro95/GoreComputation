@@ -33,7 +33,7 @@ void drawSnowman(Transform* snowman) {
 
 	applyTransform(snowman);
 
-	glColor3f(0.2f, 0.3f, 0.9f);
+	// glColor3f(0.2f, 0.3f, 0.9f);
 	glNormal3d(0, 1, 0);
 	color[0] = 0.6f;
 	color[1] = 0.3f;
@@ -50,7 +50,7 @@ void drawSnowman(Transform* snowman) {
 
 	// Draw Eyes
 	glPushMatrix();
-	glColor3f(0.0f, 0.0f, 0.0f);
+	// glColor3f(0.0f, 0.0f, 0.0f);
 	glTranslatef(0.05f, 0.10f, 0.36f);
 	glutSolidSphere(0.1f,20,20);
 	glTranslatef(-0.1f, 0.0f, 0.0f);
@@ -58,7 +58,7 @@ void drawSnowman(Transform* snowman) {
 	glPopMatrix();
 
 	// Draw Nose
-	glColor3f(1.0f, 0.5f , 0.5f);
+	// glColor3f(1.0f, 0.5f , 0.5f);
 	glNormal3d(0, 1, 0);
 	color[0] = 1.0f;
 	color[1] = 0.5f;
@@ -68,13 +68,12 @@ void drawSnowman(Transform* snowman) {
 
 }
 
-
 void drawIcecream(Transform* icecream) {
 
 	applyTransform(icecream);
 
 	// Draw icecream Cone	
-	glColor3f(0.6f, 0.2f, 0.3f);
+	// glColor3f(0.6f, 0.2f, 0.3f);
 	glNormal3d(0, 1, 0);
 	color[0] = 1.0f;
 	color[1] = 1.2f;
@@ -86,7 +85,7 @@ void drawIcecream(Transform* icecream) {
 	glutSolidCone(0.8, -2.5, 20, 5);
 
 	// Draw icecream
-	glColor3f(1.0f, 0.6f, 1.0f);
+	// glColor3f(1.0f, 0.6f, 1.0f);
 	glutSolidSphere(0.75f, 20, 20);
 }
 
@@ -102,7 +101,7 @@ void drawTorus(Transform* torus, bool selected){
 
 	glRotatef(90,1,0,0);
 
-	selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
+	// selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
 	glutSolidTorus(0.4f, 0.7f, 20, 20);
 }
 
@@ -117,11 +116,10 @@ void drawCube(Transform* cube, bool selected){
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, color);
 
 
-	selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
+	// selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
 	glutSolidCube(1.5f);
 
 }
-
 
 void drawSky(){
 	glColor3f(0.0f,0.0f,1.0f);
@@ -129,19 +127,20 @@ void drawSky(){
 }
 
 void drawGround(){
+
 	glBegin(GL_QUADS);
 
-	glColor3f(255.0f, 255.0f, 255.0f);
-	glVertex3f(-30.0f, 0.0f, -30.0f);
+		glColor3f(255.0f, 255.0f, 255.0f);
+		glVertex3f(-30.0f, 0.0f, -30.0f);
 
-	glColor3f(255.0f, 0.0f, 255.0f);
-	glVertex3f(-30.0f, 0.0f,  30.0f);
+		glColor3f(255.0f, 0.0f, 255.0f);
+		glVertex3f(-30.0f, 0.0f,  30.0f);
 
-	glColor3f(255.0f, 255.0f, 0.0f);
-	glVertex3f( 30.0f, 0.0f,  30.0f);
+		glColor3f(255.0f, 255.0f, 0.0f);
+		glVertex3f( 30.0f, 0.0f,  30.0f);
 
-	glColor3f(0.0f, 255.0f, 255.0f);
-	glVertex3f( 30.0f, 0.0f, -30.0f);
+		glColor3f(0.0f, 255.0f, 255.0f);
+		glVertex3f( 30.0f, 0.0f, -30.0f);
 
 	glEnd();
 
@@ -158,6 +157,7 @@ void drawTeapot(Transform* teapot, bool selected) {
 
 	// Draws obj
 	selected? glColor3f(HIGHLIGHTED): glColor3f(NOT_HIGHLIGHTED);
+	// selected? glColorMaterial(GL_FRONT): glColor3f(NOT_HIGHLIGHTED);
 	glutSolidTeapot(0.7f);
 
 	glPopMatrix();

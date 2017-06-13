@@ -2,13 +2,11 @@
 
 	Giovanna Oliveira Guimarães		-	9293693
 	Lucas Alexandre Soares 			-	9293265
-	Rafael Augusto Monteiro 			-	9293095
-
+	Rafael Augusto Monteiro 		-	9293095
 */
 
 #include <stdio.h>
 #include <string.h>
-#include <string>
 #include <math.h>
 #include <GL/glut.h>
 
@@ -78,20 +76,25 @@ bool skeys[255] = {0}; // special keypress state
 
 Camera* cam;
 
+// Color
+GLfloat white[] = {1.0, 1.0, 1.0};
+GLfloat purple[] = {1.0, 0.0, 1.0};
+GLfloat red[] = {1.0, 0.0, 0.0};
+
 //list of scene objects.
 sceneObject objects[3];
 
-GLfloat angle[]		= {1.0f, 1.0f, 0.2f};
+#define N_ATT	5
+GLfloat angle[]		= {1.0f, 1.0f, 0.2f, 0.0f}; // last value isnt used, its just for my convenience 
 GLfloat ambient[]	= {1.0f, 0.8f, 0.6f, 1.0f};
 GLfloat diffuse[]	= {0.3f, 0.3f, 0.3f, 1.0f};
 GLfloat specular[]	= {1.0f, 0.5f, 0.2f, 1.0f};
+GLfloat position[]	= {1.0f, 0.5f, 0.2f, 1.0f}; // last value isnt used, its just for my convenience 
 
-GLfloat step = 0.2f;
+GLfloat step = 0.1f;
+GLfloat *debug_vectors[N_ATT];
+int indexi = 0;
 GLfloat *selected = angle;
-GLfloat *debug_vectors[4];
-int indexi = 1;
-
-using namespace std;
 
 void InitLightning(){
 	
@@ -99,13 +102,16 @@ void InitLightning(){
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-    
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
     glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	// glShadeModel(GL_FLAT);
 }
 
 void myInit(){
@@ -135,6 +141,10 @@ void myInit(){
 	debug_vectors[1] = ambient;
 	debug_vectors[2] = diffuse;
 	debug_vectors[3] = specular;
+	debug_vectors[4] = position;
+
+	selected = debug_vectors[indexi];
+	
 	InitLightning();
 }
 
@@ -243,54 +253,6 @@ void processKeys() {
 
 	// Cleanup glut before exiting
 	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
-
-
-	// Debug alter lightning
-	if(skeys[GLUT_KEY_F1]){
-		indexi--;
-		if(indexi < 0) indexi = 3;
-		selected = debug_vectors[indexi];
-	}
-
-	if(skeys[GLUT_KEY_F2]){
-		indexi++;
-		if(indexi > 3) indexi = 0;
-		selected = debug_vectors[indexi];
-	}
-
-	if(keys['z']) {
-		selected[0] += step;
-		if(selected[0] > 1.0f) selected[0] = 1.0f;
-	}
-	if(keys['x']) {
-		selected[1] += step;
-		if(selected[1] > 1.0f) selected[1] = 1.0f;
-	}
-	if(keys['c']) {
-		selected[2] += step;
-		if(selected[2] > 1.0f) selected[2] = 1.0f;
-	}
-	if(keys['v'] && indexi != 0) {
-		selected[3] += step;
-		if(selected[3] > 1.0f) selected[3] = 1.0f;
-	}
-
-	if(keys['Z']) {
-		selected[0] -= step;
-		if(selected[0] < -1.0f) selected[0] = -1.0f;
-	}
-	if(keys['X']) {
-		selected[1] -= step;
-		if(selected[1] < -1.0f) selected[1] = -1.0f;
-	}
-	if(keys['C']) {
-		selected[2] -= step;
-		if(selected[2] < -1.0f) selected[2] = -1.0f;
-	}
-	if(keys['V'] && indexi != 0) {
-		selected[3] -= step;
-		if(selected[3] < -1.0f) selected[3] = -1.0f;
-	}
 }
 
 void displayText(float x, float y, const char *mstring){
@@ -300,30 +262,60 @@ void displayText(float x, float y, const char *mstring){
 
 	glPushMatrix();
 	glLoadIdentity();
-	// renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
-	renderBitmapString(5, 30, GLUT_BITMAP_8_BY_13, "Lighthouse3D");
+	glColor3f(1.0f, 1.0f, 1.0f);//needs to be called before RasterPos
+	renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
 	glPopMatrix();
 
 	restorePerspectiveProjection();
 }
 
+void debugprintcoisas(){
+    
+    char str[255];
+    
+    sprintf(str, "Camera pos: (%.2f, %.2f, %.2f)", cam->transform->position->x,
+    										 cam->transform->position->y,
+    										 cam->transform->position->z);
+    displayText(5.0f, 30.0f, str);
+
+	if(indexi == 0){
+		sprintf(str, "Selected angle [%d]", indexi);
+	} else if(indexi == 1){
+		sprintf(str, "Selected ambient [%d]", indexi);
+	} else if(indexi == 2){
+		sprintf(str, "Selected diffuse [%d]", indexi);
+	} else if(indexi == 3){
+		sprintf(str, "Selected specular [%d]", indexi);
+	} else if(indexi == 4){
+		sprintf(str, "Selected lightpos [%d]", indexi);
+	}
+
+    displayText(5.0f, 50.0f, str);
+
+    sprintf(str, "(%.1f, %.1f, %.1f, %.1f)", selected[0],
+    								 selected[1],
+    								 selected[2],
+    								 selected[3]);
+    displayText(200.0f, 50.0f, str);
+}
+
 // GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
-
-	static int count;
 
 	processKeys();
 	processSpecialKeys();
 
 	glutPostRedisplay();
 	InitLightning();
-	
-	displayText(5.0f, 30.0f, "teste string");
-	if(count % 60 == 0){
-		count = 0;
-		printf("cam position: (%f, %f, %f)\n", cam->transform->position->x,
-										 cam->transform->position->y,
-										 cam->transform->position->z);
+}
+
+void updateLightning(void){
+	if(glIsEnabled(GL_LIGHT0)){
+
+	} else if(glIsEnabled(GL_LIGHT1)){
+
+	} else if(glIsEnabled(GL_LIGHT2)){
+
 	}
 }
 
@@ -349,14 +341,23 @@ void renderScene(void) {
 
     	switch(objects[i].type){
     	case TEAPOT:
+    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
     		selectedObject - TEAPOT == 0 ? drawTeapot(objects[i].transform, true): drawTeapot(objects[i].transform, false);
     		break;
 
     	case TORUS:
+    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
     		selectedObject - TORUS == 0 ? drawTorus(objects[i].transform, true): drawTorus(objects[i].transform, false);
     		break;
 
     	case CUBE:
+    		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+            glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 128);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
     		selectedObject - CUBE == 0 ? drawCube(objects[i].transform, true): drawCube(objects[i].transform, false);
     		break;
 
@@ -366,6 +367,8 @@ void renderScene(void) {
 
 		glPopMatrix();
     }
+
+    debugprintcoisas();
 
 	//swap buffers, outputting all drawings done
 	glutSwapBuffers();
@@ -399,10 +402,12 @@ void changeSize(int w, int h) {
 }
 
 // sets key presses when some key is pressed
-void keyboardUp(unsigned char key, int x, int y){ keys[key] = false; }
+void keyboardUp(unsigned char key, int x, int y){ (void) x, (void) y, keys[key] = false; }
 void keyboardDown(unsigned char key, int x, int y){
-	switch(key){
+	
+	(void) x, (void) y;
 
+	switch(key){
 		case 't':
 			selectObject(PREVIOUS);
 			break;
@@ -416,6 +421,64 @@ void keyboardDown(unsigned char key, int x, int y){
 			myInit();
 			selectedObject = 0;
 			break;
+
+		case 'z':
+			selected[0] += step;
+			if(selected[0] > 1.0f) selected[0] = 1.0f;
+		break;
+		case 'x':
+			selected[1] += step;
+			if(selected[1] > 1.0f) selected[1] = 1.0f;
+		break;
+		case 'c':
+			selected[2] += step;
+			if(selected[2] > 1.0f) selected[2] = 1.0f;
+		break;
+		case 'v': 
+			if(indexi != 0) {
+				selected[3] += step;
+				if(selected[3] > 1.0f) selected[3] = 1.0f;
+			}
+		break;
+
+		case 'Z':
+			selected[0] -= step;
+			if(selected[0] < -1.0f) selected[0] = -1.0f;
+		break;
+		case 'X':
+			selected[1] -= step;
+			if(selected[1] < -1.0f) selected[1] = -1.0f;
+		break;
+		case 'C':
+			selected[2] -= step;
+			if(selected[2] < -1.0f) selected[2] = -1.0f;
+		break;
+		case 'V': 
+			if(indexi != 0) {
+				selected[3] -= step;
+				if(selected[3] < -1.0f) selected[3] = -1.0f;
+			}
+		break;
+
+		// Enable/Disable lightning
+		// TODO
+		case '0':
+			selected[0] -= step;
+			if(selected[0] < -1.0f) selected[0] = -1.0f;
+		break;
+		case 'E':
+			selected[1] -= step;
+			if(selected[1] < -1.0f) selected[1] = -1.0f;
+		break;
+		case 'D':
+			selected[2] -= step;
+			if(selected[2] < -1.0f) selected[2] = -1.0f;
+		break;
+		case 'S':
+			selected[2] -= step;
+			if(selected[2] < -1.0f) selected[2] = -1.0f;
+		break;
+
 			
 		default:
 			keys[key] = true;
@@ -423,5 +486,28 @@ void keyboardDown(unsigned char key, int x, int y){
 	}
 }
 
-void specialUp(int key, int x, int y){ skeys[key] = false; }
-void specialDown(int key, int x, int y){ skeys[key] = true; }
+void specialUp(int key, int x, int y){ (void) x, (void) y, skeys[key] = false; }
+void specialDown(int key, int x, int y){ 
+	
+	(void) x, (void) y;
+
+	switch(key){
+
+		// Debug lightning
+		case GLUT_KEY_F1:
+			indexi--;
+			if(indexi < 0) indexi = N_ATT-1;
+			selected = debug_vectors[indexi];			
+			break;
+
+		case GLUT_KEY_F2:
+			indexi++;
+			if(indexi > N_ATT-1) indexi = 0;
+			selected = debug_vectors[indexi];
+			break;
+
+		default:
+			skeys[key] = true; 
+			break;
+	}
+}

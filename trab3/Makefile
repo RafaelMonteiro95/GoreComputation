@@ -34,12 +34,17 @@ DEPSPP=$(wildcard $(INCDIR)/*.hpp)
 OBJ=$(foreach file, $(SRC), $(file:$(SRCDIR)/%.c=$(OBJDIR)/%.o))
 OBJ += $(foreach file, $(SRCPP), $(file:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o))
 
+# Find renamed or removed .o files
+DEL_OBJ=$(wildcard $(OBJDIR)/*.o)
+DEL_OBJ=$(filter-out %.o, $(OBJC))
+
 CC=g++
 CFLAGS=-O3 -I./$(INCDIR) 
 
-USER_LIBS=-lGL -lglut -lGLU 
+USER_LIBS=-lGL -lGLU -lglut
 DEFAULT_LIBS=-lm
 LIBS=$(USER_LIBS) $(DEFAULT_LIBS)
+
 
 ifdef debug
 	CFLAGS += -Wall -Wextra -g -D DEBUG
@@ -58,21 +63,23 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
 	@echo Building $*
 	@$(CC) -c -o $@ $< $(CFLAGS)
-	
+
 .PHONY: main
 main: $(OBJ)
 	@echo Linking object files
 	@$(CC) -o $(BLDDIR)/$(NAME) $^ $(CFLAGS) $(LIBS)
-	
+
+
 .PHONY: run
 # Run directives
-run: 
+run:
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 
 # Utility directives
 .PHONY: clean
 clean: checkname
 	-rm -f $(BLDDIR)/*
+	-rm -f vgcore*
 	-rm -f $(NAME).zip
 	-rm -f $(NAME).tar.gz
 	clear
@@ -131,7 +138,7 @@ readme: checkname
 	@echo "" >> $(NAME)/README.md
 
 # Check for directory existence and create them if necessary
-checkdirs:
+checkdirs: 
 	if [ ! -d $(BLDDIR)/ ]; then mkdir -p $(BLDDIR)/; fi
 	if [ ! -d $(INCDIR)/ ]; then mkdir -p $(INCDIR)/; fi
 	if [ ! -d $(LIBDIR)/ ]; then mkdir -p $(LIBDIR)/; fi
