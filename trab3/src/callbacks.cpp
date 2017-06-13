@@ -15,6 +15,7 @@
 #include "callbacks.hpp"
 #include "draw.hpp"
 #include "text2d.hpp"
+#include "math_globals.hpp"
 
 //defining scene objects types
 #define TEAPOT 0
@@ -80,7 +81,7 @@ bool skeys[255] = {0}; // special keypress state
 
 bool showControls = true;
 bool showDebug = false;
-
+bool needUpdateLight = true;
 bool shading_mode = SMOOTH;
 
 Camera* cam;
@@ -246,6 +247,12 @@ void myCleanup(){
 		delete objects[i].transform;
 }
 
+void selectObject(int which){
+	selectedObject += which;
+	if(selectedObject > 2) selectedObject = 0;
+	if(selectedObject < 0) selectedObject = 2;
+}
+
 // function that processes special key buttons (such as arrows)
 void processSpecialKeys() {
 
@@ -264,12 +271,6 @@ void processSpecialKeys() {
 	if(skeys[GLUT_KEY_RIGHT]){
 		cam->yawRight();
 	}
-}
-
-void selectObject(int which){
-	selectedObject += which;
-	if(selectedObject > 2) selectedObject = 0;
-	if(selectedObject < 0) selectedObject = 2;
 }
 
 // function that processes normal button presses (such as 'w', 'a', 's' and 'd')
@@ -305,44 +306,9 @@ void processKeys() {
 			cam->speed = 0.01f;
 	}
 
-	/* Dont need this now
-	// translate right
-	if(keys['i']){
-		objects[selectedObject].transform->position->x += 0.3f;
-	}
-
-	// translate left
-	if(keys['u']){
-		objects[selectedObject].transform->position->x -= 0.3f;
-	}
-
-	// rotate right
-	if(keys['k']){
-		objects[selectedObject].transform->rotation->x += 10.0f;
-	}
-
-	// rotate left
-	if(keys['j']){
-		objects[selectedObject].transform->rotation->x -= 10.0f;
-	}
-
-	// scale up
-	if(keys['m']){
-		objects[selectedObject].transform->scale->x += 0.1f;
-		objects[selectedObject].transform->scale->y += 0.1f;
-		objects[selectedObject].transform->scale->z += 0.1f;
-	}
-
-	// scale down
-	if(keys['n']){
-		objects[selectedObject].transform->scale->x -= 0.1f;
-		objects[selectedObject].transform->scale->y -= 0.1f;
-		objects[selectedObject].transform->scale->z -= 0.1f;
-	}
-	*/
-
 	// Cleanup glut before exiting
-	if(keys[ASCII_ESC]) glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
+	if(keys[ASCII_ESC]) 
+		glutDestroyWindow(g_WindowHandle), myCleanup(), exit(0);
 }
 
 void DisplayDebugInfo(){
@@ -409,26 +375,32 @@ void DisplayControls(){
 // GlutIdleFunc callback. Processes keys and redraw scene
 void update(void){
 	
-	static float count;
-	float sine = sinf(count);
-	float cossine = cosf(count);
-
+	static int count;
+	float sine = g_sinf[count];
+	float cossine = g_cosf[count];
+	if(++count > 210) count = 0;
+	
 	processKeys();
 	processSpecialKeys();
 
 	glutPostRedisplay();
-	updateLightning();
+	
+	if(needUpdateLight){
+		updateLightning();
+	}
 
 	sun->position->y += 0.01f;
 
 	// Translate objects
-	objects[0].transform->position->x += 0.025f*sine;
-	objects[0].transform->position->y += 0.025f*cossine;
+	float stranslation = 0.025f*sine;
+	float cstranslation = 0.025f*cossine;
+	objects[0].transform->position->x += stranslation;
+	objects[0].transform->position->y += cstranslation;
 
-	objects[1].transform->position->y -= 0.025f*sine;
+	objects[1].transform->position->y -= stranslation;
 
-	objects[2].transform->position->x -= 0.025f*cossine;
-	objects[2].transform->position->y -= 0.025f*sine;
+	objects[2].transform->position->x -= cstranslation;
+	objects[2].transform->position->y -= stranslation;
 
 	// Rotate objects
 	objects[0].transform->rotation->z += 0.5f;
@@ -440,38 +412,32 @@ void update(void){
 		lightSources[i].transform->position->y = lights[i][POSITION][1];
 		lightSources[i].transform->position->z = lights[i][POSITION][2];
 	}
-
-	count += 0.03f;
 }
 
 void updateLightning(void){
-	
+
+	needUpdateLight = false;
+
 	if(glIsEnabled(GL_LIGHT0)){
 
-		glPushMatrix();
 		glLightfv(GL_LIGHT0, GL_AMBIENT, lights[LIGHT0][AMBIENT]);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, lights[LIGHT0][DIFFUSE]);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, lights[LIGHT0][SPECULAR]);
 		glLightfv(GL_LIGHT0, GL_POSITION, lights[LIGHT0][POSITION]);
-		glPopMatrix();
+	}
 
-	} else if(glIsEnabled(GL_LIGHT1)){
-		
-		glPushMatrix();
+	if(glIsEnabled(GL_LIGHT1)){
 		glLightfv(GL_LIGHT1, GL_AMBIENT, lights[LIGHT1][AMBIENT]);
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lights[LIGHT1][DIFFUSE]);
 		glLightfv(GL_LIGHT1, GL_SPECULAR, lights[LIGHT1][SPECULAR]);
 		glLightfv(GL_LIGHT1, GL_POSITION, lights[LIGHT1][POSITION]);
-		glPopMatrix();
-
-	} else if(glIsEnabled(GL_LIGHT2)){
-
-		glPushMatrix();
+	}
+	
+	if(glIsEnabled(GL_LIGHT2)){
 		glLightfv(GL_LIGHT2, GL_AMBIENT, lights[LIGHT2][AMBIENT]);
 		glLightfv(GL_LIGHT2, GL_DIFFUSE, lights[LIGHT2][DIFFUSE]);
 		glLightfv(GL_LIGHT2, GL_SPECULAR, lights[LIGHT2][SPECULAR]);
 		glLightfv(GL_LIGHT2, GL_POSITION, lights[LIGHT2][POSITION]);
-		glPopMatrix();
 	}
 }
 
@@ -523,14 +489,12 @@ void renderScene(void) {
 
     // Draw light bulbs
     for(int i = 0; i < 3; i++){
-
-    	glPushMatrix();
-
     	// If not at infinity, draw light bulb
-		if(lights[i][POSITION][3] != 0.0f)
+		if(lights[i][POSITION][3] != 0.0f){
+    		glPushMatrix();
 			drawSphere(lightSources[i].transform, black);
-
-		glPopMatrix();
+			glPopMatrix();
+		}
 	}
 
 	if(showDebug){
@@ -596,21 +560,25 @@ void keyboardDown(unsigned char key, int x, int y){
 
 		// Increment selected attribute values
 		case 'z':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][0] += step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][0] > maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][0] = maxs[selectedAttribute];
 			break;
 		case 'x':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][1] += step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][1] > maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][1] = maxs[selectedAttribute];
 			break;
 		case 'c':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][2] += step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][2] > maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][2] = maxs[selectedAttribute];
 			break;
 		case 'v': 
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][3] += step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][3] > maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][3] = maxs[selectedAttribute];
@@ -618,21 +586,25 @@ void keyboardDown(unsigned char key, int x, int y){
 
 		// Dencrement selected attribute values
 		case 'Z':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][0] -= step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][0] < -maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][0] = -maxs[selectedAttribute];
 			break;
 		case 'X':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][1] -= step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][1] < -maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][1] = -maxs[selectedAttribute];
 			break;
 		case 'C':
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][2] -= step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][2] < -maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][2] = -maxs[selectedAttribute];
 			break;
 		case 'V': 
+			needUpdateLight = true;
 			lights[selectedLight][selectedAttribute][3] -= step[selectedAttribute];
 			if(lights[selectedLight][selectedAttribute][3] < -maxs[selectedAttribute]) 
 				lights[selectedLight][selectedAttribute][3] = -maxs[selectedAttribute];
@@ -640,6 +612,7 @@ void keyboardDown(unsigned char key, int x, int y){
 
 		// Change tonalization mode
 		case 'F': 
+			needUpdateLight = true;
 			if(shading_mode == SMOOTH){
 				glShadeModel(GL_FLAT);
 				shading_mode = FLAT;
@@ -651,6 +624,7 @@ void keyboardDown(unsigned char key, int x, int y){
 
 		// Enable/disable lightning
 		case 'q': 
+			needUpdateLight = true;
 			glIsEnabled(getLight(selectedLight))   ? 
 				glDisable(getLight(selectedLight)) : 
 				glEnable(getLight(selectedLight));
@@ -667,41 +641,42 @@ void specialDown(int key, int x, int y){
 	
 	(void) x, (void) y;
 
-	switch(key){
-
-		// Go to previous light source
-		case GLUT_KEY_F1:
-			selectedLight--;
-			if(selectedLight < 0) selectedLight = MAX_LIGHTS-1;
-			break;
-
-		// Go to next light source
-		case GLUT_KEY_F2:
-			selectedLight++;
-			if(selectedLight > MAX_LIGHTS-1) selectedLight = 0;
-			break;
-
-		// Go to previous attribute
-		case GLUT_KEY_F3:
-			selectedAttribute--;
-			if(selectedAttribute < 0) selectedAttribute = N_ATT-1;
-			break;
-
-		// Go to next attribute
-		case GLUT_KEY_F4:
-			selectedAttribute++;
-			if(selectedAttribute > N_ATT-1) selectedAttribute = 0;
-			break;
-
-		case GLUT_KEY_F9:
-			showControls = !showControls;
-			break;
-		case GLUT_KEY_F10:
-			showDebug =  !showDebug;
-			break;
-
-		default:
-			skeys[key] = true; 
-			break;
+	// Go to previous light source
+	if(key == GLUT_KEY_F1){
+		selectedLight--;
+		
+		if(selectedLight < 0)
+			selectedLight = MAX_LIGHTS-1;
 	}
+
+	// Go to next light source
+	else if(key == GLUT_KEY_F2){
+		selectedLight++;
+		
+		if(selectedLight > MAX_LIGHTS-1)
+			selectedLight = 0;
+	}
+
+	// Go to previous attribute
+	if(key == GLUT_KEY_F3){
+		selectedAttribute--;
+		
+		if(selectedAttribute < 0)
+			selectedAttribute = N_ATT-1;
+	}
+
+	// Go to next attribute
+	else if(key == GLUT_KEY_F4){
+		selectedAttribute++;
+		
+		if(selectedAttribute > N_ATT-1)
+			selectedAttribute = 0;
+	}
+
+	if(key == GLUT_KEY_F9)
+		showControls = !showControls;
+	if(key == GLUT_KEY_F10)
+		showDebug =  !showDebug;
+
+	else skeys[key] = true; 
 }

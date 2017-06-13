@@ -36,7 +36,7 @@ void drawSun(Transform* sun){
 	applyTransform(sun);
 	// glutSolidTeapot(10.0f);
 	// drawSnowman(sun);
-	glutSolidSphere(10.0f,30,30);
+	glutSolidSphere(10.0f,20,20);
 
 	glPopMatrix();
 }

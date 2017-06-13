@@ -82,8 +82,8 @@ run:
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 
 reileao:
-	rhythmbox-client *.mp3
-	# cplay *.mp3 &
+	# rhythmbox-client *.mp3 &
+	cplay *.mp3 &
 
 # Utility directives
 .PHONY: clean
