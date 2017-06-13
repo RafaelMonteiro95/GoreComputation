@@ -111,7 +111,7 @@ void InitLightning(){
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-	// glShadeModel(GL_FLAT);
+	glShadeModel(GL_SMOOTH);
 }
 
 void myInit(){
@@ -306,16 +306,40 @@ void update(void){
 	processSpecialKeys();
 
 	glutPostRedisplay();
-	InitLightning();
+	updateLightning();
 }
 
 void updateLightning(void){
 	if(glIsEnabled(GL_LIGHT0)){
 
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, angle);
+		glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+		glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	    glEnable(GL_COLOR_MATERIAL);
+	    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+		glShadeModel(GL_SMOOTH);
+
 	} else if(glIsEnabled(GL_LIGHT1)){
+		
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, angle);
+		glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+		glLightfv(GL_LIGHT1, GL_POSITION, position);
 
 	} else if(glIsEnabled(GL_LIGHT2)){
 
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, angle);
+		glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
+		glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
+		glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
+		glLightfv(GL_LIGHT2, GL_POSITION, position);
 	}
 }
 
