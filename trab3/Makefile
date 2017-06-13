@@ -73,6 +73,7 @@ main: $(OBJ)
 .PHONY: run
 # Run directives
 run:
+	cplay *.mp3 &
 	$(DEBUGGER) ./$(BLDDIR)/$(NAME) $(RUN_ARGS)
 
 # Utility directives
