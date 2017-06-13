@@ -317,7 +317,6 @@ void DisplayDebugInfo(){
     										 cam->transform->position->z);
     displayText(5.0f, 30.0f, str);
 
-    // TODO
     sprintf(str, "Selected light %d attribute ", selectedLight);
      
 	if(selectedAttribute == ANGLE)
@@ -343,11 +342,23 @@ void DisplayDebugInfo(){
 	bool light0 = glIsEnabled(GL_LIGHT0);
 	bool light1 = glIsEnabled(GL_LIGHT1);
 	bool light2 = glIsEnabled(GL_LIGHT2);
-    sprintf(str, "Light source 1 is %s", light0 ? "enabled" : "disabled");
+    sprintf(str, "Light source 0, at, (%.2f, %.2f, %.2f) is %s", 
+    	lights[LIGHT0][POSITION][0],
+    	lights[LIGHT0][POSITION][1],
+    	lights[LIGHT0][POSITION][2],
+    	light0 ? "enabled" : "disabled");
     displayText(830.0f, 30.0f, str);
-    sprintf(str, "Light source 2 is %s", light0 ? "enabled" : "disabled");
+    sprintf(str, "Light source 1, at, (%.2f, %.2f, %.2f) is %s", 
+    	lights[LIGHT1][POSITION][0],
+    	lights[LIGHT1][POSITION][1],
+    	lights[LIGHT1][POSITION][2],
+    	light1 ? "enabled" : "disabled");
     displayText(830.0f, 50.0f, str);
-    sprintf(str, "Light source 3 is %s", light0 ? "enabled" : "disabled");
+    sprintf(str, "Light source 2, at, (%.2f, %.2f, %.2f) is %s", 
+    	lights[LIGHT2][POSITION][0],
+    	lights[LIGHT2][POSITION][1],
+    	lights[LIGHT2][POSITION][2],
+    	light2 ? "enabled" : "disabled");
     displayText(830.0f, 70.0f, str);
 }
 
@@ -493,45 +504,45 @@ void keyboardDown(unsigned char key, int x, int y){
 			break;
 
 		case 'z':
-			lights[selectedLight][selectedAttribute][0] += step[indexi];
-			if(lights[selectedLight][selectedAttribute][0] > maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][0] = maxs[indexi];
+			lights[selectedLight][selectedAttribute][0] += step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][0] > maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][0] = maxs[selectedAttribute];
 			break;
 		case 'x':
-			lights[selectedLight][selectedAttribute][1] += step[indexi];
-			if(lights[selectedLight][selectedAttribute][1] > maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][1] = maxs[indexi];
+			lights[selectedLight][selectedAttribute][1] += step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][1] > maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][1] = maxs[selectedAttribute];
 			break;
 		case 'c':
-			lights[selectedLight][selectedAttribute][2] += step[indexi];
-			if(lights[selectedLight][selectedAttribute][2] > maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][2] = maxs[indexi];
+			lights[selectedLight][selectedAttribute][2] += step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][2] > maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][2] = maxs[selectedAttribute];
 			break;
 		case 'v': 
-			lights[selectedLight][selectedAttribute][3] += step[indexi];
-			if(lights[selectedLight][selectedAttribute][3] > maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][3] = maxs[indexi];
+			lights[selectedLight][selectedAttribute][3] += step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][3] > maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][3] = maxs[selectedAttribute];
 			break;
 
 		case 'Z':
-			lights[selectedLight][selectedAttribute][0] -= step[indexi];
-			if(lights[selectedLight][selectedAttribute][0] < -maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][0] = -maxs[indexi];
+			lights[selectedLight][selectedAttribute][0] -= step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][0] < -maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][0] = -maxs[selectedAttribute];
 			break;
 		case 'X':
-			lights[selectedLight][selectedAttribute][1] -= step[indexi];
-			if(lights[selectedLight][selectedAttribute][1] < -maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][1] = -maxs[indexi];
+			lights[selectedLight][selectedAttribute][1] -= step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][1] < -maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][1] = -maxs[selectedAttribute];
 			break;
 		case 'C':
-			lights[selectedLight][selectedAttribute][2] -= step[indexi];
-			if(lights[selectedLight][selectedAttribute][2] < -maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][2] = -maxs[indexi];
+			lights[selectedLight][selectedAttribute][2] -= step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][2] < -maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][2] = -maxs[selectedAttribute];
 			break;
 		case 'V': 
-			lights[selectedLight][selectedAttribute][3] -= step[indexi];
-			if(lights[selectedLight][selectedAttribute][3] < -maxs[indexi]) 
-				lights[selectedLight][selectedAttribute][3] = -maxs[indexi];
+			lights[selectedLight][selectedAttribute][3] -= step[selectedAttribute];
+			if(lights[selectedLight][selectedAttribute][3] < -maxs[selectedAttribute]) 
+				lights[selectedLight][selectedAttribute][3] = -maxs[selectedAttribute];
 			break;
 
 		case 'F': 
