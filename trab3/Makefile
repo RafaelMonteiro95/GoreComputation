@@ -5,7 +5,7 @@ NAME=LightiningGluteos
 
 # Directories
 INCDIR=include
-# LIBDIR=lib
+LIBDIR=lib
 BLDDIR=build
 SRCDIR=src
 OBJDIR=$(SRCDIR)/obj
@@ -39,12 +39,11 @@ DEL_OBJ=$(wildcard $(OBJDIR)/*.o)
 DEL_OBJ=$(filter-out %.o, $(OBJC))
 
 CC=g++
-CFLAGS=-O3 -I./$(INCDIR) 
+CFLAGS=-O3 -I./$(INCDIR)
 
 USER_LIBS=-lGL -lGLU -lglut
 DEFAULT_LIBS=-lm
-LIBS=$(USER_LIBS) $(DEFAULT_LIBS)
-
+LIBS=$(DEFAULT_LIBS) $(USER_LIBS)
 
 ifdef debug
 	CFLAGS += -Wall -Wextra -g -D DEBUG
@@ -57,18 +56,17 @@ all: checkname checkdirs clean main
 
 # Compile directives
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(DEPS)
-	echo Building $*
+	@echo Building $*
 	@$(CC) -c -o $@ $< $(CFLAGS)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(DEPS)
-	echo Building $*
+	@echo Building $*
 	@$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: main
 main: $(OBJ)
-	echo Linking object files
+	@echo Linking object files
 	@$(CC) -o $(BLDDIR)/$(NAME) $^ $(CFLAGS) $(LIBS)
-
 
 .PHONY: run
 # Run directives
@@ -175,7 +173,7 @@ create: checkname
 	@mkdir $(NAME) 
 	@mkdir $(NAME)/$(SRCDIR)
 	@mkdir $(NAME)/$(INCDIR)
-# mkdir $(NAME)/$(LIBDIR)
+	@mkdir $(NAME)/$(LIBDIR)
 	@mkdir $(NAME)/$(BLDDIR)
 	@mkdir $(NAME)/$(OBJDIR)
 

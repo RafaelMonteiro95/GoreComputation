@@ -5,7 +5,9 @@
 	Rafael Augusto Monteiro 		-	9293095
 */
 
+#include <string.h>
 #include <GL/glut.h>
+
 #include "text2d.hpp"
 
 /* DONT END STRING WITH A \n VAI DA RUIM DEMAIS*/
@@ -73,10 +75,12 @@ void setOrthographicProjection() {
 void displayText(float x, float y, const char *mstring){
 
 	//drawing some text
-	setOrthographicProjection();
 
 	glPushMatrix();
 	glLoadIdentity();
+	
+	setOrthographicProjection();
+	
 	glColor3f(1.0f, 1.0f, 1.0f);//needs to be called before RasterPos
 	renderBitmapString(x, y, GLUT_BITMAP_HELVETICA_18, mstring);
 	glPopMatrix();

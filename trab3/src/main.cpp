@@ -14,24 +14,6 @@
 
 int main(int argc, char *argv[]) {
 
-	// printf("double g_sin[] = {%.17f", sin(0.03f));
-	// for(double i = 0.03f; i < 2*M_PI; i += 0.03f)
-	// 	printf(", %.17f", sin(i));
-	// printf("};\n");
-	// printf("float g_sinf[] = {%.10f", sinf(0.03f));
-	// for(double i = 0.03f; i < 2*M_PI; i += 0.03f)
-	// 	printf(", %.10f", sinf(i));
-	// printf("};\n");
-	// // printf("double g_cos[] = {%.17f", cos(0.03f));
-	// for(double i = 0.03f; i < 2*M_PI; i += 0.03f)
-	// 	printf(", %.17f", cos(i));
-	// printf("};\n");
-	// printf("float g_cosf[] = {%.10f", cosf(0.03f));
-	// for(double i = 0.03f; i < 2*M_PI; i += 0.03f)
-	// 	printf(", %.10f", cosf(i));
-	// printf("};\n");
-	// exit(0);
-
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);

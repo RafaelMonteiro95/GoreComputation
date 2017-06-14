@@ -84,8 +84,8 @@ bool showDebug = false;
 bool needUpdateLight = true;
 bool shading_mode = SMOOTH;
 
-Camera* cam;
-Transform* sun;
+Camera *cam;
+Transform *sun;
 
 // Color
 GLfloat red[] 	 = {0.3f, 0.1f, 0.1f};
@@ -188,8 +188,8 @@ void InitLightning(){
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
-    glDisable(GL_LIGHT1);
-    glDisable(GL_LIGHT2);
+    // glDisable(GL_LIGHT1);
+    // glDisable(GL_LIGHT2);
 }
 
 void myInit(){
@@ -234,6 +234,8 @@ void myInit(){
 								0.0f, 0.0f, 0.0f,
 								0.0f, 0.0f, 0.0f);
 	lightSources[2].type = SPHERE;
+
+	// Initialize lights
 	InitLightning();
 }
 
@@ -369,7 +371,7 @@ void DisplayDebugInfo(){
 }
 
 void DisplayControls(){
-	displayText(5, 500, "WASD and Arrow Keys to move around\nF1/F2 cycle through light sources\nF3/F4 cycle through lights attributes\nZ X C V to increment attribute value\nQ to enable/disable light source\nSHIFT+F to change between FLAT and GOURAUD\nSHIFT + (Z X C V) to decrement attribute value\nIf a light source is not at infinity (position[3] == 0),\nit will be drawn at screen as a black sphere.");
+	displayText(5, 500, "WASD and Arrow Keys to move around\nF1/F2 cycle through light sources\nF3/F4 cycle through lights attributes\nZ X C V to increment attribute value\nSHIFT + (Z X C V) to decrement attribute value\nQ to enable/disable light source\nSHIFT+F to change between FLAT and GOURAUD\nIf a light source is not at infinity (position[3] == 0),it will be drawn at screen as a black sphere.");
 }
 
 // GlutIdleFunc callback. Processes keys and redraw scene
@@ -504,7 +506,7 @@ void renderScene(void) {
     	DisplayControls();
     }
 
-    displayText(600, 40, "F9 - Show/Hide controls\nF10 - Show/Hide debug\nTry running the command \"make run reileao=1\"");
+    displayText(600.0f, 40.0f, "F9 - Show/Hide controls\nF10 - Show/Hide debug\nTry running the command \"make run reileao=1\"");
 
 	//swap buffers, outputting all drawings done
 	glutSwapBuffers();
@@ -544,14 +546,6 @@ void keyboardDown(unsigned char key, int x, int y){
 	(void) x, (void) y;
 
 	switch(key){
-		case 't':
-			selectObject(PREVIOUS);
-			break;
-
-		case 'y':
-			selectObject(NEXT);
-			break;
-
 		case ' ':
 			myCleanup();
 			myInit();

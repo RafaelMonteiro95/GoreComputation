@@ -8,6 +8,8 @@
 #ifndef _TEXT_2D_
 #define _TEXT_2D_
 
+#include "transform.hpp"
+
 void displayText(float x, float y, const char *mstring);
 
 #endif

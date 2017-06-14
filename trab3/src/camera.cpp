@@ -58,25 +58,25 @@ void Camera::zoomOut(){
 	float rotxrad, rotyrad;
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
 	rotxrad = (transform->rotation->x / 180.0f * M_PI); 
-	transform->position->x -= float(sin(rotyrad))* speed;
-	transform->position->z += float(cos(rotyrad))* speed;
-	transform->position->y += float(sin(rotxrad))* speed;
+	transform->position->x -= sinf(rotyrad)* speed;
+	transform->position->z += cosf(rotyrad)* speed;
+	transform->position->y += sinf(rotxrad)* speed;
 	checkHeight();
 }
 
 void Camera::strafeRight(){
 	float rotyrad;
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
-	transform->position->x += float(cos(rotyrad)) * speed;
-	transform->position->z += float(sin(rotyrad)) * speed;
+	transform->position->x += cosf(rotyrad) * speed;
+	transform->position->z += sinf(rotyrad) * speed;
 	checkHeight();
 }
 
 void Camera::strafeLeft(){
 	float rotyrad;
 	rotyrad = (transform->rotation->y / 180.0f * M_PI);
-	transform->position->x -= float(cos(rotyrad)) * speed;
-	transform->position->z -= float(sin(rotyrad)) * speed;
+	transform->position->x -= cosf(rotyrad) * speed;
+	transform->position->z -= sinf(rotyrad) * speed;
 	checkHeight();
 }
 
